@@ -1,0 +1,250 @@
+<section class="entity-information">
+	<!-- VIEW TERCERO -->
+	<div fxLayout="row" *ngIf="view == 'viewTercero'">
+
+		<div fxFlex="auto" fxLayout="column">
+			<!-- <div fxFlex fxLayout="row" class="item">
+				<div class="t" fxFlex>Id Tercero:</div>
+				<div class="c" fxFlex>{{data.idtercero}}</div>
+			</div> -->
+			<div fxFlex fxLayout="row" class="item">
+				<div class="t" fxFlex>N. Tercero:</div>
+				<div class="c" fxFlex>{{data.numerotercero}}</div>
+			</div>
+			<div fxFlex fxLayout="row" class="item">
+				<div class="t" fxFlex>Área:</div>
+				<div class="c" fxFlex>{{data.nombrearea}}</div>
+			</div>
+		</div>
+
+		<div fxFlex="auto" fxLayout="column">
+			<div fxFlex fxLayout="row" class="item">
+				<div class="t" fxFlex>Nombres:</div>
+				<div class="c" fxFlex>{{data.nombres}}</div>
+			</div>
+			<div fxFlex fxLayout="row" class="item">
+				<div class="t" fxFlex>Apellidos</div>
+				<div class="c" fxFlex>{{data.apellidos}}</div>
+			</div>
+		</div>
+
+		<div fxFlex="auto" fxLayout="column">
+			<div fxFlex fxLayout="row" class="item">
+				<div class="t" fxFlex>Tipo ID:</div>
+				<div class="c" fxFlex>{{data.nombretipodocumento}}</div>
+			</div>
+			<div fxFlex fxLayout="row" class="item">
+				<div class="t" fxFlex>Identificación</div>
+				<div class="c" fxFlex>{{data.identificacion}}</div>
+			</div>
+		</div>
+
+		<!-- <div fxFlex="auto" fxLayout="column">
+			<div fxFlex fxLayout="row" class="item">
+				<div class="t" fxFlex>Área:</div>
+				<div class="c" fxFlex>{{data.nombrearea}}</div>
+			</div>
+			<div fxFlex fxLayout="row" class="item">
+			</div>
+		</div> -->
+
+	</div>
+
+	<!-- VIEW SERVICIO -->
+	<div fxLayout="row" *ngIf="view == 'viewServicio'">
+
+		<div fxFlex="auto" fxLayout="column">
+			<!-- <div fxFlex fxLayout="row" class="item">
+				<div class="t" fxFlex>Id Servicio:</div>
+				<div class="c" fxFlex>{{data.idservicio}}</div>
+			</div> -->
+			<div fxFlex fxLayout="row" class="item">
+				<div class="t" fxFlex>N. Servicio:</div>
+				<div class="c" fxFlex>{{data.numeroservicio}}</div>
+			</div>
+			<div fxFlex fxLayout="row" class="item">
+				<div class="t" fxFlex>Estado:</div>
+				<div class="c" fxFlex>{{data.nombreestado}}</div>
+			</div>
+			<div fxFlex fxLayout="row" class="item">
+				<div class="t" fxFlex>F. creación:</div>
+				<div class="c" fxFlex>{{data.fechacreacion.timestamp*1000 | date}}</div>
+			</div>
+		</div>
+
+		<div fxFlex="auto" fxLayout="column">
+			<!-- <div fxFlex fxLayout="row" class="item">
+				<div class="t" fxFlex>Id Tercero:</div>
+				<div class="c" fxFlex>{{data.idtercero}}</div>
+			</div> -->
+			<div fxFlex fxLayout="row" class="item">
+				<div class="t" fxFlex>N. Tercero</div>
+				<div class="c" fxFlex>{{data.numerotercero}}</div>
+			</div>
+			<div fxFlex fxLayout="row" class="item">
+				<div class="t" fxFlex>Nombres:</div>
+				<div class="c" fxFlex>{{data.nombrestercero}}</div>
+			</div>
+			<div fxFlex fxLayout="row" class="item">
+				<div class="t" fxFlex>Identificación</div>
+				<div class="c" fxFlex>{{data.identificaciontercero}}</div>
+			</div>
+		</div>
+
+		<div fxFlex="auto" fxLayout="column">
+			<div fxFlex fxLayout="row" class="item">
+				<div class="t" fxFlex>Dirección:</div>
+				<div class="c" fxFlex>{{data.descripciondireccion}}</div>
+			</div>
+			<div fxFlex fxLayout="row" class="item">
+				<div class="t" fxFlex>Municipio</div>
+				<div class="c" fxFlex>{{data.municipio}}</div>
+			</div>
+			<div fxFlex fxLayout="row" class="item">
+				<div class="t" fxFlex>Departamento:</div>
+				<div class="c" fxFlex>{{data.departamento}}</div>
+			</div>
+			<div fxFlex fxLayout="row" class="item">
+				<div class="t" fxFlex>Teléfonos</div>
+				<div class="c" fxFlex>
+					<span *ngIf="data.whatsappdireccion">{{data.whatsappdireccion}}</span>
+					<span *ngIf="data.whatsappdireccion && data.llamadadireccion"> - </span>
+					<span *ngIf="data.llamadadireccion">{{data.llamadadireccion}}</span>
+					<span *ngIf="data.llamadadireccion && data.celular1direccion"> - </span>
+					<span *ngIf="data.celular1direccion">{{data.celular1direccion}}</span>
+					<span *ngIf="data.celular1direccion && data.celular2direccion"> - </span>
+					<span *ngIf="data.celular2direccion">{{data.celular2direccion}}</span>
+				</div>
+			</div>
+		</div>
+
+		<div fxFlex="auto" fxLayout="column">
+			<div fxFlex fxLayout="row" class="item">
+				<div class="t" fxFlex>Plan:</div>
+				<div class="c" fxFlex>{{data.nombreplan}}</div>
+			</div>
+			<div fxFlex fxLayout="row" class="item">
+				<div class="t" fxFlex>Valor sin iva:</div>
+				<div class="c" fxFlex>{{"$ " + (data.valorsiniva | number)}}</div>
+			</div>
+			<div fxFlex fxLayout="row" class="item">
+				<div class="t" fxFlex>M. Permanencia:</div>
+				<div class="c" fxFlex>{{data.mesespermanencia + " Meses"}}</div>
+			</div>
+			<div fxFlex fxLayout="row" class="item">
+				<div class="t" fxFlex>IP:</div>
+				<div class="c" fxFlex>
+
+					<div *ngIf="data.ip;else noIp">
+						<a href="{{'http://' + data.ip}}" target="_blank" class="link">{{data.ip}}</a>
+						<button *ngIf="data.idtecnologiaplan == 2 && user['permisos']?.servicios?.ont?.ont_info"
+							mat-icon-button 
+							matTooltip="Detalle ONT" 
+							(click)="openOntInformation(data)">
+							<span class="fas fa-network-wired"></span>
+						</button>
+					</div>
+					<ng-template #noIp>Sin IP</ng-template>					
+				</div>
+				
+			</div>
+	
+			
+		</div>
+	</div>
+
+	<!-- CRATE OP SERVICIO -->
+	<div fxLayout="row" *ngIf="view == 'createOperacion'">
+
+		<div fxFlex="auto" fxLayout="column">
+			<div fxFlex fxLayout="row" class="item">
+				<div class="t" fxFlex>Id Solicitud:</div>
+				<div class="c" fxFlex>{{data.idsolicitudservicio}}</div>
+			</div>
+			<div fxFlex fxLayout="row" class="item">
+				<div class="t" fxFlex>Tipo Solicitud:</div>
+				<div class="c" fxFlex>{{data.idtiposolicitudservicio.nombre}}</div>
+			</div>
+			<div fxFlex fxLayout="row" class="item">
+				<div class="t" fxFlex>Estado Solicitud:</div>
+				<div class="c" fxFlex>{{data.idestadosolicitudservicio.nombre}}</div>
+			</div>		
+			<div fxFlex fxLayout="row" class="item">
+				<div class="t" fxFlex>F. creacion:</div>
+				<div class="c" fxFlex>{{data.fechacreacion.timestamp*1000 | date}}</div>
+			</div>	
+		</div>
+
+		<div fxFlex="auto" fxLayout="column">
+			<div fxFlex fxLayout="row" class="item">
+				<div class="t" fxFlex>Nivel Solicitud:</div>
+				<div class="c" fxFlex>{{data.idnivelsolicitudservicio.nombre}}</div>
+			</div>
+			<div fxFlex fxLayout="row" class="item">
+				<div class="t" fxFlex>Id servicio:</div>
+				<div class="c" fxFlex>{{data.idservicio.idservicio}}</div>
+			</div>
+			<div fxFlex fxLayout="row" class="item">
+				<div class="t" fxFlex>N. Servicio:</div>
+				<div class="c" fxFlex>{{data.idservicio.numeroservicio}}</div>
+			</div>
+			<div fxFlex fxLayout="row" class="item">
+				<div class="t" fxFlex>Estado Servicio:</div>
+				<div class="c" fxFlex>{{data.idservicio.idestadoservicio.nombre}}</div>
+			</div>
+		</div>
+
+
+		<div fxFlex="auto" fxLayout="column">
+			<div fxFlex fxLayout="row" class="item">
+				<div class="t" fxFlex="30">Tercero:</div>
+				<div class="c" fxFlex>{{data.idservicio.idtercero.nombres + " " + data.idservicio.idtercero.apellidos}}</div>
+			</div>
+
+			<div fxFlex fxLayout="row" class="item">
+				<div class="t" fxFlex="30">N. Tercero:</div>
+				<div class="c" fxFlex>{{data.idservicio.idtercero.numerotercero}}</div>
+			</div>
+			
+			<div fxFlex fxLayout="row" class="item">
+				<div class="t" fxFlex="30">Plan:</div>
+				<div class="c" fxFlex>{{data.idservicio.idplan.nombre}}</div>
+			</div>
+
+			<div fxFlex fxLayout="row" class="item">
+				<div class="t" fxFlex="30">Valor:</div>
+				<div class="c" fxFlex>$ {{data.idservicio.idplan.valorsiniva * (data.idservicio.idplan.iva > 0 ? ((data.idservicio.idplan.iva/100) + 1) : 1) | number}}</div>
+			</div>
+
+		
+		</div>
+
+		<div fxFlex="auto" fxLayout="column">
+			<div fxFlex fxLayout="row" class="item">
+				<div class="t" fxFlex="30">Dirección:</div>
+				<div class="c" fxFlex>{{data.idservicio.iddireccion.descripcion }}</div>
+			</div>
+
+			<div fxFlex fxLayout="row" class="item">
+				<div class="t" fxFlex="30">Barrio:</div>
+				<div class="c" fxFlex>{{data.idservicio.iddireccion.idbarrio ? data.idservicio.iddireccion.idbarrio.nombre : "Sin barrio." }}</div>
+			</div>
+			
+			<div fxFlex fxLayout="row" class="item">
+				<div class="t" fxFlex="30">Mun/Dpto:</div>
+				<div class="c" fxFlex>{{data.idservicio.iddireccion.idmunicipio.nombre + " - " + data.idservicio.iddireccion.idmunicipio.iddepartamento.nombre}}</div>
+			</div>
+
+			<div fxFlex fxLayout="row" class="item">
+				<div class="t" fxFlex="30">Teléfono:</div>
+				<div class="c" fxFlex>{{data.idservicio.iddireccion.celular1}}</div>
+			</div>
+			
+		</div>
+
+
+	</div>
+
+
+</section>
+

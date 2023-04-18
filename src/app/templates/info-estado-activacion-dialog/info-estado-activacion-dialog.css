@@ -1,0 +1,92 @@
+
+.mat-dialog-actions {
+	display: inherit;
+}
+
+.center {
+	text-align: center;
+}
+
+p {
+	font-weight: bold;
+	/* margin-bottom: 2em; */
+}
+
+.mat-dialog-content {
+	padding: 24px !important;
+}
+
+.numeroservicio {
+	font-weight: bold;
+	color: var(--primary);
+}
+
+mat-panel-title.mat-expansion-panel-header-title {
+	font-size: 20px;
+}
+
+.mat-expansion-panel-body {
+	text-align: left !important;
+}
+
+.icon-panel-title {
+	margin-right: 10px;
+	color: var(--secondary);
+}
+
+.mat-list{
+	text-align: left;
+}
+
+.mat-list-item{
+	display: inline-block;
+	width: auto;
+}
+
+.no-data {
+	font-size: 18px;
+	color: gray;
+	font-weight: normal;
+}
+
+.red {
+	color: red;
+}
+
+.green {
+	color:  var(--secondary);
+}
+
+.yellow{
+	color: yellow;
+}
+
+.gray{
+	color: gray;
+}
+
+.invoice-link{
+	text-decoration: none;
+	color: var(--primary);
+}
+
+.fecha-corte {
+	color: gray;
+	font-size: 15px;
+}
+
+.badge {
+	color: gray;
+	font-size: 15px;
+	align-content: baseline;
+	margin-top: 4px;
+	margin-left: 8px;
+}
+
+.estado-cuenta{
+	color: #a5a5a5;
+}
+
+.estado-cuenta.pago{
+	color: #98c221;
+}

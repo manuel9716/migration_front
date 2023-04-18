@@ -1,0 +1,43 @@
+.entity-information{
+    width: 100%;
+    background-color: #fff;
+}
+
+
+.item{
+    margin-bottom: 3px;
+    font-size: 0.8em;
+    text-align: center;
+}
+
+.t {
+    font-weight: bold;
+    color: #0099ef;
+    text-transform: uppercase;
+    padding: 5px;
+  
+}
+
+.c{
+    background-color: #dbf2ff;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.t,.c{
+    text-overflow:ellipsis;
+    white-space:nowrap; 
+    overflow:hidden;
+}
+
+.t:hover,.c:hover {
+    width: auto;
+    white-space: initial;
+    overflow:visible;
+    cursor: pointer;
+}
+  
+.ip-field{
+    display: flex;
+    align-items: center;
+}

@@ -1,0 +1,7 @@
+<button mat-raised-button color="primary" (click)="isBar = !isBar; graph()">
+    Cambiar a  <mat-icon>{{isBar ? 'pie_chart' : 'bar_chart'}}</mat-icon>
+</button>
+
+<div class="chart">
+    <canvas id="chart1"></canvas>
+</div>

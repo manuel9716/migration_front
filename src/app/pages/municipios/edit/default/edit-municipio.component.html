@@ -1,0 +1,34 @@
+<mat-toolbar color="primary" class="header-pages" fxLayout="row" fxLayoutAlign="space-between center">
+	<div [@animate]="{value:'*',params:{x:'50px'}}">
+		<span class="title">Municipios</span><br>
+		<span class="breadcrumb">Municipios > Editar</span>
+	</div>
+</mat-toolbar>
+
+<mat-card class="page-content-card">
+
+    <div  [@animate]="{value:'*',params:{y:'100%'}}">	
+		<div div fxLayout="row" fxLayoutAlign="start center" >
+			<button mat-icon-button color="primary" class="ml16" (click)="back()">
+				<i class="fas fa-arrow-left fa-2x"></i>
+			</button>
+			<span class="ml16" *ngIf="!municipio"><i class="fas fa-spinner fa-spin fa-lg"></i></span>
+			<h2 [@animate]="{value:'*',params:{x:'50px'}}" class="ml16" *ngIf="municipio">{{municipio?.nombremunicipio + " (" + municipio?.nombredepartamento + ")"}}</h2>
+		</div>
+		
+		<mat-tab-group *ngIf="municipio">
+			<mat-tab label="Barrios" *ngIf="user['permisos']?.municipios?.barrios">
+				<ng-template matTabContent>
+					<app-barrios [idMunicipio]="municipio.idmunicipio"></app-barrios>
+				</ng-template>
+			</mat-tab>
+			<mat-tab label="Planes" *ngIf="user['permisos']?.municipios?.planes">
+				<ng-template matTabContent>
+					<app-planes-municipio [idMunicipio]="municipio.idmunicipio"></app-planes-municipio>
+				</ng-template>
+			</mat-tab>
+		</mat-tab-group>
+		
+	</div>
+
+</mat-card>

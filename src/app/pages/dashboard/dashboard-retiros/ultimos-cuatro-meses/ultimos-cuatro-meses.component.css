@@ -1,0 +1,16 @@
+.texto-Info{
+    text-align: center;
+    margin-bottom: 18px;
+    margin-top: 10px;
+}
+
+.bold{
+    font-weight: bold;
+}
+.example-month-picker .mat-calendar-period-button {
+    pointer-events: none;
+  }
+  
+  .example-month-picker .mat-calendar-arrow {
+    display: none;
+  }

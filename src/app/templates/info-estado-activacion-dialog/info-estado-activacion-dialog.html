@@ -1,0 +1,169 @@
+<div class="center">
+
+	<h1 style="font-size: 25px;margin-top: 16px;" mat-dialog-title>Servicio Número:
+		<div style="display: inline-block;" *ngIf="!info"><i class="fas fa-spinner fa-spin"></i></div>
+		<span class="numeroservicio" *ngIf="info">{{info?.data?.numeroservicio}}</span>
+		<div class="fecha-corte">Fecha Corte: 
+			<div style="display: inline-block;" *ngIf="!info"><i class="fas fa-spinner fa-spin"></i></div>
+			<strong *ngIf="info">{{info?.data['fechacorte'].timestamp*1000 | date}}</strong>
+		</div>
+	</h1>
+
+
+	<div mat-dialog-content *ngIf="info">
+
+		<mat-accordion class="info-estado-activacion">
+			<!-- FACT BLOQUE -->
+			<mat-expansion-panel>
+				<mat-expansion-panel-header>
+					<mat-panel-title>
+						<i [ngClass]="{'red' : info['facturacionbloque'].length == 0}" class="icon-panel-title fas fa-file-invoice-dollar"></i> Facturación En Bloque
+						<span class="badge">{{'(' + info['facturacionbloque'].length + ')'}}</span>
+					</mat-panel-title>
+				</mat-expansion-panel-header>
+				<p class="no-data" *ngIf="info['facturacionbloque'].length == 0">Este servicio no está en facturación en
+					bloque.</p>
+				<mat-list>
+					<mat-list-item style="text-align: left;" *ngFor="let fb of info['facturacionbloque']">
+						<i mat-list-icon class="green fas fa-file-invoice-dollar"></i>
+						<h4 mat-line><strong>Saldo:</strong> ${{fb['saldo'] | number}}</h4>
+						<h5 mat-line><strong>Estado:</strong> {{fb['estado']}}</h5>
+						<h5 mat-line>{{fb['idinventario']}}</h5>
+					</mat-list-item>
+				</mat-list>
+			</mat-expansion-panel>
+
+			<!-- EST CUENTAS -->
+			<mat-expansion-panel>
+				<mat-expansion-panel-header>
+					<mat-panel-title>
+						<i [ngClass]="{'red' : facturaVencida}" class="icon-panel-title fas fa-wallet"></i> Estados De Cuentas
+						<span class="badge">{{'(' + info['estadoscuenta'].length + ')'}}</span>
+					</mat-panel-title>
+				</mat-expansion-panel-header>
+				<p class="no-data" *ngIf="info['estadoscuenta'].length == 0">Este servicio no tiene facturas asociadas.
+				</p>
+				<mat-list>
+					<mat-list-item style="text-align: left;" *ngFor="let ec of info['estadoscuenta']">
+						<i mat-list-icon [ngClass]="ec['facturavencida'] ? 'red' : 'green'" class="fas fa-wallet"></i>
+						<h4 mat-line><strong>Valor:</strong> ${{ec['valor'] | number}}</h4>
+						<h4 mat-line><strong>N° Factura: </strong>
+							<a *ngIf="ec['facturalink']" class="invoice-link" target="_blank" [href]="ec['facturalink']">{{ec['numerofactura']}}</a>
+							<span *ngIf="!ec['facturalink']" class="">{{ec['numerofactura']}}</span>
+						</h4>
+						<h5 mat-line><strong>F. Emisión:</strong> {{ec['fechaemision'].timestamp*1000 | date}}</h5>
+						<h5 mat-line><strong>F. Vencimiento:</strong> {{ec['fechavencimiento'].timestamp*1000 | date}}</h5>
+						<h5 mat-line><strong>Estado de pago: </strong> <span class="estado-cuenta" [ngClass]="ec['estadopago'] ? 'pago' : ''">{{ec['estadopago'] ? 'Pago' : 'No Pago'}}</span></h5>
+					</mat-list-item>
+				</mat-list>
+			</mat-expansion-panel>
+
+			<!-- CONVENIOS -->
+			<mat-expansion-panel>
+				<mat-expansion-panel-header>
+					<mat-panel-title>
+						<i [ngClass]="info['convenios'].length == 0 ? 'gray':'green'" class="icon-panel-title fas fa-comments-dollar"></i> Convenios
+						<span class="badge">{{'(' + info['convenios'].length + ')'}}</span>
+					</mat-panel-title>
+				</mat-expansion-panel-header>
+				<p class="no-data" *ngIf="info['convenios'].length == 0">Este servicio no tiene convenios.</p>
+				<mat-list>
+					<mat-list-item style="text-align: left;" *ngFor="let conv of info['convenios']">
+						<i mat-list-icon class="fas fa-comments-dollar"></i>
+						<h4 mat-line><strong>Estado:</strong> {{conv['estado'] == 1 ? 'Activo' : 'Inactivo'}}</h4>
+						<h5 mat-line><strong>F. Creación:</strong> {{conv['fechacreacion'].timestamp*1000 | date}}</h5>
+						<h5 mat-line><strong>Observaciones:</strong> {{conv['observaciones']}}</h5>
+					</mat-list-item>
+				</mat-list>
+			</mat-expansion-panel>
+
+			<!-- ACUERDOS TERCEROS -->
+			<mat-expansion-panel>
+				<mat-expansion-panel-header>
+					<mat-panel-title>
+						<i [ngClass]="info['acuerdosterceros'].length == 0 ? 'gray':'green'" class="icon-panel-title fas fa-hands-helping"></i> Acuerdos De Pago Del Tercero
+						<span class="badge">{{'(' + info['acuerdosterceros'].length + ')'}}</span>
+					</mat-panel-title>
+				</mat-expansion-panel-header>
+				<p class="no-data" *ngIf="info['acuerdosterceros'].length == 0">El tercero de este servicio no tiene
+					acuerdos de pago.</p>
+				<mat-list>
+					<mat-list-item style="text-align: left;" *ngFor="let apt of info['acuerdosterceros']">
+						<i mat-list-icon class="fas fa-hands-helping"></i>
+						<h4 mat-line><strong>Estado:</strong> {{apt['estado'] == 1 ? 'Activo' : 'Inactivo'}}</h4>
+						<h5 mat-line><strong>F. Solicitud:</strong> {{apt['fechasolicitud'].timestamp*1000 | date}}</h5>
+						<h5 mat-line><strong>F. Pago:</strong> {{apt['fechapago'].timestamp*1000 | date}}</h5>
+						<h5 mat-line><strong>Observaciones:</strong> {{apt['observaciones']}}</h5>
+					</mat-list-item>
+				</mat-list>
+			</mat-expansion-panel>
+
+			<!-- EXCEPCIONES -->
+			<mat-expansion-panel>
+				<mat-expansion-panel-header>
+					<mat-panel-title>
+						<i [ngClass]="info['excepciones'].length == 0 ? 'gray':'green'" class="icon-panel-title fas fa-exclamation-triangle"></i> Excepciones
+						<span class="badge">{{'(' + info['excepciones'].length + ')'}}</span>
+					</mat-panel-title>
+				</mat-expansion-panel-header>
+				<p class="no-data" *ngIf="info['excepciones'].length == 0">Este servicio no tiene excepciones.</p>
+				<mat-list>
+					<mat-list-item style="text-align: left;" *ngFor="let exc of info['excepciones']">
+						<i mat-list-icon class="fas fa-exclamation-triangle"></i>
+						<h4 mat-line><strong>Estado:</strong> {{exc['estado'] == 1 ? 'Activa' : 'Inactiva'}}</h4>
+						<h5 mat-line><strong>F. Creación:</strong> {{exc['fechacreacion'].timestamp*1000 | date}}</h5>
+						<h5 mat-line><strong>F. Finalización:</strong>
+							{{exc['fechafinalizacion'].timestamp*1000 | date}}</h5>
+						<h5 mat-line><strong>Observaciones:</strong> {{exc['observaciones']}}</h5>
+					</mat-list-item>
+				</mat-list>
+			</mat-expansion-panel>
+
+			<!-- RETIROS -->
+			<mat-expansion-panel>
+				<mat-expansion-panel-header>
+					<mat-panel-title>
+						<i [ngClass]="retiro ? 'red':'green'" class="icon-panel-title fas fa-sign-out-alt"></i> Retiros
+						<span class="badge">{{'(' + info['retiros'].length + ')'}}</span>
+					</mat-panel-title>
+				</mat-expansion-panel-header>
+				<p class="no-data" *ngIf="info['retiros'].length == 0">Este servicio no tiene retiros programados.</p>
+				<mat-list>
+					<mat-list-item style="text-align: left;" *ngFor="let ret of info['retiros']">
+						<i mat-list-icon [ngClass]="ret['retiroprogramado'] ? 'red':'yellow'" class="fas fa-sign-out-alt"></i>
+						<h4 mat-line><strong>F. Retiro:</strong> {{ret['fecharetiro'].timestamp*1000 | date}}</h4>
+						<h5 mat-line><strong>F. Creación:</strong> {{ret['fechacreacion'].timestamp*1000 | date}}</h5>
+					</mat-list-item>
+				</mat-list>
+			</mat-expansion-panel>
+
+			<!-- SUSPENSIONES -->
+			<mat-expansion-panel>
+				<mat-expansion-panel-header>
+					<mat-panel-title>
+						<i [ngClass]="suspencion ? 'red':'green'" class="icon-panel-title fas fa-calendar-minus"></i> Suspensiones
+						<span class="badge">{{'(' + info['suspensiones'].length + ')'}}</span>
+					</mat-panel-title>
+				</mat-expansion-panel-header>
+				<p class="no-data" *ngIf="info['suspensiones'].length == 0">Este servicio no tiene suspensiones
+					programadas.</p>
+				<mat-list>
+					<mat-list-item style="text-align: left;" *ngFor="let susp of info['suspensiones']">
+						<i mat-list-icon [ngClass]="susp['suspendido'] ? 'red':'yellow'" class="fas fa-calendar-minus"></i>
+						<h4 mat-line><strong>F. Inicio:</strong> {{susp['fechainicio'].timestamp*1000 | date}}</h4>
+						<h4 mat-line><strong>F. Fin:</strong> {{susp['fechafin'].timestamp*1000 | date}}</h4>
+						<h5 mat-line><strong>F. Creación:</strong> {{susp['fechacreacion'].timestamp*1000 | date}}</h5>
+					</mat-list-item>
+				</mat-list>
+			</mat-expansion-panel>
+		</mat-accordion>
+
+
+
+	</div>
+
+
+	<div mat-dialog-actions>
+		<button mat-raised-button [mat-dialog-close]="true" cdkFocusInitial>Cerrar</button>
+	</div>
+</div>

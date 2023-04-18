@@ -1,0 +1,12 @@
+.top-buttons{
+    text-align: right;
+}
+.solicitudTomada{
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.ip-field{
+    display: flex;
+    align-items: center;
+}

@@ -1,0 +1,48 @@
+<mat-progress-bar mode="indeterminate" *ngIf="cargando"></mat-progress-bar>
+<br>
+<div [formGroup]="formConsulta" fxLayout="column" fxLayoutAlign="center center"
+    [@animate]="{value:'*',params:{x:'-50px'}}">
+    <div fxLayout="row">
+        <mat-form-field fxLayoutAlign="center center" fxFlex class="pr20 no-pb align-item-c " appearance="outline">
+            <mat-label>Variable para graficar</mat-label>
+            <mat-select formControlName="tipoBusquedaForm" (selectionChange)="graficar()">
+                <mat-option *ngFor="let flitro of filtrosPor " [value]="flitro.value">
+                    {{flitro.descripcion}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <div
+            *ngIf="(formConsulta.controls.tipoBusquedaForm.value==5 || formConsulta.controls.tipoBusquedaForm.value==6) && municipiosselect != []">
+            <br><br>
+            <mat-form-field fxLayoutAlign="center center" fxFlex class="pr20 no-pb align-item-c" appearance="outline">
+                <mat-label>Selecione Municipio</mat-label>
+                <mat-select formControlName="cargaMunicipios" (selectionChange)="selectMunicipioRetiro()">
+                    <mat-option *ngFor="let municipio of municipiosselect" [value]="municipio.nIndex">
+                        {{municipio.nombre}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div
+            *ngIf="(formConsulta.controls.tipoBusquedaForm.value==5 || formConsulta.controls.tipoBusquedaForm.value==6) && municipiosselect != []">
+            <div fxFlex class="pr20 no-pb align-item-c" fxLayoutAlign="center center">
+                <button *ngIf="cargando == false" (click)="visualizarTablaRetirosVsMunicipios('Retiros')"
+                    mat-raised-button color="accent">
+                    Ver tabla General
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="formConsulta.controls.tipoBusquedaForm.value ==5 && municipiosselect.length>0">
+    <app-graficas-retiro [cont]='cuentaMunicipiosVsVariable' [datosFiltrados]='dataPie'
+        [variable]="'retiros programados en ' + municipiosselect[formConsulta.controls.cargaMunicipios.value].nombre + ' / filtrado por motivo de retiro' ">
+    </app-graficas-retiro>
+</div>
+<div *ngIf="formConsulta.controls.tipoBusquedaForm.value ==6 && municipiosselect.length>0">
+    <app-graficas-retiro [cont]='cuentaMunicipiosVsVariable' [datosFiltrados]='dataPie'
+        [variable]="'retiros programados en ' + municipiosselect[formConsulta.controls.cargaMunicipios.value].nombre  + ' / filtrado por estado de retiro'">
+    </app-graficas-retiro>
+</div>

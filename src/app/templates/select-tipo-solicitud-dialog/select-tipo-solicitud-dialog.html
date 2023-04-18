@@ -1,0 +1,24 @@
+<div class="center">
+
+	<h1 style="font-size: 25px;margin-top: 16px;" mat-dialog-title>Tipos de Solicitud</h1>
+
+	<div mat-dialog-content>
+		<div fxLayout="row" fxLayoutAlign="space-between none">
+			<div  class="grupo-wrapper mat-elevation-z2" *ngFor="let grupo of grupos">
+				<div [formGroup]="formGruposTipos">
+					<div class="name-grupo"> <mat-checkbox [formControlName]="grupo['nombre']"(change)="SelectAllGrup(grupo['nombre'])" >{{grupo['nombre']}}</mat-checkbox></div>
+				</div>
+				
+				
+				<div *ngFor="let tipo of grupo['tipos']" [formGroup]="formTipos">
+					<!-- [(ngModel)]="tipo['status']" -->
+					<mat-checkbox [formControlName]="tipo['nombre']" [(ngModel)]="tipo['status']"  >{{tipo['nombre']}}</mat-checkbox>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div mat-dialog-actions>
+		<button mat-raised-button (click)="cancel()" cdkFocusInitial>Cerrar</button>
+	</div>
+</div>

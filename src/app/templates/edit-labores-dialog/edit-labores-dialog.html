@@ -1,0 +1,29 @@
+<mat-toolbar color="primary" class="toolbar-header-dialog">
+   <h2>Editar la labor</h2>
+</mat-toolbar>
+
+<div mat-dialog-content>     
+   
+   <div class="mat-elevation-z5 m-10 of-auto" >
+  <div  fxLayout="row" fxLayoutAlign="center center">
+
+     <mat-form-field appearance="outline"  class="mr20">
+        <mat-label>Selecione Labor</mat-label>
+        <mat-select >
+           <!-- <mat-select [(ngModel)]="filters['estadolabor']"> -->
+            <mat-option *ngFor="let labor of data['labores']" [value]="labor">{{labor}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+  </div>
+
+      
+   </div>
+   
+   <!-- <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons="true"></mat-paginator> -->
+</div>
+
+
+<div mat-dialog-actions align="end">
+   <button color='primary' mat-raised-button [mat-dialog-close] cdkFocusInitial>Guardar</button>
+</div>

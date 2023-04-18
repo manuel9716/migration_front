@@ -1,0 +1,94 @@
+/* table tr:hover {
+	background: rgba(29, 31, 34, 0.06);
+}
+ */
+table tr,
+td {
+	height: 33px;
+	font-size: 14px;
+}
+
+tr:nth-child(odd) {
+	background-color: #f2f2f2;
+}
+
+table th {
+	font-size: 12px;
+	background-color: #ffffff;
+	border-bottom: 1px solid;
+}
+
+#barra_opciones {
+	width: 100%;
+}
+
+#containerTitulo {
+	flex-direction: column !important;
+	flex-wrap: nowrap;
+	margin-left: -40px;
+	margin-right: 40px;
+}
+
+.buttonSize {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.no-date-table {
+	padding-bottom: 20px;
+}
+
+.buttonColor {
+	background: white;
+}
+
+.buttonColor mat-icon {
+	color: var(--first-bg-color);
+}
+
+@media screen and (min-width: 1300px) and (max-width: 1600px) {
+	.title {
+		font-size: 39px;
+	}
+	.breadcrumb {
+		font-size: medium;
+	}
+}
+
+@media screen and (min-width: 780px) and (max-width: 1299px) {
+	.title {
+		font-size: 24px;
+		margin-left: 40px;
+	}
+	.breadcrumb {
+		font-size: medium;
+		margin-left: 40px;
+	}
+}
+
+@media screen and (max-width: 779px) {
+	.title {
+		font-size: 16px;
+		margin-left: 40px;
+	}
+	.breadcrumb {
+		font-size: small;
+		margin-left: 40px;
+	}
+}
+
+#divChart {
+	width: 60%;
+	height: 580px;
+	display: flex;
+    flex-direction: column;
+	margin: 2% auto;
+	background: #f2f2f2;
+	box-shadow: 0px 3px 5px -1px rgb(0 0 0 / 20%),
+		0px 5px 8px 0px rgb(0 0 0 / 14%), 0px 1px 14px 0px rgb(0 0 0 / 12%);
+}
+
+#chart1{
+	margin: 0 15px 15px;
+}

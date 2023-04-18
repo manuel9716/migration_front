@@ -1,0 +1,10 @@
+.main-container-loader{
+   background-color: var(--first-bg-color);
+   height: 100%;
+   width: 100%;
+}
+
+.main-loader{
+   text-align: center;
+   
+}

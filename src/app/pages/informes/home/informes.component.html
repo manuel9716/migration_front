@@ -1,0 +1,26 @@
+<mat-toolbar color="primary" class="header-pages">
+    <div [@animate]="{value:'*',params:{x:'50px'}}">
+        <span class="title"> Informes </span><br>
+        <span class="breadcrumb">Página de inicio </span>
+    </div>
+</mat-toolbar>
+
+<mat-card class="page-content-card">
+    <div class="title-grafic">
+        <span class=" mat-display-1">consultar informes</span>
+    </div>
+    <div class="conten-op" fxLayout="row" fxLayoutAlign="space-evenly   center">
+        <div class="card-dasboard" *ngIf="user['permisos']?.informes?.desplazamientos">
+            <a class="link-gra" (click)="openDialog()">
+                <i mat-list-icon class="fas fa-file-csv icon-dasboard-bitwan"></i>
+                <h2 class="mat-h2">Desplazamientos</h2>
+            </a>
+        </div>
+        <div class="card-dasboard" *ngIf="user['permisos']?.dashboard?.nuevosModulos">
+            <a class="link-gra" routerLink="/dashboard/ventas/historialsolicitudes">
+                <i mat-list-icon class="fas fa-history icon-dasboard-bitwan"></i>
+                <h2 class="mat-h2">Historial de solicitudes por municipio</h2>
+            </a>
+        </div>
+    </div>
+</mat-card>

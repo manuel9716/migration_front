@@ -1,0 +1,62 @@
+<mat-toolbar fxLayout="row" fxLayoutAlign="center center" color="primary">
+	<h4>CAMBIAR ESTADO DEL RETIRO</h4>
+</mat-toolbar>
+
+<div class="separator"></div>
+
+
+<form name="form" [formGroup]="form" [@animate]="{value:'*',params:{y:'50px'}}" (ngSubmit)="onSubmit()" novalidate>
+
+	<table class="vertical-table odd-children w-100">
+		<tr>
+			<td class="title">Estado Actual:</td>
+			<td class="content">
+				<span class="est-ret est-ret-{{ data['idestadoretiro']}}">{{ data['nombreestadoretiro'] }}</span>
+			
+			</td>
+			<td class="title">Fecha Retiro:</td>
+			<td class="content">{{data['fecharetiro'] | date}}</td>
+		</tr>
+
+		<tr>
+			<td class="title">Fecha Creado:</td>
+			<td class="content">{{data['fechacreacion'] | date:'medium'}}</td>
+			<td class="title">Servicio:</td>
+			<td class="content">{{data['numeroservicio']}}</td>
+		</tr>
+
+		<tr>
+			<td class="title">Plan:</td>
+			<td class="content">{{data['plan']}}</td>
+			<td class="title">Tercero:</td>
+			<td class="content">{{data['nombrestercero'] + ' ' + data['apellidostercero']}}</td>
+		</tr>
+
+		<tr>
+			<td class="title">Observaciones:</td>
+			<td colspan="3" class="content">{{data['observaciones'] ? data['observaciones'] : 'Sin observaciones.'}}</td>
+		</tr>
+	</table>
+	
+	<mat-form-field appearance="outline" style="width: 50%; display: block; margin: 0 auto; margin-top: 32px;">
+		<mat-label>Nuevo estado retiro</mat-label>
+		<mat-select formControlName="idestadoretiro" required>
+			<mat-option [disabled]="estado.idestadoretiro == data.idestado" *ngFor="let estado of estadosRetiros" [value]="estado.idestadoretiro">
+				{{estado.nombre}}
+			</mat-option>
+		</mat-select>
+		<mat-error>Nuevo Estado retiro requerido</mat-error>
+	</mat-form-field>
+
+
+	<div class="separator"></div>
+	<span class="error" *ngIf="error" [@animate]="{value:'*',params:{y:'50px'}}">{{error}}</span>
+
+	<div class="content-form-submit">
+		<button mat-raised-button class="btn-form-submit" type="button" (click)="close()" [disabled]="loading">Cancelar</button>
+		<button mat-raised-button class="btn-form-submit" type="submit" color="primary" [disabled]="form.invalid || loading">Cambiar estado</button>
+	</div>
+
+	<mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+</form>
+

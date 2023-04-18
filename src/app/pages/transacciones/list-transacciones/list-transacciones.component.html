@@ -1,0 +1,157 @@
+<mat-toolbar color="primary" class="header-pages">
+	<div [@animate]="{value:'*',params:{x:'50px'}}">
+		<span class="title">Transacciones</span><br>
+		<span class="breadcrumb">Transacciones > Listar</span>
+	</div>
+</mat-toolbar>
+
+<mat-card class="page-content-card">
+
+	<!-- HEADER -->
+
+
+ 
+	<div fxLayout="column" fxLayoutAlign="start stretch" [@animate]="{value:'*',params:{x:'-50px'}}">
+
+        <div fxFlex fxLayout="row">
+            <mat-form-field appearance="outline" fxFlex class="pr20 no-pb">
+                <mat-label>Identificacion</mat-label>
+                <input matInput [(ngModel)]="filters['identificacion']">
+                <button mat-button *ngIf="filters['identificacion']" matSuffix mat-icon-button aria-label="Clear"
+                    (click)="filters['numerofactura'] = null">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" fxFlex class="pr20 no-pb">
+                <mat-label>Número Factura</mat-label>
+                <input matInput [(ngModel)]="filters['numerofactura']">
+                <button mat-button *ngIf="filters['numerofactura']" matSuffix mat-icon-button aria-label="Clear"
+                    (click)="filters['numerofactura'] = null">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+    
+            <mat-form-field appearance="outline" fxFlex class="pr20 no-pb">
+                <mat-label>Número Comprobante</mat-label>
+                <input matInput [(ngModel)]="filters['numerocomprobante']">
+                <button mat-button *ngIf="filters['numerocomprobante']" matSuffix mat-icon-button aria-label="Clear"
+                    (click)="filters['numerocomprobante'] = null">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" fxFlex class="no-pb">
+                <mat-label>Valor</mat-label>
+                <input matInput type="number" [(ngModel)]="filters['valor']">
+                <button mat-button *ngIf="filters['valor']" matSuffix mat-icon-button aria-label="Clear"
+                    (click)="filters['valor'] = null">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+        </div>
+
+        <div fxFlex fxLayout="row" class="mt10">
+            <mat-form-field appearance="outline" fxFlex class="pr20 no-pb">
+                <mat-label>Fecha Pago</mat-label>
+                <input [(ngModel)]="filters['fechapago']" matInput [matDatepicker]="fechaPago">
+                <mat-datepicker-toggle matSuffix [for]="fechaPago"></mat-datepicker-toggle>
+                <mat-datepicker touchUi #fechaPago></mat-datepicker>
+            </mat-form-field>
+    
+            <mat-form-field appearance="outline" fxFlex class="pr20 no-pb">
+                <mat-label>Convenios de Pago</mat-label>
+                <mat-select multiple [(ngModel)]="filters['idconveniospago']" [disabled]="!conveniosPago">
+                    <mat-option *ngFor="let convenioPago of conveniosPago" [value]="convenioPago.idconveniopago">{{convenioPago.nombre}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" fxFlex class="no-pb">
+                <mat-label>Estados Transacciones</mat-label>
+                <mat-select multiple [(ngModel)]="filters['idestadostransaccion']" [disabled]="!estadosTransaccion">
+                    <mat-option 
+                        [ngClass]="'estado-transaccion-' + estadoTransaccion.idestadotransaccion"
+                        *ngFor="let estadoTransaccion of estadosTransaccion" 
+                        [value]="estadoTransaccion.idestadotransaccion">
+                        {{estadoTransaccion.nombre}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <div fxFlex="10" fxLayout="row" fxLayoutAlign="center center">
+
+                <button mat-icon-button class="pr20" matTooltip="Borrar filtros" (click)="resetFilters()">
+                    <i class="fas fa-backspace"></i>
+                </button>
+    
+                <button mat-mini-fab color="primary" matTooltip="Buscar" (click)="search()">
+                    <mat-icon>search</mat-icon>
+                </button>
+            </div>
+        </div>
+
+	</div>
+
+	<div class="separator20"></div>
+
+
+	<!-- CONTENT -->
+
+	<mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+
+	<div class="mat-elevation-z5" [@animate]="{value:'*',params:{y:'100%'}}">
+
+		<table mat-table [dataSource]="dataSource" matSort>
+
+			<ng-container matColumnDef="idtransaccion">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> Id Transacción </th>
+				<td mat-cell *matCellDef="let row"> {{row.idtransaccion}}</td>
+			</ng-container>
+
+			<ng-container matColumnDef="identificacion">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> Identificación </th>
+				<td mat-cell *matCellDef="let row"> {{row.identificacion}} </td>
+			</ng-container>
+
+			<ng-container matColumnDef="numerofactura">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> Número Factura </th>
+				<td mat-cell *matCellDef="let row"> {{row.numerofactura}} </td>
+			</ng-container>
+
+			<ng-container matColumnDef="numerocomprobante">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> Número Comprobante </th>
+				<td mat-cell *matCellDef="let row"> {{row.numerocomprobante}} </td>
+			</ng-container>
+
+			<ng-container matColumnDef="valor">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> Valor </th>
+				<td mat-cell *matCellDef="let row"> {{row.valor | currency : 'COP' : 'symbol' : '1.0'}} </td>
+			</ng-container>
+
+            <ng-container matColumnDef="fechapago">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha Pago </th>
+				<td mat-cell *matCellDef="let row"> {{row.fechapago | date:'medium'}} </td>
+			</ng-container>
+
+            <ng-container matColumnDef="nombreestadotransaccion">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> Estado Transacción </th>
+				<td mat-cell *matCellDef="let row" class="estado-transaccion" [ngClass]="'estado-transaccion-' + row.idestadotransaccion"> {{row.nombreestadotransaccion}} </td>
+			</ng-container>
+
+            <ng-container matColumnDef="nombreconveniopago">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> Convenio </th>
+				<td mat-cell *matCellDef="let row"> {{row.nombreconveniopago}} </td>
+			</ng-container>
+
+			<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+			<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+		</table>
+
+		<div *ngIf="dataSource?.data?.length === 0" class="no-date-table">
+			No hay información para mostrar.
+		</div>
+
+		<mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons="true"></mat-paginator>
+
+	</div>
+
+</mat-card>

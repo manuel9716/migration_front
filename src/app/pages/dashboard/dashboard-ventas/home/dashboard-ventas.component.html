@@ -1,0 +1,32 @@
+<mat-toolbar color="primary" class="header-pages">
+    <div [@animate]="{value:'*',params:{x:'50px'}}">
+        <span class="title"> Ventas </span><br>
+        <span class="breadcrumb">Dashboard > Ventas </span>
+    </div>
+</mat-toolbar>
+
+<mat-card class="page-content-card">
+    <div class="title-grafic">
+        <span class=" mat-display-1">Gráficos, datos y estadísticas</span>
+    </div>
+    <div class="conten-op" fxLayout="row" fxLayoutAlign="space-evenly   center">
+        <div class="card-dasboard" *ngIf="user['permisos']?.dashboard?.ventas">
+            <a class="link-gra" routerLink="/dashboard/ventas/historialestados">
+                <i mat-list-icon class="fas fa-clipboard-list icon-dasboard-bitwan"></i>
+                <h2 class="mat-h2">Historial estado de solicitudes</h2>
+            </a>
+        </div>
+        <div class="card-dasboard" *ngIf="user['permisos']?.dashboard?.ventas">
+            <a class="link-gra" routerLink="/dashboard/ventas/historialsolicitudes">
+                <i mat-list-icon class="fas fa-history icon-dasboard-bitwan"></i>
+                <h2 class="mat-h2">Historial de solicitudes por municipio</h2>
+            </a>
+        </div>
+        <div class="card-dasboard" *ngIf="user['permisos']?.dashboard?.ventas">
+            <a class="link-gra" routerLink="/dashboard/ventas/ventasdiariasmuncipios">
+                <i mat-list-icon class="fas fa-clipboard icon-dasboard-bitwan"></i>
+                <h2 class="mat-h2">Historial de ventas diarias por municipio</h2>
+            </a>
+        </div>
+    </div>
+</mat-card>

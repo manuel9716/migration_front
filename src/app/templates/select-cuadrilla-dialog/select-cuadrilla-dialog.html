@@ -1,0 +1,61 @@
+<mat-toolbar color="primary" class="toolbar-header-dialog">
+   <h2>POR FAVOR ASIGNE UNA CUADRILLA PARA LA AGENDA</h2>
+</mat-toolbar>
+
+<div mat-dialog-content>
+
+      <div class="top-filters m-10">
+         <mat-form-field appearance="outline" style="width: 100%;" class="no-pb">
+            <mat-label>Buscar cuadrilla</mat-label>
+            <input matInput (keyup)="applyFilter($event.target.value)" [(ngModel)]="cuadrillaSearch">
+            <mat-icon matPrefix class="secondary-text">search</mat-icon>
+            <button mat-button *ngIf="cuadrillaSearch" matSuffix mat-icon-button aria-label="Clear"
+               (click)="cuadrillaSearch=''; applyFilter('')">
+               <mat-icon>close</mat-icon>
+            </button>
+         </mat-form-field>
+      </div>
+      
+   <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+   
+   <div class="mat-elevation-z5 m-10 of-auto">
+      <table mat-table class="compact-table" [dataSource]="dataSource" matSort>
+         
+         <ng-container matColumnDef="numeroservicio">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Número Cuadrilla </th>
+            <td mat-cell *matCellDef="let row"> {{row.numeroservicio}} </td>
+         </ng-container>
+         
+         
+         <ng-container matColumnDef="nombres">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Representante </th>
+            <td mat-cell *matCellDef="let row" matTooltip="{{'Número: ' + row.numerotercero}}"> {{row.nombres + " " + row.apellidos}} </td>
+         </ng-container>
+         
+                 
+         <ng-container matColumnDef="actions" stickyEnd>
+            <th mat-header-cell *matHeaderCellDef> </th>
+            <td mat-cell *matCellDef="let row">
+               <button mat-icon-button color="primary" matTooltip="Seleccionar" (click)="selectCuadrilla(row)">
+                  <mat-icon>check</mat-icon>
+               </button>
+            </td>
+         </ng-container>
+         
+         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+         <tr mat-row *matRowDef="let row; columns: displayedColumns;" (dblclick)="selectCuadrilla(row)"></tr>
+      </table> 
+      
+      <div *ngIf="dataSource?.data?.length === 0" class="no-date-table" style="margin:20px">
+         No se encontraron cuadrillas.
+      </div>
+      
+   </div>
+   
+   <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons="true"></mat-paginator>
+</div>
+
+
+<div mat-dialog-actions align="end">
+   <button mat-raised-button [mat-dialog-close] cdkFocusInitial>Cerrar</button>
+</div>

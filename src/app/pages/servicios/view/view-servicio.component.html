@@ -1,0 +1,297 @@
+<mat-toolbar color="primary" class="header-pages" fxLayout="row" fxLayoutAlign="space-between center">
+	<div [@animate]="{value:'*',params:{x:'50px'}}">
+		<span class="title">Servicio</span><br>
+		<span class="breadcrumb">Servicio > {{breadcrumb}}</span>
+	</div>
+	<div [@animate]="{value:'*',params:{x:'-50px'}}" *ngIf="servicio" class="status">
+		Estado Activación: <span [ngClass]="servicio.estadoactivacion ? 'ea-active': 'ea-inactive'">{{servicio.estadoactivacion ? 'ACTIVO': 'INACTIVO'}}</span>
+		<button mat-icon-button color="{{servicio.estadoactivacion ? 'accent' : 'warn'}}" matTooltip="Información de estado" (click)="getInfoEstadoActivacion()">
+			<mat-icon>info</mat-icon>
+		</button>
+	</div>
+</mat-toolbar>
+
+<div class="banner-retiro" *ngIf="retiro && retiro['idretiro']" fxLayoutAlign=" center" >
+	<mat-icon style="margin-right: 5px">warning</mat-icon>Este servicio tiene un retiro en estado<strong style="margin: 0px 5px;">{{ retiro.nombreestadoretiro}}</strong>programado para el día {{retiro?.fecharetiro | date}}
+</div>
+<div class="banner-retiro" *ngIf="suspension && suspension['idsuspension']" fxLayoutAlign=" center" > 
+	<mat-icon style="margin-right: 5px">warning</mat-icon>
+	Este servicio tiene una suspensión programada entre los días {{suspension['fechainicio'] | date}} y {{suspension['fechafin'] | date}} 
+</div>
+
+<mat-card class="page-content-card">
+
+	<app-entity-information *ngIf="servicio" [data]="servicio" [view]="'viewServicio'"></app-entity-information>
+
+	<mat-progress-bar mode="indeterminate" *ngIf="!servicio"></mat-progress-bar>
+
+	<mat-tab-group *ngIf="servicio" [selectedIndex]="selectedTab" (selectedTabChange)="changeTab($event)">
+
+		<!-- SERVICIO -->
+		<mat-tab label="Servicio">
+			<ng-template matTabContent>
+				<div class="m-10">
+
+					<div [@animate]="{value:'*',params:{y:'50px'}}">
+					
+						<div fxLayout="column" fxLayoutAlign="start" fxLayout.gt-md="row">
+							<div fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto">
+					
+								<div fxLayout="row" fxLayoutAlign="start start" fxFlex="1 0 auto">
+
+									<div fxFlex class="p-20">
+										<h2 fxLayoutAlign="center">Servicio</h2>
+										<table class="vertical-table odd-children w-100">
+
+											<tr>
+												<td class="title">IP: </td>
+												<td class="content">
+													<span *ngIf="!servicio['ip']">Sin IP</span>
+													<a href="{{'http://servicio' + servicio['ip']}}" target="_blank" class="link">{{servicio['ip']}}</a>
+												</td>
+												<td class="btn-edit">
+													<span *ngIf="user?.permisos?.servicios?.editar?.ip" (click)="editField('ip')"> <i class="edit fas fa-pen" ></i></span>
+													<span *ngIf="user?.permisos?.servicios?.editar?.ip && servicio?.ip" (click)="deleteField('ip')"> <i class="delete fas fa-trash"></i></span>
+												</td>
+											</tr>
+											
+											<tr>
+												<td class="title">Puerto Caja: </td>
+												<td class="content">{{servicio?.puertocaja}}</td>
+												<td class="btn-edit">
+													<span *ngIf="user?.permisos?.servicios?.editar?.puertocaja" (click)="editField('puertocaja')"> <i class="edit fas fa-pen" ></i></span>
+													<span *ngIf="user?.permisos?.servicios?.editar?.puertocaja && servicio?.puertocaja" (click)="deleteField('puertocaja')"> <i class="delete fas fa-trash"></i></span>
+												</td>
+												<!-- <td class="btn-edit" (click)="editField('puertocaja')"><i *ngIf="user?.permisos?.servicios?.editar?.puertocaja" class="edit fas fa-pen"></i></td> -->
+											</tr>
+
+											<tr>
+												<td class="title">N° Caja Nap: </td>
+												<td class="content">{{servicio?.ncajanap}}</td>
+												<td class="btn-edit">
+													<span *ngIf="user?.permisos?.servicios?.editar?.ncajanap" (click)="editField('ncajanap')"> <i class="edit fas fa-pen" ></i></span>
+													<span *ngIf="user?.permisos?.servicios?.editar?.ncajanap && servicio?.ncajanap" (click)="deleteField('ncajanap')"> <i class="delete fas fa-trash"></i></span>
+												</td>
+												<!-- <td class="btn-edit" (click)="editField('ncajanap')"><i *ngIf="user?.permisos?.servicios?.editar?.ncajanap" class="edit fas fa-pen"></i></td> -->
+											</tr>
+
+											<tr>
+												<td class="title">Serial ONT: </td>
+												<td class="content">{{servicio?.serialont}}</td>
+												<td class="btn-edit">
+													<span *ngIf="user?.permisos?.servicios?.editar?.serialont" (click)="editField('serialont')"> <i class="edit fas fa-pen" ></i></span>
+													<span *ngIf="user?.permisos?.servicios?.editar?.serialont && servicio?.serialont" (click)="deleteField('serialont')"> <i class="delete fas fa-trash"></i></span>
+												</td>
+												<!-- <td class="btn-edit" (click)="editField('serialont')"><i *ngIf="user?.permisos?.servicios?.editar?.serialont" class="edit fas fa-pen"></i></td> -->
+											</tr>
+
+											<tr>
+												<td class="title">ONT ID: </td>
+												<td class="content">{{servicio?.ontid}}</td>
+												<td class="btn-edit">
+													<span *ngIf="user?.permisos?.servicios?.editar?.ontid" (click)="editField('ontid')"> <i class="edit fas fa-pen" ></i></span>
+													<span *ngIf="user?.permisos?.servicios?.editar?.ontid && servicio?.ontid" (click)="deleteField('ontid')"> <i class="delete fas fa-trash"></i></span>
+												</td>
+												<!-- <td class="btn-edit" (click)="editField('ontid')"><i *ngIf="user?.permisos?.servicios?.editar?.ontid" class="edit fas fa-pen"></i></td> -->
+											</tr>
+
+											<tr>
+												<td class="title">Potencia Caja Nap: </td>
+												<td class="content">{{servicio?.potcajanap}}</td>
+												<td class="btn-edit">
+													<span *ngIf="user?.permisos?.servicios?.editar?.potcajanap" (click)="editField('potcajanap')"> <i class="edit fas fa-pen" ></i></span>
+													<span *ngIf="user?.permisos?.servicios?.editar?.potcajanap && servicio?.potcajanap" (click)="deleteField('potcajanap')"> <i class="delete fas fa-trash"></i></span>
+												</td>
+												<!-- <td class="btn-edit" (click)="editField('potcajanap')"><i *ngIf="user?.permisos?.servicios?.editar?.potcajanap" class="edit fas fa-pen"></i></td> -->
+											</tr>
+
+											<tr>
+												<td class="title">Potencia ONT: </td>
+												<td class="content">{{servicio?.potont}}</td>
+												<td class="btn-edit">
+													<span *ngIf="user?.permisos?.servicios?.editar?.potont" (click)="editField('potont')"> <i class="edit fas fa-pen" ></i></span>
+													<span *ngIf="user?.permisos?.servicios?.editar?.potont && servicio?.potont" (click)="deleteField('potont')"> <i class="delete fas fa-trash"></i></span>
+												</td>
+												<!-- <td class="btn-edit" (click)="editField('potont')"><i *ngIf="user?.permisos?.servicios?.editar?.potont" class="edit fas fa-pen"></i></td> -->
+											</tr>
+
+											<tr>
+												<td class="title">Fecha creación: </td>
+												<td class="content">{{servicio?.fechacreacion.timestamp*1000 | date}}</td>
+											</tr>
+
+											<!-- <tr>
+												<td class="title">Id servicio: </td>
+												<td class="content">{{servicio?.idservicio}}</td>
+											</tr> -->
+											<!-- <tr>
+												<td class="title">Número servicio: </td>
+												<td class="content">{{servicio?.numeroservicio}}</td>
+											</tr>
+											<tr>
+												<td class="title">Estado Instalación: </td>
+												<td class="content" matTooltip="{{servicio?.descripcionestado}}"> {{servicio?.nombreestado}}
+												</td>
+											</tr>
+											<tr>
+												<td class="title">Estado Activación: </td>
+													<td class="content" *ngIf="servicio"> {{servicio.estadoactivacion ? 'ACTIVO': 'INACTIVO'}}</td>
+												</tr>
+											<tr>
+												<td class="title">Tipo: </td>
+												<td class="content" matTooltip="{{servicio?.descripciontipo}}"> {{servicio?.nombretipo}}
+												</td>
+											</tr>
+											<tr>
+												<td class="title">Fecha creación: </td>
+												<td class="content">{{servicio?.fechacreacion.timestamp*1000 | date}}</td>
+											</tr> -->
+										</table>
+									</div>
+					
+									<div fxFlex class="p-20">
+										<h2 fxLayoutAlign="center" (click)="editPlan()">Plan 
+										<i class="edit fas fa-pen" *ngIf="user['permisos']?.servicios?.editar?.plan"></i></h2>
+										<table class="vertical-table odd-children w-100">
+											<tr>
+												<td class="title">Id Plan: </td>
+												<td class="content">{{servicio?.idplan}}</td>
+											</tr>
+											<tr>
+												<td class="title">Nombre: </td>
+												<td class="content" matTooltip="{{servicio?.descripcionplan}}"> {{servicio?.nombreplan}}
+												</td>
+											</tr>
+											<tr>
+												<td class="title">Valor sin iva: </td>
+												<td class="content" currencyMask>{{servicio?.valorsiniva}}</td>
+											</tr>
+											<tr>
+												<td class="title">Iva: </td>
+												<td class="content">{{servicio?.iva}}%</td>
+											</tr>
+											<tr>
+												<td class="title">Permanencia: </td>
+												<td class="content">{{servicio?.mesespermanencia}} Meses</td>
+											</tr>
+											<tr>
+												<td class="title">Vel Max Descarga (Mbps): </td>
+												<td class="content">{{servicio?.velmaxdescargambps}} Mbps</td>
+											</tr>
+											<tr>
+												<td class="title">Vel Max Carga (Mbps): </td>
+												<td class="content">{{servicio?.velmaxcargambps}} Mbps</td>
+											</tr>
+						
+										</table>
+									</div>
+								</div>
+					
+								<div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+									<div fxFlex class="p-20">
+										<h2 fxLayoutAlign="center" (click)="editTercero()">Tercero 
+										<i class="edit fas fa-pen" *ngIf="user['permisos']?.servicios?.editar?.tercero && user['permisos']?.servicios?.editar?.direccion"></i></h2>
+										<table class="vertical-table odd-children w-100">
+											<!-- <tr>
+												<td class="title">Id Tercero: </td>
+												<td class="content">
+													<span [routerLink]="['/tercero', servicio.idtercero]" class="table-link">{{servicio?.idtercero}}</span>
+												</td>
+											</tr> -->
+											<tr>
+												<td class="title">Número tercero: </td>
+												<td class="content">
+													<span [routerLink]="['/tercero', servicio.idtercero]" class="table-link">{{servicio?.numerotercero}}</span>
+												</td>
+											</tr>
+											<tr>
+												<td class="title">Nombres: </td>
+												<td class="content"> {{servicio?.nombrestercero}} </td>
+											</tr>
+											<tr>
+												<td class="title">Apellidos: </td>
+												<td class="content"> {{servicio?.apellidostercero}} </td>
+											</tr>
+											<tr>
+												<td class="title">Identificación: </td>
+												<td class="content">{{servicio?.identificaciontercero}}</td>
+											</tr>
+										</table>
+									</div>
+					
+									<div fxFlex class="p-20">
+										<h2 fxLayoutAlign="center" (click)="editDireccion()">Dirección 
+										<i class="edit fas fa-pen" *ngIf="user['permisos']?.servicios?.editar?.direccion"></i></h2>
+										<table class="vertical-table odd-children w-100">
+											<tr>
+												<td class="title">Descripción: </td>
+												<td class="content">{{servicio?.descripciondireccion}}
+													<span *ngIf="servicio?.estratodireccion"> {{" (Estrato: " + servicio?.estratodireccion + ")"}}</span>
+												</td>
+											</tr>
+											<tr>
+												<td class="title">Barrio: </td>
+												<td class="content">{{servicio?.barrio}}</td>
+											</tr>
+											<tr>
+												<td class="title">Municipio: </td>
+												<td class="content"> {{servicio?.municipio}} </td>
+											</tr>
+											<tr>
+												<td class="title">Departamento: </td>
+												<td class="content"> {{servicio?.departamento}} </td>
+											</tr>
+											<tr>
+												<td class="title">Teléfonos: </td>
+												<td class="content">
+													<span *ngIf="servicio.whatsappdireccion">{{servicio.whatsappdireccion}}</span>
+													<span *ngIf="servicio.whatsappdireccion && servicio.llamadadireccion"> - </span>
+													<span *ngIf="servicio.llamadadireccion">{{servicio.llamadadireccion}}</span>
+													<span *ngIf="servicio.llamadadireccion && servicio.celular1direccion"> - </span>
+													<span *ngIf="servicio.celular1direccion">{{servicio.celular1direccion}}</span>
+													<span *ngIf="servicio.celular1direccion && servicio.celular2direccion"> - </span>
+													<span *ngIf="servicio.celular2direccion">{{servicio.celular2direccion}}</span>
+												</td>
+											</tr>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</ng-template>
+		</mat-tab>
+
+		<!-- SOLICITUDES -->
+		<mat-tab label="Solicitudes" *ngIf="user['permisos']?.servicios?.solicitudes?.listar">
+			<ng-template matTabContent>
+				<app-solicitudes-servicios (refreshDataEvent)="refreshDataEvent()"></app-solicitudes-servicios>
+			</ng-template>
+		</mat-tab>
+
+		<!-- CONTACTOS -->
+		<mat-tab label="Contactos" *ngIf="user['permisos']?.servicios?.contactos?.listar">
+			<ng-template matTabContent>
+				<app-contactos-servicios></app-contactos-servicios>
+			</ng-template>
+		</mat-tab>
+
+		<!-- CONVENIOS -->
+		<mat-tab label="Convenios" *ngIf="user['permisos']?.servicios?.convenios?.listar">
+			<ng-template matTabContent>
+				<app-convenios-servicios (refreshDataEvent)="refreshDataEvent()"></app-convenios-servicios>
+			</ng-template>
+		</mat-tab>
+
+		<!-- EXCEPCIONES -->
+		<mat-tab label="Excepciones" *ngIf="user['permisos']?.servicios?.excepciones?.listar">
+			<ng-template matTabContent>
+				<app-excepciones-servicios (refreshDataEvent)="refreshDataEvent()"></app-excepciones-servicios>
+			</ng-template>
+		</mat-tab>
+
+	</mat-tab-group>
+
+</mat-card>

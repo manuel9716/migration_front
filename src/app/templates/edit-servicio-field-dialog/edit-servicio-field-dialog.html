@@ -1,0 +1,176 @@
+<mat-toolbar fxLayout="row" fxLayoutAlign="center center" color="primary">
+	<h4>Editar Servicio</h4>
+</mat-toolbar>
+
+<div class="separator"></div>
+
+<form  name="form" [formGroup]="form" (ngSubmit)="onSubmit()">
+
+	<div fxLayout="column" style="width: 100%;" fxLayoutAlign="start" fxFlex="1 0 auto">
+
+		<div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+
+			<mat-form-field appearance="outline" class="pr20" fxFlex="15" *ngIf="data['field'] == 'ip'">
+				<mat-label>Octeto 1</mat-label>
+				<input matInput formControlName="octeto1" (input)="buildIp()" required>
+				<mat-hint>{{form.controls['octeto1'].value?.length}} de 3</mat-hint>
+				<mat-error>
+					<span *ngIf="form.controls['octeto1'].hasError('required')">Octeto 1 es
+						requerido</span>
+					<!-- <span *ngIf="form.controls['octeto1'].hasError('maxlength')">Máximo 3
+						caracteres</span> -->
+						<span *ngIf="form.controls['octeto1'].hasError('max')">Números entre 0 y 255.</span>
+						<span *ngIf="form.controls['octeto1'].hasError('pattern')">Número inválido.</span>
+				</mat-error>
+			</mat-form-field>
+
+			<mat-form-field appearance="outline" class="pr20" fxFlex="15" *ngIf="data['field'] == 'ip'">
+				<mat-label>Octeto 2</mat-label>
+				<input matInput formControlName="octeto2" (input)="buildIp()" required>
+				<mat-hint>{{form.controls['octeto2'].value?.length}} de 3</mat-hint>
+				<mat-error>
+					<span *ngIf="form.controls['octeto2'].hasError('required')">Octeto 2 es
+						requerido</span>
+					<!-- <span *ngIf="form.controls['octeto2'].hasError('maxlength')">Máximo 3
+						caracteres</span> -->
+						<span *ngIf="form.controls['octeto2'].hasError('max')">Números entre 0 y 255.</span>
+						<span *ngIf="form.controls['octeto2'].hasError('pattern')">Número inválido.</span>
+				</mat-error>
+			</mat-form-field>
+
+			<mat-form-field appearance="outline" class="pr20" fxFlex="15" *ngIf="data['field'] == 'ip'">
+				<mat-label>Octeto 3</mat-label>
+				<input matInput formControlName="octeto3" (input)="buildIp()" required>
+				<mat-hint>{{form.controls['octeto3'].value?.length}} de 3</mat-hint>
+				<mat-error>
+					<span *ngIf="form.controls['octeto3'].hasError('required')">Octeto 3 es
+						requerido</span>
+					<!-- <span *ngIf="form.controls['octeto3'].hasError('maxlength')">Máximo 3
+						caracteres</span> -->
+						<span *ngIf="form.controls['octeto3'].hasError('max')">Números entre 0 y 255.</span>
+						<span *ngIf="form.controls['octeto3'].hasError('pattern')">Número inválido.</span>
+				</mat-error>
+			</mat-form-field>
+
+			<mat-form-field appearance="outline" class="pr20" fxFlex="15" *ngIf="data['field'] == 'ip'">
+				<mat-label>Octeto 4</mat-label>
+				<input matInput formControlName="octeto4" (input)="buildIp()" required>
+				<mat-hint>{{form.controls['octeto4'].value?.length}} de 3</mat-hint>
+				<mat-error>
+					<span *ngIf="form.controls['octeto4'].hasError('required')">Octeto 4 es
+						requerido</span>
+					<!-- <span *ngIf="form.controls['octeto4'].hasError('maxlength')">Máximo 3
+						caracteres</span> -->
+						<span *ngIf="form.controls['octeto4'].hasError('max')">Números entre 0 y 255.</span>
+						<span *ngIf="form.controls['octeto4'].hasError('pattern')">Número inválido.</span>
+				</mat-error>
+			</mat-form-field>
+
+			<mat-form-field appearance="outline" fxFlex *ngIf="data['field'] == 'ip'">
+				<mat-label>IP</mat-label>
+				<input matInput formControlName="ip" required>
+			</mat-form-field>
+
+			<mat-form-field appearance="outline" fxFlex *ngIf="data['field'] == 'puertocaja'">
+				<mat-label>Puerto Caja NAP</mat-label>
+				<input matInput formControlName="puertocaja" required>
+				<mat-hint>{{form.controls['puertocaja'].value?.length}} de 3</mat-hint>
+				<mat-error>
+					<span *ngIf="form.controls['puertocaja'].hasError('required')">Puerto
+						caja NAP requerido</span>
+					<span *ngIf="form.controls['puertocaja'].hasError('maxlength')">Máximo 3
+						caracteres</span>
+				</mat-error>
+			</mat-form-field>
+
+			<mat-form-field appearance="outline" fxFlex *ngIf="data['field'] == 'ncajanap'">
+				<mat-label>Número caja NAP</mat-label>
+				<input matInput formControlName="ncajanap" required>
+				<mat-hint>{{form.controls['ncajanap'].value?.length}} de 8</mat-hint>
+				<mat-error>
+					<span *ngIf="form.controls['ncajanap'].hasError('required')">Número caja
+						NAP requerido</span>
+					<span *ngIf="form.controls['ncajanap'].hasError('maxlength')">Máximo 8
+						caracteres</span>
+				</mat-error>
+			</mat-form-field>
+
+			<mat-form-field appearance="outline" fxFlex *ngIf="data['field'] == 'serialont'">
+				<mat-label>Serial ONT</mat-label>
+				<input matInput formControlName="serialont" required>
+				<mat-hint>{{form.controls['serialont'].value?.length}} de 16</mat-hint>
+				<mat-error>
+					<span *ngIf="form.controls['serialont'].hasError('required')">Serial ONT
+						requerida</span>
+					<span *ngIf="form.controls['serialont'].hasError('maxlength')">Máximo 16
+						caracteres</span>
+				</mat-error>
+			</mat-form-field>
+
+			<mat-form-field appearance="outline" fxFlex *ngIf="data['field'] == 'ontid'">
+				<mat-label>ONT ID</mat-label>
+				<input matInput formControlName="ontid" required>
+				<mat-hint>{{form.controls['ontid'].value?.length}} de 3</mat-hint>
+				<mat-error>
+					<span *ngIf="form.controls['ontid'].hasError('required')">ONT ID
+						requerido</span>
+					<span *ngIf="form.controls['ontid'].hasError('maxlength')">Máximo 3
+						caracteres</span>
+				</mat-error>
+			</mat-form-field>
+
+			<mat-form-field appearance="outline" fxFlex *ngIf="data['field'] == 'potcajanap'">
+				<mat-label>Potencia caja NAP (XX.XX)</mat-label>
+				<input matInput formControlName="potcajanap" required>
+				<mat-error>
+					<span *ngIf="form.controls['potcajanap'].hasError('required')">Potencia
+						caja NAP requerida</span>
+					<span *ngIf="form.controls['potcajanap'].hasError('pattern')">Formato
+						invalido (XX.XX)</span>
+				</mat-error>
+			</mat-form-field>
+
+			<mat-form-field appearance="outline" fxFlex *ngIf="data['field'] == 'potont'">
+				<mat-label>Potencia ONT (XX.XX)</mat-label>
+				<input matInput formControlName="potont" required>
+				<mat-error>
+					<span *ngIf="form.controls['potont'].hasError('required')">Potencia ONT
+						requerida</span>
+					<span *ngIf="form.controls['potont'].hasError('pattern')">Formato
+						invalido (XX.XX)</span>
+				</mat-error>
+			</mat-form-field>
+
+		</div>
+
+
+		<div class="separator"></div>
+		<div fxFlex [@animate]="{value:'*',params:{y:'50px'}}" *ngIf="activateError['msg']"
+			class="active-error {{activateError['status']}}">{{activateError['msg']}}</div>
+
+		<div class="content-form-submit">
+			<button mat-raised-button class="btn-form-submit" type="button" (click)="cancel()"
+				[disabled]="loading">Cancelar</button>
+			<button mat-raised-button class="btn-form-submit" type="submit" color="primary"
+				[disabled]="form.invalid || (!activateError['status'] && data['field'] == 'ip') || loading">Editar</button>
+		</div>
+
+		<mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+
+	</div>
+</form>
+
+<style>
+
+	.active-error{
+		text-align: center;
+	}
+
+	.active-error.true {
+		color: green;
+	}
+
+	.active-error.false {
+		color: red;
+	}
+</style>

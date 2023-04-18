@@ -1,0 +1,176 @@
+<mat-toolbar color="primary" class="header-pages">
+	<div [@animate]="{value:'*',params:{x:'50px'}}">
+		<span class="title">Agenda</span><br>
+		<span class="breadcrumb">Agenda</span>
+	</div>
+</mat-toolbar>
+
+<mat-card class="page-content-card">
+
+	<!-- Filters -->
+	<div fxLayout="row" style="margin-bottom: 20px;" [@animate]="{value:'*',params:{x:'-50px'}}">
+
+		<div fxFlex="85">
+
+			<div fxFlex fxLayout="row">
+
+				<mat-form-field appearance="outline" fxFlex class="pr20" *ngIf="user['permisos']?.agenda?.listar?.flt_estados">
+					<mat-label>Estados</mat-label>
+					<mat-select [(ngModel)]="filters['estado']">
+						<mat-option value="todas">Todas</mat-option>
+						<mat-option value="pendientes">Pendientes</mat-option>
+						<mat-option value="finalizadas">Finalizadas</mat-option>
+					</mat-select>
+				</mat-form-field>
+
+				<mat-form-field appearance="outline" fxFlex class="pr20" *ngIf="user['permisos']?.agenda?.listar?.flt_cuadrillas">
+					<mat-label>Cuadrillas</mat-label>
+					<mat-select [(ngModel)]="filters['cuadrillas']" multiple>
+						<mat-option *ngFor="let cuadrilla of cuadrillas" [value]="cuadrilla.idservicio">
+							{{cuadrilla.numeroservicio + " - " + cuadrilla.nombres + " " + cuadrilla.apellidos}}
+						</mat-option>
+					</mat-select>
+				</mat-form-field>
+
+				<div fxFlex fxLayout="row" fxLayoutAlign="center center" *ngIf="user['permisos']?.agenda?.listar?.flt_terceros">
+
+					<div *ngIf="filters['tercero'].idtercero">{{filters['tercero'].nombres + " " + filters['tercero'].apellidos}}</div>
+
+					<button mat-raised-button *ngIf="!filters['tercero'].idtercero" type="button" color="accent" (click)="selectTercero()">
+						<span>Tercero</span>
+					</button>
+
+					<button mat-icon-button *ngIf="filters['tercero'].idtercero" type="button" color="accent" matTooltip="Cabmiar Tercero" (click)="selectTercero()">
+						<mat-icon>autorenew</mat-icon>
+					</button>
+					
+				</div>
+
+			</div>
+
+
+			<!-- <div fxFlex fxLayout="column"
+				*ngIf="user['permisos']?.agenda?.listar?.flt_cuadrillas || user['permisos']?.agenda?.listar?.flt_terceros">
+
+				<mat-form-field appearance="outline" fxFlex class="pr20"
+					*ngIf="user['permisos']?.agenda?.listar?.flt_cuadrillas">
+					<mat-label>Cuadrillas</mat-label>
+					<mat-select [(ngModel)]="filters['cuadrillas']" multiple>
+						<mat-option *ngFor="let cuadrilla of cuadrillas" [value]="cuadrilla.idservicio">
+							{{cuadrilla.numeroservicio + " - " + cuadrilla.nombres + " " + cuadrilla.apellidos}}
+						</mat-option>
+					</mat-select>
+				</mat-form-field>
+
+				<div fxFlex fxLayout="column" fxLayoutAlign="center center" class="pr20" *ngIf="user['permisos']?.agenda?.listar?.flt_terceros">
+					<div *ngIf="filters['tercero'].idtercero">{{filters['tercero'].nombres + " " + filters['tercero'].apellidos}}</div>
+					<button type="button" mat-raised-button color="accent" (click)="selectTercero()">
+						<span *ngIf="!filters['tercero'].idtercero">Tercero</span>
+						<mat-icon *ngIf="filters['tercero'].idtercero">autorenew</mat-icon>
+					</button>
+				</div>
+
+			</div> -->
+		</div>
+
+
+		<div fxFlex="15" fxLayout="column" fxLayoutAlign="center center">
+			<div class="top-buttons">
+				<button mat-icon-button class="pr20" matTooltip="Borrar filtros" (click)="resetFilters()"><i
+						class="fas fa-backspace"></i></button>
+				<button mat-mini-fab color="primary" matTooltip="Buscar" (click)="search()">
+					<mat-icon>search</mat-icon>
+				</button>
+			</div>
+		</div>
+
+	</div>
+
+
+	<mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+	<div class="mat-elevation-z5" [@animate]="{value:'*',params:{y:'100%'}}">
+
+		<table mat-table [dataSource]="dataSource" matSort>
+
+			<ng-container matColumnDef="estado">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+				<td mat-cell *matCellDef="let row">
+					<span color="primary" class="box-status" matTooltip="{{row.estado ? 'Finalizada':'Pendiente'}}"
+						[ngClass]="row.estado ? 'bg-pri':'bg-sec'"></span>
+				</td>
+			</ng-container>
+
+			<ng-container matColumnDef="fechacreado">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> F. creación </th>
+				<td mat-cell *matCellDef="let row"> {{row.fechacreado.timestamp*1000 | date}} </td>
+			</ng-container>
+
+			<ng-container matColumnDef="fechaagenda">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> F. ejecución </th>
+				<td mat-cell *matCellDef="let row"> {{row.fechaagenda ? (row.fechaagenda.timestamp*1000 | date) : ' - '}} </td>
+			</ng-container>
+
+			<ng-container matColumnDef="numerocuadrilla">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> Cuadrilla </th>
+				<td mat-cell *matCellDef="let row"> {{row.nombrescuadrilla + " " + row.apellidoscuadrilla + "(" + row.numerocuadrilla + ")"}} </td>
+			</ng-container>
+
+			<ng-container matColumnDef="numeroservicio">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> N. servicio </th>
+				<td mat-cell *matCellDef="let row">
+					<a href="#" class="link" [routerLink]="['/servicio', row.idservicio]">{{row.numeroservicio}}</a>
+				</td>
+			</ng-container>
+
+			<ng-container matColumnDef="nombretiposolicitud">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> T. solicitud </th>
+				<td mat-cell *matCellDef="let row"> {{row.nombretiposolicitud}} </td>
+			</ng-container>
+
+			<ng-container matColumnDef="nombreplan">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> Plan </th>
+				<td mat-cell *matCellDef="let row" matTooltip="{{row.nombreplan}}">
+					<div class="cut-text-100"><a href="#" class="link"
+							[routerLink]="['/plan', row.idplan]">{{row.nombreplan}}</a></div>
+				</td>
+			</ng-container>
+
+			<ng-container matColumnDef="nombrestercero">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> Tercero </th>
+				<td mat-cell *matCellDef="let row">
+					<a href="#" class="link"
+						[routerLink]="['/tercero', row.idtercero]">{{row.nombrestercero + " " + row.apellidostercero}}</a>
+				</td>
+			</ng-container>
+
+			<ng-container matColumnDef="descripciondireccion">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> Dirección </th>
+				<td mat-cell *matCellDef="let row"
+					matTooltip="{{row.nombrebarrio + ' - ' + row.nombremunicipio + ' - ' + row.nombredepartamento}}">
+					{{row.descripciondireccion}} </td>
+			</ng-container>
+
+			<ng-container matColumnDef="actions">
+				<th mat-header-cell *matHeaderCellDef> </th>
+				<td mat-cell *matCellDef="let row" class="align-r">
+					<button *ngIf="!row['estado'] && !row['fechaagenda'] && user['permisos']['agenda']['cancelar']" mat-icon-button color="warn" matTooltip="Cancelar" [disabled]="row['loading']" (click)="cancelAgenda(row)">
+						<mat-icon *ngIf="!row['loading']">event_busy</mat-icon>
+						<div *ngIf="row['loading']"><i class="fas fa-spinner fa-spin"></i></div>
+					</button>
+				</td>
+			</ng-container>
+
+			<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+			<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+		</table>
+
+		<div *ngIf="dataSource?.data?.length < 1" class="no-date-table">
+			No hay Agendas para mostrar
+		</div>
+
+		<mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons="true"></mat-paginator>
+	</div>
+
+
+</mat-card>

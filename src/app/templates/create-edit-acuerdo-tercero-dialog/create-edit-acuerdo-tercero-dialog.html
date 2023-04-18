@@ -1,0 +1,49 @@
+<mat-toolbar fxLayout="row" fxLayoutAlign="center center" color="primary">
+	<h4>{{acuerdoPago ? 'EDITAR ACUERO DE PAGO' : 'CREAR ACUERO DE PAGO'}}</h4>
+</mat-toolbar>
+
+<div class="separator"></div>
+
+<form class="w100" name="form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+	<div fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto">
+
+		<div style="margin: 25px 0px" fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+			<mat-slide-toggle formControlName="estado" fxFlex>
+				Estado: {{form.controls['estado'].value ? 'Activo' : 'Inactivo'}}
+			</mat-slide-toggle>
+		</div>
+
+		<div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+			<mat-form-field appearance="outline" fxFlex>
+				<mat-label>Fecha de pago</mat-label>
+				<input matInput [matDatepicker]="picker1" formControlName="fechapago" [min]="today">
+				<mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+				<mat-datepicker #picker1></mat-datepicker>
+				<mat-error> Fecha de pago requerida.</mat-error>
+			</mat-form-field>
+		</div>
+
+		<div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+			<mat-form-field appearance="outline" fxFlex>
+				<mat-label>Observaciones</mat-label>
+				<textarea matInput formControlName="observaciones"></textarea>
+				<mat-hint>{{form.controls['observaciones']?.value?.length}} de 300</mat-hint>
+				<mat-error> Máximo 300 caracteres.</mat-error>
+			</mat-form-field>
+		</div>
+
+		<div class="separator"></div>
+		<span class="error" *ngIf="error" [@animate]="{value:'*',params:{y:'50px'}}">{{error}}</span>
+
+		<div class="content-form-submit">
+			<button mat-raised-button class="btn-form-submit" type="button" (click)="cancel()"
+				[disabled]="loading">Cancelar</button>
+			<button mat-raised-button class="btn-form-submit" type="submit" color="primary"
+				[disabled]="form.invalid || loading">{{acuerdoPago ? 'Editar' : 'Crear'}}</button>
+		</div>
+
+		<mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+	</div>
+
+</form>

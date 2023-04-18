@@ -1,0 +1,209 @@
+<mat-toolbar color="primary" class="header-pages">
+	<div [@animate]="{value:'*',params:{x:'50px'}}">
+		<span class="title">Planes</span><br>
+		<span class="breadcrumb">Planes > Listar</span>
+	</div>
+</mat-toolbar>
+
+<mat-card class="page-content-card">
+
+	<!-- HEADER -->
+
+	<div class="header-pages-tools" fxLayout="row" fxLayoutAlign="start center">
+
+		<div class="top-filters" fxLayout="row" fxLayoutAlign="start center" [@animate]="{value:'*',params:{x:'-50px'}}"
+			  fxFlex="85">
+
+			<mat-form-field appearance="outline" fxFlex class="pr20">
+				<mat-label>Buscar plan</mat-label>
+				<input matInput (keyup)="applyFilter($event.target.value)" [(ngModel)]="planSearch">
+				<mat-icon matPrefix class="secondary-text">search</mat-icon>
+				<button mat-button *ngIf="planSearch" matSuffix mat-icon-button aria-label="Clear"
+						  (click)="planSearch=''; applyFilter('')">
+					<mat-icon>close</mat-icon>
+				</button>
+
+			</mat-form-field>
+
+			<mat-form-field appearance="outline" fxFlex="20" class="pr20" *ngIf="user['permisos']?.planes?.listar?.flt_geografia">
+				<mat-label>Geografia</mat-label>
+				<mat-select multiple [(ngModel)]="filterSearchParams.idgeografia">
+					<mat-option *ngFor="let geografia of geografias" [value]="geografia.id">{{geografia.name}}</mat-option>
+				</mat-select>
+			</mat-form-field>
+
+			<mat-form-field appearance="outline" fxFlex="20" class="pr20" *ngIf="user['permisos']?.planes?.listar?.flt_tipo_plan">
+				<mat-label>Tipo Plan</mat-label>
+				<mat-select multiple [(ngModel)]="filterSearchParams.idtipoplan">
+					<mat-option *ngFor="let tipoPlan of tiposPlanes" [value]="tipoPlan.id">{{tipoPlan.name}}</mat-option>
+				</mat-select>
+			</mat-form-field>
+
+			<mat-form-field appearance="outline" fxFlex="20" class="pr20" *ngIf="user['permisos']?.planes?.listar?.flt_tipo_servicio">
+				<mat-label>Tipo Servicio</mat-label>
+				<mat-select multiple [(ngModel)]="filterSearchParams.idtiposervicio">
+					<mat-option *ngFor="let tipoServicio of tiposServicios" [value]="tipoServicio.id">{{tipoServicio.name}}
+					</mat-option>
+				</mat-select>
+			</mat-form-field>
+
+			<button mat-icon-button color="primary" matTooltip="Buscar con filtros" (click)="filterSearch()">
+				<mat-icon>search</mat-icon>
+			</button>
+		</div>
+
+		<div class="top-buttons" fxFlex="15" *ngIf="user['permisos']?.planes?.crear">
+			<button mat-mini-fab color="accent" matTooltip="Crear Plan" routerLink="/plan">
+				<mat-icon>add</mat-icon>
+			</button>
+		</div>
+	</div>
+
+	<!-- CONTENT -->
+
+	<mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+
+	<div class="mat-elevation-z5" [@animate]="{value:'*',params:{y:'100%'}}">
+
+		<table mat-table [dataSource]="dataSource" matSort>
+
+			<ng-container matColumnDef="estado">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+				<td mat-cell *matCellDef="let row">
+					<span color="primary" class="box-status" matTooltip="{{row.estado ? 'Activo':'Inactivo'}}" [ngClass]="row.estado ? 'bg-pri':'bg-sec'"></span>
+				</td>
+			</ng-container>
+
+			<ng-container matColumnDef="nombre">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
+				<td mat-cell *matCellDef="let row"> {{row.nombre}} </td>
+			</ng-container>
+
+			<ng-container matColumnDef="valorsiniva">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> Valor sin iva </th>
+				<td mat-cell *matCellDef="let row"> $ {{row.valorsiniva | number}} </td>
+			</ng-container>
+
+			<ng-container matColumnDef="iva">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> Iva </th>
+				<td mat-cell *matCellDef="let row"> {{row.iva + '%'}} </td>
+			</ng-container>
+
+			<ng-container matColumnDef="idgeografia">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> Geografía </th>
+				<td mat-cell *matCellDef="let row">{{geografias[row.idgeografia-1]?.name}}</td>
+			</ng-container>
+
+			<ng-container matColumnDef="idtipoplan">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo plan </th>
+				<td mat-cell *matCellDef="let row">{{tiposPlanes[row.idtipoplan-1]?.name}}</td>
+			</ng-container>
+
+			<ng-container matColumnDef="idtiposervicio">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo servicio </th>
+				<td mat-cell *matCellDef="let row">{{tiposServicios[row.idtiposervicio-1]?.name}}</td>
+			</ng-container>
+
+			<ng-container matColumnDef="idtecnologiaplan">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo tecnología </th>
+				<td mat-cell *matCellDef="let row">{{row.nombretecnologiaplan}}</td>
+			</ng-container>
+
+			<ng-container matColumnDef="velmaxdescargambps">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> Vel Max Descarga Mbps </th>
+				<td mat-cell *matCellDef="let row">{{row.velmaxdescargambps + " Mbps"}}</td>
+			</ng-container>
+
+			<ng-container matColumnDef="velmaxcargambps">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> Vel Max Carga Mbps </th>
+				<td mat-cell *matCellDef="let row">{{row.velmaxcargambps + " Mbps"}}</td>
+			</ng-container>
+
+			<ng-container matColumnDef="actions">
+				<th mat-header-cell *matHeaderCellDef class="w-10p"> </th>
+				<td mat-cell *matCellDef="let row" class="w-10p align-r">
+					<button mat-icon-button color="primary" matTooltip="Editar" [routerLink]="['/plan', row.idplan]" *ngIf="user['permisos']?.planes?.editar">
+						<mat-icon>edit</mat-icon>
+					</button>
+					<button mat-icon-button color="warn" matTooltip="Eliminar" (click)="deletePlan(row)" *ngIf="user['permisos']?.planes?.eliminar">
+						<mat-icon>delete</mat-icon>
+					</button>
+				</td>
+			</ng-container>
+
+
+			<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+			<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+		</table>
+
+		<div *ngIf="dataSource?.data?.length === 0" class="no-date-table">
+			No hay planes para mostrar
+		</div>
+
+		<mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons="true"></mat-paginator>
+
+	</div>
+
+
+	<!-- <ngx-datatable class="material" [rows]="rows" [columnMode]="'force'" [sortType]="'single'" [headerHeight]="50"
+						[footerHeight]="50" [rowHeight]="'auto'" [loadingIndicator]="loading" [@animate]="{value:'*',params:{y:'100%'}}"
+						[messages]="{emptyMessage: 'No hay planes'}" [limit]="8">
+
+		<ngx-datatable-column name="idplan" [sortable]="true" [prop]="idp" [@animate]="{value:'*',params:{y:'100%'}}">
+			<ng-template let-column="column" ngx-datatable-header-template let-sort="sortFn">ID</ng-template>
+			<ng-template let-value="value" ngx-datatable-cell-template>{{value}}</ng-template>
+		</ngx-datatable-column>
+
+		<ngx-datatable-column name="estado" [sortable]="true" prop="estado">
+			<ng-template let-column="column" ngx-datatable-header-template>Estado</ng-template>
+			<ng-template let-value="value" ngx-datatable-cell-template>
+				<span color="primary" class="box-status" [ngClass]="value ? 'bg-pri':'bg-sec'"></span>
+			</ng-template>
+		</ngx-datatable-column>
+
+		<ngx-datatable-column name="nombre">
+			<ng-template let-column="column" ngx-datatable-header-template>Nombre</ng-template>
+			<ng-template let-value="value" ngx-datatable-cell-template>{{value}}</ng-template>
+		</ngx-datatable-column>
+
+		<ngx-datatable-column name="valorsiniva">
+			<ng-template let-column="column" ngx-datatable-header-template>Valor sin iva</ng-template>
+			<ng-template let-value="value" ngx-datatable-cell-template>{{value | currency}}</ng-template>
+		</ngx-datatable-column>
+
+		<ngx-datatable-column name="iva">
+			<ng-template let-column="column" ngx-datatable-header-template>Iva</ng-template>
+			<ng-template let-value="value" ngx-datatable-cell-template>{{value}}%</ng-template>
+		</ngx-datatable-column>
+
+		<ngx-datatable-column name="idgeografia">
+			<ng-template let-column="column" ngx-datatable-header-template>Geografia</ng-template>
+			<ng-template let-value="value" ngx-datatable-cell-template>{{geografias[value-1]?.name}}</ng-template>
+		</ngx-datatable-column>
+
+		<ngx-datatable-column name="idtipoplan">
+			<ng-template let-column="column" ngx-datatable-header-template>Tipo plan</ng-template>
+			<ng-template let-value="value" ngx-datatable-cell-template>{{tiposPlanes[value-1]?.name}}</ng-template>
+		</ngx-datatable-column>
+
+		<ngx-datatable-column name="idtiposervicio">
+			<ng-template let-column="column" ngx-datatable-header-template>Tipo servicio</ng-template>
+			<ng-template let-value="value" ngx-datatable-cell-template>{{tiposServicios[value-1]?.name}}</ng-template>
+		</ngx-datatable-column>
+
+		<ngx-datatable-column minWidth="150">
+			<ng-template let-column="column" ngx-datatable-header-template let-column="column"></ng-template>
+			<ng-template let-value="value" ngx-datatable-cell-template let-row="row"> -->
+	<!-- <button mat-icon-button color="primary" matTooltip="Ver"><mat-icon>remove_red_eye</mat-icon></button> -->
+	<!-- <button mat-icon-button color="primary" matTooltip="Editar" [routerLink]="['/plan', row.idplan]">
+					<mat-icon>edit</mat-icon>
+				</button>
+				<button mat-icon-button color="warn" matTooltip="Eliminar" (click)="deletePlan(row)">
+					<mat-icon>delete</mat-icon>
+				</button>
+			</ng-template>
+		</ngx-datatable-column>
+
+	</ngx-datatable> -->
+
+</mat-card>

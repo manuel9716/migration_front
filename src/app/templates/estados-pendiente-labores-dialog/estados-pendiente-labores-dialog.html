@@ -1,0 +1,24 @@
+<mat-toolbar color="primary" class="toolbar-header-dialog">
+   <h5> {{this.data['labor']['nombrelabor']}} </h5>
+</mat-toolbar>
+
+<div class="separator"></div>
+
+<div mat-dialog-content fxLayout="column" fxLayoutAlign="center center">
+  
+    <div *ngFor="let estado of estadoSelectedPendiente">
+       <span>
+        *{{estado.nombre}}
+       </span>
+    </div>
+    <div *ngIf="estadoSelectedPendiente.length==0 && !cargando">
+      NO TIENE ESTADOS PENDIENTES
+    </div>
+
+   <span *ngIf="cargando"><i class="fas fa-spinner fa-spin fa-lg"></i></span>
+</div>
+
+
+<div mat-dialog-actions align="end">
+   <button  mat-raised-button [mat-dialog-close] cdkFocusInitial>Cerrar</button>
+</div>

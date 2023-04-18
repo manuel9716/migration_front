@@ -1,0 +1,45 @@
+<mat-toolbar color="primary" class="toolbar-header-dialog">
+   <h2>Editar Desplazamientos </h2>
+</mat-toolbar>
+
+<div class="separator"></div>
+<div class="separator"></div>
+
+<div mat-dialog-content  fxLayout="column">
+   <div fxLayout="row" fxLayoutAlign="center center" fxFlex="1 0 auto">
+      <mat-form-field appearance="outline"  fxFlex="100" class="pr-20">
+         <mat-label>Municipios Inicio</mat-label>
+         <mat-select [(ngModel)]="municipiosInicoSelected">
+            <!-- <mat-select [(ngModel)]="filters['estadolabor']"> -->
+            <mat-option *ngFor="let municipio of municipiosDeInicio" [value]="municipio['idmunicipio']"
+            (onSelectionChange)="calcluarMunicipiosFinales(municipio['idmunicipio'])">
+               {{municipio['nombre']}}
+            </mat-option>
+         </mat-select>
+      </mat-form-field>
+
+   </div>
+   <div fxLayout="row" fxLayoutAlign="center center" fxFlex="1 0 auto">
+      <mat-form-field appearance="outline"  fxFlex="100" class="pr-20" >
+         <mat-label>Municipios Final</mat-label>
+         <mat-select [(ngModel)]="municipiosFinalSelected"
+         [disabled]="(municipiosInicoSelected==0 && municipiosFinalSelected==0) || municipiosDeFinal.length==0">
+            <!-- <mat-select [(ngModel)]="filters['estadolabor']"> -->
+            <mat-option *ngFor="let municipio of municipiosDeFinal" [value]="municipio['idmunicipio']"  >
+               {{municipio['nombre']}}
+            </mat-option>
+         </mat-select>
+      </mat-form-field>
+   </div>
+</div>
+
+
+<div mat-dialog-actions align="end">
+   <button color='primary' mat-raised-button (click)="selectEstado()"
+      [disabled]="(cargando|| (municipiosInicoSelected==0 || municipiosFinalSelected==0 ))">
+      <span *ngIf="!cargando">Editar Desplazamiento </span>
+      <span *ngIf="cargando"><i class="fas fa-spinner fa-spin fa-lg"></i></span>
+      <!-- {{!cargando?'Editar':''}} <mat-spinner  *ngIf="cargando"></mat-spinner> -->
+   </button>
+   <button mat-raised-button [mat-dialog-close] cdkFocusInitial>Cancelar</button>
+</div>

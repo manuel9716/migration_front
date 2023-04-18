@@ -1,0 +1,51 @@
+<mat-toolbar fxLayout="row" fxLayoutAlign="center center" color="primary">
+	<h4>CAMBIAR ESTADO DE SOLICITUD</h4>
+</mat-toolbar>
+
+<div class="separator"></div>
+
+<div class="" fxLayout="column" fxLayoutAlign="start" fxLayout.gt-md="row">
+
+	<div [@animate]="{value:'*',params:{y:'50px'}}" fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto"
+		  *ngIf="!loaded">
+		<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+	</div>
+
+	<form name="form" [formGroup]="form" fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto" [@animate]="{value:'*',params:{y:'50px'}}" (ngSubmit)="onSubmit()" novalidate *ngIf="loaded">
+
+		<div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+			<mat-form-field appearance="outline" fxFlex="50">
+				<mat-label>Estado solicitud</mat-label>
+				<mat-select formControlName="idestadosolicitudtercero" required>
+					<mat-option *ngFor="let estadoSolicitud of estadosSolicitud" [value]="estadoSolicitud.idestadosolicitudtercero">
+						{{estadoSolicitud.nombre}}
+					</mat-option>
+				</mat-select>
+				<mat-error>Estado solicitud requerido</mat-error>
+			</mat-form-field>
+		</div>
+
+		<div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+			<mat-form-field appearance="outline" fxFlex="100">
+				<mat-label>Observaciones</mat-label>
+				<textarea matInput formControlName="observaciones" rows="3" required></textarea>
+				<mat-hint>{{form.controls['observaciones'].value?.length}} de 300</mat-hint>
+				<mat-error>
+					<span *ngIf="form.controls['observaciones'].hasError('required')">Observaciones es requerido</span>
+					<span *ngIf="form.controls['observaciones'].hasError('maxlength')">Máximo 300 caracteres</span>
+				</mat-error>
+			</mat-form-field>
+		</div>
+
+		<div class="separator"></div>
+		<span class="error" *ngIf="error" [@animate]="{value:'*',params:{y:'50px'}}">{{error}}</span>
+
+		<div class="content-form-submit">
+			<button mat-raised-button class="btn-form-submit" type="button" (click)="close()" [disabled]="loading">Cancelar</button>
+			<button mat-raised-button class="btn-form-submit" type="submit" color="primary" [disabled]="form.invalid || loading">Cambiar estado</button>
+		</div>
+
+		<mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+	</form>
+
+</div>

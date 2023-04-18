@@ -1,0 +1,58 @@
+mat-toolbar{
+  color: rgba(0,0,0,.54);
+  border-bottom: #0073b3 2px solid;
+}
+
+.avatar {
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  line-height: 40px;
+  margin: 0 8px 0 0;
+  border-radius: 50%;
+  font-size: 17px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.user-button {
+  min-width: 64px;
+  height: 64px;
+}
+
+.toolbar-separator {
+  background: rgba(0, 0, 0, .12);
+  height: 64px;
+  width: 1px;
+}
+
+
+.field-search{
+  width: 100%;
+  margin-top: 12px;
+  margin-left: 15px;
+}
+
+.field-search mat-icon {
+  font-size: 26px;
+}
+
+.field-search button {
+  margin-top: 14px;
+}
+
+mat-checkbox#mat-checkbox-1 {
+  display: block;
+  margin: 10px;
+}
+
+mat-progress-bar{
+  position: absolute;
+}
+
+.exactly{
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.87);
+  font-weight: 400;
+}

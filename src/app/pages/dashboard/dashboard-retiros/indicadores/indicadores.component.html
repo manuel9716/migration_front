@@ -1,0 +1,19 @@
+<mat-progress-bar mode="indeterminate" *ngIf="cargando"></mat-progress-bar>
+<br>
+<div fxLayout fxLayoutAlign="center center">
+    <h3>
+        Días promedios entre variables
+    </h3>
+</div>
+<br><br>
+<div  class="pad" fxLayout="row" fxLayoutAlign="space-around center">
+    <ngx-charts-bar-vertical [view]="viewSTNPq" [scheme]="colorScheme" [results]="flitroFechas"
+        [legendPosition]="legendPositionPie" [gradient]="gradientBarS" [xAxis]="showXAxisBarS" [yAxis]="showYAxisBarS"
+        [legend]="showLegendBarS" [showXAxisLabel]="showXAxisLabelBarS" [legendTitle]="legendTitleBarS"
+        [showYAxisLabel]="showYAxisLabelBarS" [xAxisLabel]="xAxisLabelBarS" [yAxisLabel]="yAxisLabelBarS"
+        (select)="onSelect($event)">
+    </ngx-charts-bar-vertical>
+    <ngx-charts-number-card [view]="viewBanerPq" [scheme]="colorScheme" [results]="flitroFechas"
+        [cardColor]="cardColor" (select)="onSelect($event)" [innerPadding]="innerPaddingDataGraf">
+    </ngx-charts-number-card>
+</div>

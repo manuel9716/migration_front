@@ -1,0 +1,102 @@
+<mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+
+<mat-toolbar class="p-0 mat-elevation-z1">
+   
+   <div fxFlex fxFill fxLayout="row" fxLayoutAlign="start center" *ngIf="searchStatus">
+      
+      <button mat-button class="user-button" (click)="searchStatus = false">
+         <mat-icon class="s-16">chevron_left</mat-icon>
+      </button>
+      
+      <div class="toolbar-separator"></div>
+      
+      <button mat-button class="user-button" [matMenuTriggerFor]="pararms">
+         <mat-icon class="s-16">settings</mat-icon>
+      </button>
+      <mat-menu #pararms="matMenu">
+         <button mat-menu-item [matMenuTriggerFor]="servicios">Servicios</button>
+         <button mat-menu-item [matMenuTriggerFor]="terceros">Terceros</button>
+         <mat-divider></mat-divider>
+         <mat-checkbox [(ngModel)]="searchConfig.exactly" class="exactly" (click)="$event.stopPropagation()">Búsqueda Exacta</mat-checkbox>
+         
+      </mat-menu>
+      <mat-menu #servicios="matMenu">
+         <button mat-menu-item (click)="setSearchParams('servicio', 'id')">Id</button>
+         <button mat-menu-item (click)="setSearchParams('servicio', 'numero')">Número</button>
+      </mat-menu>
+      <mat-menu #terceros="matMenu">
+         <button *ngFor="let property of terceroProperties" mat-menu-item (click)="setSearchParams('terceros', property)">{{property.alias}}</button>
+      </mat-menu>
+      
+      <mat-form-field class="field-search" appearance="none" floatlabel="never">
+         <input #searchTextInput id="searchTextInput" matInput type="text" placeholder="{{searchPlaceholder}}"
+         [(ngModel)]="searchConfig.value" [disabled]="loading" (keyup.enter)="search()">
+         <button mat-button *ngIf="searchConfig.value" matSuffix mat-icon-button aria-label="Clear" (click)="searchConfig.value = null">
+            <mat-icon>close</mat-icon>
+         </button>
+      </mat-form-field>
+      
+   </div>
+   
+   <div fxFlex fxFill fxLayout="row" fxLayoutAlign="start center" *ngIf="!searchStatus">
+
+      <input type="file" #facBloque (change)="uploadFacturacionBloque($event)" hidden>
+      <input type="file" #estCuentas (change)="uploadEstadosCuentas($event)" hidden>
+      
+      <div fxFlex="1 0 auto" fxLayout="row" fxLayoutAlign="start center">
+         <div class="px-8 px-md-16">
+            <button mat-icon-button matTooltip="Crear Servicio" routerLink="/servicio">
+               <mat-icon>library_add</mat-icon>
+            </button>
+            <button mat-icon-button matTooltip="Importar Estados de Cuentas." (click)="estCuentas.click()" [disabled]="loading">
+               <i class="fas fa-wallet fa-lg"></i>
+            </button>
+            <button mat-icon-button matTooltip="Importar Facturación en Bloque." (click)="facBloque.click()" [disabled]="loading">
+               <i class="fas fa-file-invoice-dollar fa-lg"></i>
+            </button>
+            <button mat-icon-button matTooltip="Servicios Inactivos" (click)="getInactivos()">
+               <mat-icon>money_off</mat-icon>
+            </button>
+         </div>
+      </div>
+      
+      <div class="" fxFlex="0 1 auto" fxLayout="row" fxLayoutAlign="start center">
+         
+         <div class="toolbar-separator"></div>
+         
+         <button mat-button class="user-button" (click)="searchStatus = true">
+            <mat-icon class="s-16">search</mat-icon>
+         </button>
+         
+         <div class="toolbar-separator"></div>
+         
+         <button mat-button [matMenuTriggerFor]="userMenu" class="user-button">
+            <div fxLayout="row" fxLayoutAlign="center center">
+               <img class="avatar mr-0 mr-sm-16" src="/assets/avatars/women.jpg">
+               <span class="username mr-12" fxHide fxShow.gt-sm>Diego Vidal</span>
+               <mat-icon class="s-16" fxHide.xs>keyboard_arrow_down</mat-icon>
+            </div>
+         </button>
+         
+         <mat-menu #userMenu="matMenu" [overlapTrigger]="false">
+            <button mat-menu-item>
+               <mat-icon>account_circle</mat-icon>
+               <span>My Profile</span>
+            </button>
+            
+            <button mat-menu-item class="">
+               <mat-icon>mail</mat-icon>
+               <span>Inbox</span>
+            </button>
+            
+            <button mat-menu-item class="" (click)="logout()">
+               <mat-icon>exit_to_app</mat-icon>
+               <span>Logout</span>
+            </button>
+         </mat-menu>
+         
+      </div>
+      
+   </div>
+   
+</mat-toolbar>

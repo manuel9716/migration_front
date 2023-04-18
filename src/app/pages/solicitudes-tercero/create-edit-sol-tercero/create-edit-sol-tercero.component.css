@@ -1,0 +1,7 @@
+form{
+   width: 100%;
+}
+
+td.mat-cell, td.mat-footer-cell, th.mat-header-cell {
+   padding-right: 15px;
+}

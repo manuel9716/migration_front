@@ -1,0 +1,55 @@
+<table class="table table-striped align-middle">
+    <thead>
+        <tr class="text-center"> 
+            <th>Registro</th>
+            <th>
+                <abbr title="Fecha y hora de enganche">
+                    <fa-layers>
+                        <fa-icon [icon]="calendarIcon" class="text-success" size="2x"></fa-icon>
+                        <fa-icon [icon]="linkIcon" class="text-light" transform="shrink-4 down-4.2 right-5" ></fa-icon>
+                    </fa-layers>
+                </abbr>
+            </th>
+            <th>
+                <abbr title="Fecha y hora de desenganche">
+                    <fa-layers>
+                        <fa-icon [icon]="calendarIcon" class="text-danger" size="2x"></fa-icon>
+                        <fa-icon [icon]="powerOffIcon" class="text-light" transform="shrink-4 down-4.2 right-5" ></fa-icon>
+                    </fa-layers>
+                </abbr>
+            </th>
+            <!-- <th>Duracion</th> -->
+            <th>
+                Causa<br>
+                desenganche
+            </th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        <tr *ngFor="let item of historyONT">
+            <td class="text-center">{{ item.index }}</td>
+            <td class="text-start">{{ item.upTime }}</td>
+            <td class="text-start">{{ item.downTime != 'Null' ? item.downTime : ''}}</td>
+            <!-- <td class="text-start">-------</td> -->
+            <td class="text-center">
+                <abbr *ngIf="item.cause == 'ONT sin energía'" title="{{item.cause}}">
+                    <fa-layers>
+                        <fa-icon [icon]="energyIcon" class="text-danger"></fa-icon>
+                        <fa-icon [icon]="slashIcon" class="text-danger"></fa-icon>
+                    </fa-layers>
+                </abbr>
+                <abbr *ngIf="item.cause == 'ONT LOSi/LOBi alarm'" title="{{item.cause}}">
+                    <fa-layers>
+                        <fa-icon [icon]="powerOffIcon" class="text-danger"></fa-icon>
+                    </fa-layers>
+                </abbr>
+                <abbr *ngIf="item.cause != 'ONT LOSi/LOBi alarm' && item.cause != 'ONT sin energía'">
+                    {{item.cause != 'Null' ? item.cause : ''}}
+                </abbr>
+            </td>
+        </tr>
+
+    </tbody>
+</table>

@@ -1,0 +1,462 @@
+<!-- [ngClass]="{'paginatorDesabile':!checkedDataGrafic}" *ngIf="user['permisos']?.dashboard?.grafica1?.ver" -->
+<mat-card class="page-content-card">
+    <div *ngIf="selected!==2" [@animate]="{value:'*',params:{x:'-50px'}}">
+        <div [formGroup]="formRetirosFiltros" fxLayout="row" [@animate]="{value:'*',params:{x:'-50px'}}">
+            <div fxLayout="column" fxFlex="90%" fxLayoutAlign="start  center">
+                <div fxLayout="row" fxLayoutAlign="start   center">
+                    <mat-form-field fxFlex="25%" class="pr20 no-pb" appearance="outline">
+                        <mat-label> Estado servicio</mat-label>
+                        <mat-select formControlName="arrEstadosServicio" multiple>
+                            <mat-option
+                                (onSelectionChange)="selectTodo(formRetirosFiltros,'arrEstadosServicio',estadosServicios,'idestadoservicio')">
+                                <strong>
+                                    Selecionar Todo
+                                </strong>
+                            </mat-option>
+                            <mat-option *ngFor="let estadosServicio of estadosServicios"
+                                [value]="estadosServicio.idestadoservicio">
+                                {{estadosServicio.nombre}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field fxFlex="25%" class="pr20 no-pb" appearance="outline">
+                        <mat-label> Estado solicitud servicio </mat-label>
+                        <mat-select formControlName="arrEstadosSolicitud" multiple>
+                            <mat-option
+                                (onSelectionChange)="selectTodo(formRetirosFiltros,'arrEstadosSolicitud',estadosSolServicios,'idestadosolicitudservicio')">
+                                <strong>
+                                    Selecionar Todo
+                                </strong>
+                            </mat-option>
+                            <mat-option *ngFor="let estadosSolServicio of estadosSolServicios"
+                                [value]="estadosSolServicio.idestadosolicitudservicio">
+                                {{estadosSolServicio.nombre}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field fxFlex="25%" class="pr20 no-pb" appearance="outline">
+                        <mat-label>Estado de la programación retiros </mat-label>
+                        <mat-select formControlName="arrEstadosRetiro" multiple>
+                            <mat-option
+                                (onSelectionChange)="selectTodo(formRetirosFiltros,'arrEstadosRetiro',estadosRetiros,'idestadoretiro')">
+                                <strong>
+                                    Selecionar Todo
+                                </strong>
+                            </mat-option>
+                            <mat-option *ngFor="let estadosRetiro of estadosRetiros"
+                                [value]="estadosRetiro.idestadoretiro">
+                                {{estadosRetiro.nombre}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field fxFlex="25%" class="pr20 no-pb" appearance="outline">
+                        <mat-label> Motivo de la programación de retiro </mat-label>
+                        <mat-select formControlName="arrMotivosRetiro" multiple>
+                            <mat-option
+                                (onSelectionChange)="selectTodo(formRetirosFiltros,'arrMotivosRetiro',motivosRetiros,'idmotivoretiro')">
+                                <strong>
+                                    Selecionar Todo
+                                </strong>
+                            </mat-option>
+                            <mat-option *ngFor="let motivosRetiro of motivosRetiros"
+                                [value]="motivosRetiro.idmotivoretiro">
+                                {{motivosRetiro.nombre}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div fxLayout="row" fxLayoutAlign="center center">
+                    <mat-form-field fxFlex="25%" class="pr20 no-pb" appearance="outline">
+                        <mat-label> Solicitudes Programadas por </mat-label>
+                        <mat-select formControlName="arrSolCreadaPor" multiple>
+                            <mat-option
+                                (onSelectionChange)="selectTodo(formRetirosFiltros,'arrSolCreadaPor',solicitudescreadaspor,'idtercero')">
+                                <strong>
+                                    Selecionar Todo
+                                </strong>
+                            </mat-option>
+                            <mat-option *ngFor="let solicitudCreadaspor of solicitudescreadaspor"
+                                [value]="solicitudCreadaspor.idtercero">
+                                {{solicitudCreadaspor.nombres}} {{solicitudCreadaspor.apellidos}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field fxFlex="25%" class="pr20 no-pb" appearance="outline">
+                        <mat-label> Selecionar Municipios </mat-label>
+                        <mat-select formControlName="arrMunicipio" multiple>
+                            <mat-option
+                                (onSelectionChange)="selectTodo(formRetirosFiltros,'arrMunicipio',municipios,'idmunicipio')">
+                                <strong>
+                                    Selecionar Todo
+                                </strong>
+                            </mat-option>
+                            <mat-option *ngFor="let municipio of municipios" [value]="municipio.idmunicipio">
+                                {{municipio.nombre}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field fxFlex="25%" class="pr20 no-pb" appearance="outline">
+                        <mat-label> Retiros Programados por </mat-label>
+                        <mat-select formControlName="arrRetiroCreadoPor" multiple>
+                            <mat-option
+                                (onSelectionChange)="selectTodo(formRetirosFiltros,'arrRetiroCreadoPor',retiroscreadospor,'idservicio')">
+                                <strong>
+                                    Selecionar Todo
+                                </strong>
+                            </mat-option>
+                            <mat-option *ngFor="let retirocreadospor of retiroscreadospor"
+                                [value]="retirocreadospor.idservicio">
+                                {{retirocreadospor.nombres}} {{retirocreadospor.apellidos}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <section fxFlex="25%" class="pr20 ">
+                        <!-- <mat-checkbox formControlName="FiltroFecha">Filtro Fecha</mat-checkbox> -->
+                        <mat-slide-toggle formControlName="FiltroFecha">
+                            Filtrar Por Fecha
+                        </mat-slide-toggle>
+                    </section>
+                </div>
+
+            </div>
+            <div fxFlex="10%" fxLayoutAlign="center center" class="top-buttons block-top-buttons">
+                <button mat-icon-button class="pr20" matTooltip="Borrar filtros" (click)="borrarFiltro()" [disabled]="cargando"><i class="fas fa-backspace"></i></button>
+
+                <button mat-mini-fab color="primary" matTooltip="Buscar" (click)="buscarDatosDB()" [disabled]="cargando">
+                    <mat-icon *ngIf="!cargando">search</mat-icon>
+                    <span *ngIf="cargando"><i class="fas fa-spinner fa-spin"></i></span> 
+                </button>
+            </div>
+        </div>
+        <br>
+        <!-- <div class="p-20" [formGroup]="formRetirosFiltros" fxLayout="row" fxLayoutAlign="space-around center"
+            [@animate]="{value:'*',params:{x:'-50px'}}">
+
+        
+        </div> -->
+        <ng-container *ngIf='formRetirosFiltros.controls.FiltroFecha.value'>
+            <div [formGroup]="formRetirosFiltros" fxLayout="row" fxLayoutAlign="start center" fxLayout.lt-md="column"
+                fxLayoutWrap fxLayoutGap="0.5%" [@animate]="{value:'*',params:{x:'-50px'}}" class="content">
+                <div fxLayout="column" fxFlex="19%" class="lineas">
+                    <h3 [ngStyle.xs]="{'font-size.px': 13}" [ngStyle.sm]="{'font-size.px': 13}"
+                        [ngStyle.md]="{'font-size.px': 13}" [ngStyle.lg]="{'font-size.px': 14}"
+                        [ngStyle.xl]="{'font-size.px': 17}">Retiro Programado</h3>
+                    <mat-form-field appearance="outline" fxFlex class="no-pb" appearance="outline">
+                        <mat-label>Fecha Inicial</mat-label>
+                        <input formControlName="fiRetiro" matInput [matDatepicker]="fiRetiro">
+                        <mat-datepicker-toggle matSuffix [for]="fiRetiro"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #fiRetiro></mat-datepicker>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" fxFlex class="no-pb" appearance="outline">
+                        <mat-label>Fecha Final</mat-label>
+                        <input formControlName="ffRetiro" matInput [matDatepicker]="ffRetiro"
+                            [disabled]="this.formRetirosFiltros.controls.fiRetiro.value==''">
+                        <mat-datepicker-toggle matSuffix [for]="ffRetiro"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #ffRetiro></mat-datepicker>
+                    </mat-form-field>
+                </div>
+
+                <div fxLayout="column" fxFlex="19%" class="lineasSincolor">
+                    <h3 [ngStyle.xs]="{'font-size.px': 13}" [ngStyle.sm]="{'font-size.px': 13}"
+                        [ngStyle.md]="{'font-size.px': 13}" [ngStyle.lg]="{'font-size.px': 14}"
+                        [ngStyle.xl]="{'font-size.px': 17}">Retiro Fisco</h3>
+                    <mat-form-field appearance="outline" fxFlex class="no-pb" appearance="outline">
+                        <mat-label>Fecha Inicial</mat-label>
+                        <input formControlName="fiRetiroFisico" matInput [matDatepicker]="fiRetiroFisico">
+                        <mat-datepicker-toggle matSuffix [for]="fiRetiroFisico"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #fiRetiroFisico></mat-datepicker>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" fxFlex class="no-pb" appearance="outline">
+                        <mat-label>Fechas Final </mat-label>
+                        <input formControlName="ffRetiroFisico" matInput [matDatepicker]="ffRetiroFisico"
+                            [disabled]="this.formRetirosFiltros.controls.fiRetiroFisico.value==''">
+                        <mat-datepicker-toggle matSuffix [for]="ffRetiroFisico"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #ffRetiroFisico></mat-datepicker>
+                    </mat-form-field>
+                </div>
+
+
+                <div fxLayout="column" fxFlex="19%" class="lineas">
+                    <h3 [ngStyle.xs]="{'font-size.px': 9}" [ngStyle.sm]="{'font-size.px': 9}"
+                        [ngStyle.md]="{'font-size.px': 9}" [ngStyle.lg]="{'font-size.px': 12}"
+                        [ngStyle.xl]="{'font-size.px': 17}">
+                        Creación de Programación de Retiro
+                    </h3>
+                    <mat-form-field appearance="outline" fxFlex class="no-pb" appearance="outline">
+                        <mat-label>Fecha Inicial</mat-label>
+                        <input formControlName="fiCreacionRetiros" matInput [matDatepicker]="fiCreacionRetiros">
+                        <mat-datepicker-toggle matSuffix [for]="fiCreacionRetiros"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #fiCreacionRetiros></mat-datepicker>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" fxFlex class="no-pb" appearance="outline">
+                        <mat-label>Fechas Final </mat-label>
+                        <input formControlName="ffCreacionRetiros" matInput [matDatepicker]="ffCreacionRetiros"
+                            [disabled]="this.formRetirosFiltros.controls.fiCreacionRetiros.value=='' ">
+                        <mat-datepicker-toggle matSuffix [for]="ffCreacionRetiros"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #ffCreacionRetiros></mat-datepicker>
+                    </mat-form-field>
+                </div>
+
+                <div fxLayout="column" fxFlex="19%" class="lineasSincolor">
+                    <h3 [ngStyle.xs]="{'font-size.px': 13}" [ngStyle.sm]="{'font-size.px': 13}"
+                        [ngStyle.md]="{'font-size.px': 13}" [ngStyle.lg]="{'font-size.px': 14}"
+                        [ngStyle.xl]="{'font-size.px': 17}">Activación Inicial del Servicio</h3>
+                    <mat-form-field appearance="outline" fxFlex class="no-pb" appearance="outline">
+                        <mat-label>Fecha Inicia </mat-label>
+                        <input formControlName="fiActInicial" matInput [matDatepicker]="fiActInicial">
+                        <mat-datepicker-toggle matSuffix [for]="fiActInicial"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #fiActInicial></mat-datepicker>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" fxFlex class="no-pb" appearance="outline">
+                        <mat-label>Fechas Final </mat-label>
+                        <input formControlName="ffActInicial" matInput [matDatepicker]="ffActInicial"
+                            [disabled]="this.formRetirosFiltros.controls.fiActInicial.value==''">
+                        <mat-datepicker-toggle matSuffix [for]="ffActInicial"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #ffActInicial></mat-datepicker>
+                    </mat-form-field>
+                </div>
+
+
+                <div fxLayout="column" fxFlex="19%" class="lineas">
+                    <h3 [ngStyle.xs]="{'font-size.px': 13}" [ngStyle.sm]="{'font-size.px': 13}"
+                        [ngStyle.md]="{'font-size.px': 13}" [ngStyle.lg]="{'font-size.px': 14}"
+                        [ngStyle.xl]="{'font-size.px': 17}">Solicitud del Retiro</h3>
+                    <mat-form-field appearance="outline" fxFlex class="no-pb" appearance="outline">
+                        <mat-label>Fecha Inicial</mat-label>
+                        <input formControlName="fiSolicitud" matInput [matDatepicker]="fiSolicitud">
+                        <mat-datepicker-toggle matSuffix [for]="fiSolicitud"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #fiSolicitud></mat-datepicker>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" fxFlex class="no-pb" appearance="outline">
+                        <mat-label>Fechas Final</mat-label>
+                        <input formControlName="ffSolicitud" matInput [matDatepicker]="ffSolicitud"
+                            [disabled]="this.formRetirosFiltros.controls.fiSolicitud.value==''">
+                        <mat-datepicker-toggle matSuffix [for]="ffSolicitud"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #ffSolicitud></mat-datepicker>
+                    </mat-form-field>
+                </div>
+
+            </div>
+        </ng-container>
+        <div class="m-10">
+            <mat-chip-list *ngIf="municipiosSeleccionados.length>0" aria-label="Fish selection">
+                <small>
+                    Filtro Municipios:
+                </small>
+                <mat-chip color="primary" (removed)="removeMunicipio(municipio)" selected
+                    *ngFor="let municipio of municipiosSeleccionados">
+                    <small> {{municipio.nombre}}</small>
+                    <mat-icon matChipRemove>cancel</mat-icon>
+                </mat-chip>
+            </mat-chip-list>
+            <mat-chip-list *ngIf='solCreadaPorUser.length>0' aria-label="Fish selection">
+                <small>
+                    Solicitudes Creadas por:
+                </small>
+                <mat-chip color="primary" (removed)="removeSolicitudesCreadoPOr(solCreadaPor)" selected
+                    *ngFor="let solCreadaPor of solCreadaPorUser">
+                    <small> {{solCreadaPor['nombres']}} {{solCreadaPor['apellidos']}} </small>
+                    <mat-icon matChipRemove>cancel</mat-icon>
+                </mat-chip>
+            </mat-chip-list>
+            <mat-chip-list *ngIf='retiroCreadoPorUser.length>0' aria-label="Fish selection">
+                <small>
+                    Retiros Programados por:
+                </small>
+                <mat-chip color="primary" selected (removed)="removeRetiroCreadoPOr(retiroCreadoPor)"
+                    *ngFor="let retiroCreadoPor of retiroCreadoPorUser">
+                    <small> {{retiroCreadoPor['nombres']}} {{retiroCreadoPor['apellidos']}}</small>
+                    <mat-icon matChipRemove>cancel</mat-icon>
+                </mat-chip>
+            </mat-chip-list>
+        </div>
+    </div>
+    <!-- <mat-progress-bar mode="indeterminate" *ngIf="cargando"></mat-progress-bar> -->
+    <mat-tab-group dynamicHeight [selectedIndex]="selected" (selectedIndexChange)="selected=$event">
+        
+        <mat-tab label="Cantidades">
+            <br><br>
+            <div *ngIf="dataSource?.data.length >= 1" class="header-pages-tools" fxLayoutAlign="end center">
+
+                <mat-label ngClass="labelBeforeSlide">
+                    <mat-icon [ngClass]="{'gray-disb': checkedDataGrafic}" color="{{checkedDataGrafic ? '' : 'accent'}}">leaderboard</mat-icon>
+                </mat-label>
+                <mat-slide-toggle class="checked-data-grafic" [(ngModel)]="checkedDataGrafic" [disabled]="isGraficaData" (change)="CargandoGraficos()">
+                    <mat-icon [ngClass]="{'gray-disb': !checkedDataGrafic}" color="{{checkedDataGrafic ? 'accent' : ''}}">table_rows</mat-icon>
+                </mat-slide-toggle>
+                
+            </div>
+            <!-- *ngIf="!checkedDataGrafic" -->
+            <div class="mat-elevation-z5" [@animate]="{value:'*',params:{y:'100%'}}">
+                <!-- *ngIf='dataParaGraficos.length>0 && checkedDataGrafic' -->
+                <ng-container>
+                    <table mat-table class="table-striped table-hover" [dataSource]="dataSource" matSort
+                        [ngClass]="{'paginatorDesabile':  !checkedDataGrafic}">
+
+                        <ng-container matColumnDef="idestado">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado Retiro</th>
+                            <td mat-cell *matCellDef="let row">
+                                <span
+                                    class="est-ret est-ret-{{row.idestadoretiro ? getEstadoRetiro(row.idestadoretiro)['nombre'] : 'N/A'}}">{{row.idestadoretiro
+                                    ? getEstadoRetiro(row.idestadoretiro)['nombre'] : 'N/A'}}</span>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="idmotivo">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Motivo </th>
+                            <td mat-cell *matCellDef="let row">{{row.idmotivoretiro ? (getMotivoRetiro(row.idmotivoretiro) ?
+                                getMotivoRetiro(row.idmotivoretiro)['nombre'] : ' - '): 'N/A'}}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="fecharetiro">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> F. Retiro </th>
+                            <td mat-cell *matCellDef="let row"> {{row.fecharetiro ? (row.fecharetiro |
+                                date:'mediumDate') :
+                                'N/A'}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="fechacreacion">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> F. Creado </th>
+                            <td mat-cell *matCellDef="let row"> {{row.fechacreacionretiro ? (row.fechacreacionretiro |
+                                date:'mediumDate'):'N/A'}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="numeroservicio">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> N. Servicio </th>
+                            <td mat-cell *matCellDef="let row">
+                                <a href="#" class="link"
+                                    [routerLink]="['/servicio', row.idservicio]">{{row.numeroservicio}}</a>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="plan">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Plan </th>
+                            <td mat-cell *matCellDef="let row">
+                                <a href="#" class="link" [routerLink]="['/plan', row.idplan]">{{row.plan}}</a>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="nombrestercero">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Tercero </th>
+                            <td mat-cell *matCellDef="let row">
+                                <a href="#" class="link" [routerLink]="['/tercero', row.idtercero]">{{row.nombrestercero
+                                    + ' ' +
+                                    row.apellidostercero}}</a>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="municipio">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Municipio </th>
+                            <td mat-cell *matCellDef="let row"> {{row.municipio ? (row.municipio ):'N/A'}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="estadosolicitudservicio">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado Solicitud Servicio </th>
+                            <td mat-cell *matCellDef="let row"> {{row.municipio ? (row.nombreestadosolicitudservicio
+                                ):'N/A'}} </td>
+                        </ng-container>
+
+          
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                    </table>
+
+
+                </ng-container>
+
+                <mat-paginator [ngClass]="{'paginatorDesabile':!checkedDataGrafic}"
+                    [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons="true"></mat-paginator>
+            </div>
+
+            <div *ngIf="dataSource?.data.length < 1" class="no-hay-data">
+                <br>
+                No hay retiros para mostrar, por favor realice una busqueda.
+                <br><br>
+            </div>
+            <ng-container *ngIf="!checkedDataGrafic">
+                <br>
+                <div [formGroup]="formConsulta" fxLayout="column" *ngIf="dataPie" fxLayoutAlign="center center"
+                    [@animate]="{value:'*',params:{x:'-50px'}}">
+
+                    <div fxLayout="row">
+                        <mat-form-field fxLayoutAlign="center center" fxFlex class="pr20 no-pb align-item-c "
+                            appearance="outline">
+                            <mat-label>Variable para graficar</mat-label>
+                            <mat-select formControlName="tipoBusquedaForm" (selectionChange)="graficar()">
+                                <mat-option *ngFor="let flitro of filtrosPor " [value]="flitro.value">
+                                    {{flitro.descripcion}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                    <div>
+                        <br>
+                        <small>
+                            Se encontrados
+                            <strong> {{this.dataParaGraficos.length}} </strong> solicitudes de terminacón de contrato,
+                            con
+                            <strong> {{this.contRetiros }}</strong> retiros programados
+                        </small>
+                        <hr>
+                    </div>
+
+
+                </div>
+
+                <div
+                    *ngIf="(formConsulta.controls.tipoBusquedaForm.value < 3 || formConsulta.controls.tipoBusquedaForm.value > 6)">
+                    <app-graficas-retiro [cont]='contRetiros' [datosFiltrados]='dataPie' variable="retiros programados">
+                    </app-graficas-retiro>
+                </div>
+
+                <div *ngIf="formConsulta.controls.tipoBusquedaForm.value ==3">
+                    <app-graficas-retiro [cont]='dataParaGraficos.length' [datosFiltrados]='dataPie'
+                        variable="solicitudes de terminacón de contrato"></app-graficas-retiro>
+                </div>
+
+                <div *ngIf="formConsulta.controls.tipoBusquedaForm.value ==4 ">
+                    <app-graficas-retiro [cont]='dataParaGraficos.length - contRetiros' [datosFiltrados]='dataPie'
+                        variable="solicitudes de terminacón de contrato sin retiro programado"></app-graficas-retiro>
+                </div>
+
+                <div
+                    *ngIf="(formConsulta.controls.tipoBusquedaForm.value ==5 || formConsulta.controls.tipoBusquedaForm.value ==6)">
+                    <app-graficas-retiro [cont]='dataParaGraficos.length' [datosFiltrados]='dataPie'
+                        variable="solicitudes de terminacón de contrato"></app-graficas-retiro>
+                </div>
+            </ng-container>
+        </mat-tab>
+
+        <mat-tab label="Promedios">
+            <ng-template matTabContent>
+                <div *ngIf="dataSource?.data.length < 1" class="no-date-table">
+                    <br>
+                    Por favor realice una búsqueda.
+                    <br>
+                </div>
+                <app-indicadores *ngIf="dataSource?.data.length > 1" [flitroFechas]='consultaG'></app-indicadores>
+            </ng-template>
+        </mat-tab>
+
+        <mat-tab label="Últimos 4 Meses">
+            <ng-template matTabContent>
+                <app-ultimos-cuatro-meses></app-ultimos-cuatro-meses>
+            </ng-template>
+        </mat-tab>
+
+        <mat-tab label="ChartJs">
+            <ng-template matTabContent>
+
+                <app-chartjs></app-chartjs>
+
+            </ng-template>
+        </mat-tab>
+
+    </mat-tab-group>
+
+
+
+
+</mat-card>

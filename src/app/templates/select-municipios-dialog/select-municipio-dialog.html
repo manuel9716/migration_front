@@ -1,0 +1,38 @@
+<div class="center">
+
+	<h1 style="font-size: 25px;margin-top: 16px;" mat-dialog-title>Selecionar Municipios</h1>
+	<div mat-dialog-content>
+		<div  [formGroup]="formMunicipios" fxLayout="row" fxLayoutAlign="space-around none">
+			<mat-form-field class="pr20 no-pb" appearance="outline">
+				<mat-label> Selecione Departamento </mat-label>
+				<mat-select formControlName="departamentos"  (selectionChange)="selectionChangeID($event)">
+					<mat-option *ngFor="let departemento of data" [value]="departemento['iddepartamento']">
+						{{departemento['nombre']}}
+					</mat-option>
+				</mat-select>
+			</mat-form-field>
+			<mat-form-field class="pr20 no-pb" appearance="outline"  *ngIf="formMunicipios.controls.departamentos.value != ''">
+				<mat-label> Selecione Municipios </mat-label>
+				<mat-select formControlName="municipios" multiple >
+					<mat-option *ngFor="let municipio of cargaMunicipios" [value]="municipio">
+						{{municipio['nombre']}}
+					</mat-option>
+				</mat-select>
+			</mat-form-field>
+		</div>
+	</div>
+	<div *ngIf="muncipiosSeleccionados.length>0">
+		<mat-chip-list aria-label="Fish selection">
+			<mat-chip color="primary" selected *ngFor="let municipio of muncipiosSeleccionados">
+				{{municipio.nombre}}
+			</mat-chip>
+		</mat-chip-list>
+	</div>
+	<br>
+	<br>
+	<div mat-dialog-actions>
+		<button mat-raised-button (click)="agregar()" cdkFocusInitial>Agregar Municipio</button>
+		<button mat-raised-button (click)="enviarFiltro()" color="accent" cdkFocusInitial  [disabled]="muncipiosSeleccionados.length<=0" >Añadir Filtro</button>
+		<button mat-raised-button (click)="dialogRef.close()" cdkFocusInitial>Salir</button>
+	</div>
+</div>

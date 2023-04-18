@@ -1,0 +1,54 @@
+<mat-toolbar color="primary" class="header-pages">
+	<div [@animate]="{value:'*',params:{x:'50px'}}">
+		<span class="title">Dashboard</span><br>
+		<span class="breadcrumb">Página de inicio</span>
+	</div>
+</mat-toolbar>
+
+
+<mat-card class="page-content-card">
+	
+<div class="title-grafic">
+	<span class=" mat-display-1">Gráficos, datos y estadísticas</span>
+</div>
+
+	<div class="conten-op" fxLayout="row" fxLayoutAlign="space-evenly   center"  >
+		<div class="card-dasboard" *ngIf="user['permisos']?.dashboard?.retiros">
+			<a class="link-gra" routerLink="/dashboard/retiros">
+				<i mat-list-icon class="fas fa-sign-out-alt icon-dasboard-bitwan"></i>
+				<h2 class="mat-h2">Retiros</h2>
+			</a>
+		</div>
+
+		<div class="card-dasboard" *ngIf="user['permisos']?.dashboard?.labores">
+			<a class="link-gra" routerLink="/dashboard/labores">
+				<i mat-list-icon class="fas fa-business-time icon-dasboard-bitwan"></i>
+				<h2 class="mat-h2">Labores</h2>
+			</a>
+		</div>
+
+		<div class="card-dasboard" *ngIf="user['permisos']?.dashboard?.ventas">
+			<a class="link-gra" routerLink="/dashboard/ventas">
+				<i mat-list-icon class="fas fa-dollar-sign icon-dasboard-bitwan"></i>
+				<h2 class="mat-h2">Ventas</h2>
+			</a>
+		</div>
+		
+		<!-- <div class="card-dasboard">
+			<a class="link-gra" routerLink="/planes">
+				<i mat-list-icon class="fas fa-calendar-minus icon-dasboard-bitwan"></i>
+				<h2 class="mat-h2">Suspensiones</h2>
+			</a>
+		</div>
+
+		<div class="card-dasboard">
+			<a class="link-gra" routerLink="/planes">
+				<i mat-list-icon class="fas fa-hands-helping icon-dasboard-bitwan"></i>
+				<h2 class="mat-h2">Acuerdos P Terceros</h2>
+			</a>
+		</div> -->
+
+	</div>
+
+
+</mat-card>

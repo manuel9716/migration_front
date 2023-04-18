@@ -1,0 +1,82 @@
+<h1 mat-dialog-title>Resultados de búsqueda</h1>
+
+<div mat-dialog-content>
+	
+	<mat-form-field appearance="outline">
+		<mat-label>Filtrar Tercero</mat-label>
+		<input matInput (keyup)="applyFilter($event.target.value)" [(ngModel)]="terceroSearch">
+		<mat-icon matPrefix class="secondary-text">search</mat-icon>
+		<button mat-button *ngIf="terceroSearch" matSuffix mat-icon-button aria-label="Clear"
+			(click)="terceroSearch=''; applyFilter('')">
+			<mat-icon>close</mat-icon>
+		</button>
+	</mat-form-field>
+	
+	<div class="mat-elevation-z8">
+		<table mat-table class="compact-table" [dataSource]="dataSource" matSort>
+			
+			<ng-container matColumnDef="idtercero">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+				<td mat-cell *matCellDef="let row"> {{row.idtercero}} </td>
+			</ng-container>
+			
+			<ng-container matColumnDef="numerotercero">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> Número tercero </th>
+				<td mat-cell *matCellDef="let row"> {{row.numerotercero}} </td>
+			</ng-container>
+			
+			<ng-container matColumnDef="nombres">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> Nombres </th>
+				<td mat-cell *matCellDef="let row"> {{row.nombres}} </td>
+			</ng-container>
+			
+			<ng-container matColumnDef="apellidos">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> Apellidos </th>
+				<td mat-cell *matCellDef="let row"> {{row.apellidos}}</td>
+			</ng-container>
+			
+			<ng-container matColumnDef="identificacion">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> Identificación </th>
+				<td mat-cell *matCellDef="let row"> {{row.identificacion}} </td>
+			</ng-container>
+			
+			<ng-container matColumnDef="actions" stickyEnd>
+				<th mat-header-cell *matHeaderCellDef> </th>
+				<td mat-cell *matCellDef="let row">
+					<button mat-icon-button color="primary" matTooltip="Seleccionar" (click)="selectTercero(row)">
+						<mat-icon>check</mat-icon>
+					</button>
+				</td>
+			</ng-container>
+			
+			<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+			<tr mat-row *matRowDef="let row; columns: displayedColumns;" (dblclick)="selectTercero(row)"></tr>
+		</table>
+		
+		<div *ngIf="dataSource?.data.length < 1" class="no-date-table" style="margin:20px">
+			No hay resultados.
+		</div>
+		
+		<mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons="true"></mat-paginator>
+		
+	</div>
+	
+</div>
+
+
+
+<div mat-dialog-actions>
+	<button mat-button [mat-dialog-close] cdkFocusInitial>Cerrar</button>
+</div>
+
+
+<style>
+	table {
+		width: 100%;
+	}
+	
+	.mat-form-field {
+		font-size: 14px;
+		width: 100%;
+	}
+</style>

@@ -1,0 +1,82 @@
+<div fxLayout="row" fxLayoutAlign="end center" style="margin: 15px" *ngIf="user['permisos']?.municipios?.planes?.asociar">
+	<button mat-raised-button color="primary" matTooltip="Asociar Plan" (click)="modalAsociarPlan()" [disabled]="associating">
+		Asociar Plan
+		<mat-icon class="ml8" *ngIf="!associating">add_link</mat-icon>
+		<span class="ml8" *ngIf="associating"><i class="fas fa-spinner fa-spin"></i></span>
+	</button>
+</div>
+
+
+<mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+
+<div class="mat-elevation-z5" [@animate]="{value:'*',params:{y:'100%'}}">
+	
+	<table mat-table [dataSource]="dataSource" matSort >
+		
+		<ng-container matColumnDef="nombre">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
+			<td mat-cell *matCellDef="let row"> {{row.nombre}} </td>
+		</ng-container>
+		
+		<ng-container matColumnDef="valorsiniva">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header> Vlr. sin iva </th>
+			<td mat-cell *matCellDef="let row"> {{row.valorsiniva | currency : 'USD' : 'symbol' : '1.0'}} </td>
+		</ng-container>
+		
+		<ng-container matColumnDef="iva">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header> Iva </th>
+			<td mat-cell *matCellDef="let row"> {{row.iva}}% </td>
+		</ng-container>
+				
+		<ng-container matColumnDef="idgeografia">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header> Geografía </th>
+			<td mat-cell *matCellDef="let row"> {{geografias[row.idgeografia-1]?.name}} </td>
+		</ng-container>
+		
+		<ng-container matColumnDef="idtipoplan">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo plan </th>
+			<td mat-cell *matCellDef="let row"> {{tiposPlanes[row.idtipoplan-1]?.name}} </td>
+		</ng-container>
+		
+		<ng-container matColumnDef="idtiposervicio">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo servicio </th>
+			<td mat-cell *matCellDef="let row"> {{tiposServicios[row.idtiposervicio-1]?.name}} </td>
+		</ng-container>
+				
+		<ng-container matColumnDef="velmaxdescargambps">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header> Vel. max. descarga </th>
+			<td mat-cell *matCellDef="let row"> {{row.velmaxdescargambps}} Mbps </td>
+		</ng-container>
+		
+		<ng-container matColumnDef="velmaxcargambps">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header> Vel. max. carga </th>
+			<td mat-cell *matCellDef="let row"> {{row.velmaxcargambps}} Mbps</td>
+		</ng-container>
+				
+		<!-- Actions -->
+		<ng-container matColumnDef="actions">
+			<th mat-header-cell *matHeaderCellDef> </th>
+			<td mat-cell *matCellDef="let row" class="align-r">
+			
+
+				<button color="warn" mat-icon-button matTooltip="Desasociar" [disabled]="row['disassociating']" (click)="disassociate(row)" *ngIf="user['permisos']?.municipios?.planes?.desasociar">
+					<div *ngIf="!row['disassociating']"><i class="fas fa-unlink"></i></div>
+					<div *ngIf="row['disassociating']"><i class="fas fa-spinner fa-spin"></i></div>
+				</button>
+			</td>
+		</ng-container>
+		
+		<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+		<tr mat-row *matRowDef="let row; columns: displayedColumns;"  (dblclick)="edit(row)"></tr>
+		
+	</table>
+	
+	<div *ngIf="dataSource?.data?.length === 0" class="no-date-table">
+		No se encontraron Planes asociados.
+	</div>
+	
+	<mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons="true"></mat-paginator>
+	
+</div>
+
+

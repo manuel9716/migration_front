@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "bitwan-f0333": {
+      "hosting": {
+        "sidebar": [
+          "bitwan-f0333"
+        ]
+      }
+    }
+  }
+}

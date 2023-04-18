@@ -1,0 +1,84 @@
+<div fxLayout="row" fxLayoutAlign="end center" style="margin: 10px" *ngIf="user['permisos']?.municipios?.barrios?.crear">
+	
+	<mat-form-field appearance="outline" class="no-pb compress">
+		<input matInput [(ngModel)]="newBarrio" placeholder="Crear un barrio..." (ngModelChange)="newBarrio = $event.toUpperCase()" (keyup)="applyFilter($event)">
+		<button mat-button *ngIf="newBarrio" matSuffix mat-icon-button aria-label="Clear" (click)="newBarrio = null; applyFilter(null)">
+			<mat-icon>close</mat-icon>
+		</button>
+	</mat-form-field>
+
+	<button mat-mini-fab color="primary" matTooltip="Crear" class="ml8" (click)="create(newBarrio)" [disabled]="!newBarrio">
+		<mat-icon *ngIf="!creating">add</mat-icon>
+		<div *ngIf="creating"><i class="fas fa-spinner fa-spin"></i></div>
+	</button>
+
+</div>
+
+
+<mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+
+<div class="mat-elevation-z5" [@animate]="{value:'*',params:{y:'100%'}}">
+	
+	<table mat-table [dataSource]="dataSource" matSort >
+		
+		<!-- <ng-container matColumnDef="idbarrio">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+			<td mat-cell *matCellDef="let row" style="width: 120px;"> {{row.idbarrio}}</td>
+		</ng-container> -->
+
+		<!-- Nombre -->
+		<ng-container matColumnDef="nombrebarrio">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
+			<td mat-cell *matCellDef="let row">
+
+				<span *ngIf="currentBarrio?.idbarrio != row.idbarrio">{{row.nombrebarrio}}</span>
+
+				<div fxLayout="row" fxLayoutAlign="start center" *ngIf="currentBarrio?.idbarrio == row.idbarrio">
+					<mat-form-field appearance="outline" class="no-pb compress" >
+
+						<input matInput [(ngModel)]="currentBarrio['editNombre']">
+
+						<button mat-button *ngIf="currentBarrio['editNombre']" matSuffix mat-icon-button aria-label="Clear" (click)="currentBarrio = null">
+							<mat-icon>close</mat-icon>
+						</button>
+					</mat-form-field>
+					
+					<button mat-icon-button color="accent" matTooltip="Guardar" (click)="update(row)" [disabled]="row['updating']">
+						<mat-icon *ngIf="!row['updating']">save</mat-icon>
+						<div *ngIf="row['updating']"><i class="fas fa-spinner fa-spin"></i></div>
+					</button>
+
+				</div>
+
+			</td>
+		</ng-container>
+		<!-- Actions -->
+		<ng-container matColumnDef="actions">
+			<th mat-header-cell *matHeaderCellDef> </th>
+			<td mat-cell *matCellDef="let row" class="align-r">
+				<button  mat-icon-button color="primary" matTooltip="Editar" [disabled]="currentBarrio" (click)="edit(row)" *ngIf="user['permisos']?.municipios?.barrios?.editar">
+					<mat-icon>edit</mat-icon>
+				</button>
+				
+
+				<button color="warn" mat-icon-button matTooltip="Eliminar" [disabled]="currentBarrio" (click)="delete(row)" *ngIf="user['permisos']?.municipios?.barrios?.eliminar">
+					<div *ngIf="!row['deleting']"><i class="fas fa-trash"></i></div>
+					<div *ngIf="row['deleting']"><i class="fas fa-spinner fa-spin"></i></div>
+				</button>
+			</td>
+		</ng-container>
+		
+		<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+		<tr mat-row *matRowDef="let row; columns: displayedColumns;"  (dblclick)="edit(row)"></tr>
+		
+	</table>
+	
+	<div *ngIf="dataSource?.data?.length === 0" class="no-date-table">
+		No se encontraron barrios.
+	</div>
+	
+	<mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons="true"></mat-paginator>
+	
+</div>
+
+

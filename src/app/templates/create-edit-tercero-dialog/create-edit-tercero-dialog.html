@@ -1,0 +1,147 @@
+<mat-toolbar fxLayout="row" fxLayoutAlign="center center" color="primary">
+	<h4>CREAR TERCERO</h4>
+</mat-toolbar>
+
+<div class="separator"></div>
+
+<div class="" fxLayout="column" fxLayoutAlign="start" fxLayout.gt-md="row">
+
+	<div [@animate]="{value:'*',params:{y:'50px'}}" fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto"
+		*ngIf="load">
+		<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+	</div>
+
+	<form name="form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate
+		fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto" *ngIf="!load"
+		[@animate]="{value:'*',params:{y:'50px'}}">
+
+		<div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+			<mat-form-field appearance="outline" fxFlex="50" class="pr20">
+				<mat-label>Nombres</mat-label>
+				<input matInput formControlName="nombres" required class="text-upp">
+				<mat-icon matSuffix class="secondary-text">account_circle</mat-icon>
+				<mat-hint>{{form.controls['nombres'].value?.length}} de 40</mat-hint>
+				<mat-error>
+					<span *ngIf="form.controls['nombres'].hasError('required')">Nombres es requerido</span>
+					<span *ngIf="form.controls['nombres'].hasError('maxlength')">Máximo 40 caracteres</span>
+				</mat-error>
+			</mat-form-field>
+
+			<mat-form-field appearance="outline" fxFlex="50" class="pr20">
+				<mat-label>Apellidos</mat-label>
+				<input matInput formControlName="apellidos" class="text-upp">
+				<mat-icon matSuffix class="secondary-text">account_circle</mat-icon>
+				<mat-hint>{{form.controls['apellidos'].value?.length}} de 40</mat-hint>
+				<mat-error>Máximo 40 caracteres</mat-error>
+			</mat-form-field>
+		</div>
+
+		<div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+			<mat-form-field appearance="outline" fxFlex="50" class="pr20">
+				<mat-label><i class="fas fa-mouse-pointer"></i> Tipo identificación</mat-label>
+				<mat-select formControlName="idtipodocumento" required>
+					<mat-option *ngFor="let tiposdocumentos of tiposdocumentos" [value]="tiposdocumentos.idtipo">
+						{{tiposdocumentos.nombre}}
+					</mat-option>
+				</mat-select>
+				<mat-error>Tipo identificación es requerido</mat-error>
+			</mat-form-field>
+
+			<mat-form-field appearance="outline" fxFlex="50" class="pr20">
+				<mat-label>Identificación</mat-label>
+				<input matInput formControlName="identificacion" required>
+				<i matSuffix class="far fa-id-card" data-fa-transform="grow-6 up-6 left-5"></i>
+				<mat-hint>{{form.controls['identificacion'].value?.length}} de 20</mat-hint>
+				<mat-error>
+					<span *ngIf="form.controls['identificacion'].hasError('required')">Identificación es requerido</span>
+					<span *ngIf="form.controls['identificacion'].hasError('maxlength')">Máximo 20 caracteres</span>
+					<span *ngIf="form.controls['identificacion'].hasError('pattern')">Número inválido</span>
+				</mat-error>
+			</mat-form-field>
+		</div>
+
+		<!-- <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+			<mat-form-field appearance="outline" fxFlex="50" class="pr20">
+				<mat-label>Email</mat-label>
+				<input matInput formControlName="email" required>
+				<mat-icon matSuffix class="secondary-text">email</mat-icon>
+				<mat-hint>{{form.controls['email'].value?.length}} de 50</mat-hint>
+				<mat-error>
+					<span *ngIf="form.controls['email'].hasError('email')">Email inválido</span>
+					<span *ngIf="form.controls['email'].hasError('required')">Email es requerido</span>
+					<span *ngIf="form.controls['email'].hasError('maxlength')">Máximo 50 caracteres</span>
+				</mat-error>
+			</mat-form-field>
+
+			<mat-form-field appearance="outline" fxFlex="50" class="pr20">
+				<mat-label>Celular</mat-label>
+				<input matInput formControlName="celular">
+				<mat-icon matSuffix class="secondary-text">phone_iphone</mat-icon>
+				<mat-hint>{{form.controls['celular'].value?.length}} de 11</mat-hint>
+				<mat-error>
+					<span *ngIf="form.controls['celular'].hasError('maxlength')">Máximo 11 caracteres</span>
+					<span *ngIf="form.controls['celular'].hasError('pattern')">Número inválido</span>
+				</mat-error>
+			</mat-form-field>
+		</div> -->
+
+
+		<div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+			<mat-form-field appearance="outline" fxFlex="50" class="pr20">
+				<mat-label><i class="fas fa-venus-mars"></i> Sexo</mat-label>
+				<mat-select formControlName="sexo">
+					<mat-option [value]="'f'">Femenino</mat-option>
+					<mat-option [value]="'m'">Masculino</mat-option>
+				</mat-select>
+			</mat-form-field>
+
+			<mat-form-field appearance="outline" fxFlex="50" class="pr20">
+				<mat-label>F. nacimiento</mat-label>
+				<input matInput [matDatepicker]="picker" formControlName="fnacimiento">
+				<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+				<mat-datepicker #picker></mat-datepicker>
+			</mat-form-field>
+		</div>
+
+		<!-- <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+			<mat-form-field appearance="outline" fxFlex="33" class="pr20">
+				<mat-label><i class="far fa-building"></i> Área</mat-label>
+				<mat-select formControlName="idarea" required>
+					<mat-option *ngFor="let area of areas" [value]="area.idarea">{{area.nombre}}
+					</mat-option>
+				</mat-select>
+				<mat-error>Área es requerida</mat-error>
+			</mat-form-field>
+
+			<mat-form-field appearance="outline" fxFlex="34" class="pr20">
+				<mat-label><i class="fas fa-mouse-pointer"></i> Tipos de tercero</mat-label>
+				<mat-select formControlName="idtiposterceros" multiple>
+					<mat-option *ngFor="let tipoTercero of tiposterceros" [value]="tipoTercero.idtipo">{{tipoTercero.nombre}}
+					</mat-option>
+				</mat-select>
+			</mat-form-field>
+
+			<mat-form-field appearance="outline" fxFlex="33" class="pr20">
+				<mat-label><i class="fas fa-user-tie"></i> Cargos</mat-label>
+				<mat-select formControlName="idcargos" multiple>
+					<mat-option *ngFor="let cargo of cargos" [value]="cargo.idcargo">{{cargo.nombre}}
+					</mat-option>
+				</mat-select>
+			</mat-form-field>
+		</div> -->
+
+		<div class="separator"></div>
+		<span class="error" *ngIf="error" [@animate]="{value:'*',params:{y:'50px'}}">{{error}}</span>
+
+		<div class="content-form-submit">
+			<button mat-raised-button class="btn-form-submit" type="button" (click)="cancel()"
+				[disabled]="loading">Cancelar</button>
+			<button mat-raised-button class="btn-form-submit" type="submit" color="primary"
+				[disabled]="form.invalid || loading">Crear Tercero</button>
+		</div>
+
+		<mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+
+	</form>
+
+</div>

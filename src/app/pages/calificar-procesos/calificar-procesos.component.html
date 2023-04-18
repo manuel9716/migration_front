@@ -1,0 +1,385 @@
+<mat-toolbar color="primary" class="header-pages">
+    <div [@animate]="{value:'*',params:{x:'50px'}}">
+        <span class="title">Validar Labores</span><br>
+        <span class="breadcrumb">Validar Labores > <span>{{tabs[currentTab]['name']}}</span>
+        </span>
+    </div>
+</mat-toolbar>
+
+<mat-card class="page-content-card">
+
+    <div fxLayout="row" class="mat-card mat-elevation-z1" style="margin-bottom: 20px;" fxLayoutAlign="start center"
+        [@animate]="{value:'*',params:{x:'-50px'}}">
+
+        <mat-form-field appearance="outline" fxFlex="14" class="mr20">
+            <mat-label>Estado Labor</mat-label>
+            <mat-select [(ngModel)]="filters['estadolabor']" multiple>
+                <mat-option *ngFor="let estado of estadosLabores" [value]="estado.idestadolabor">{{estado.nombre}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" fxFlex="14" class="mr20">
+            <mat-label>Categoría Labor</mat-label>
+            <mat-select [(ngModel)]="filters['categorialabor']" multiple>
+                <mat-option value="operaciones">Operaciones</mat-option>
+                <mat-option value="soporte">Soporte</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" fxFlex="14" class="mr20">
+            <mat-label>Estado Documento</mat-label>
+            <mat-select [(ngModel)]="filters['idestadodocumento']" multiple>
+                <mat-option *ngFor="let estado of estadosValidcioDocumentosForm" [value]="estado.idestadodocumento">{{estado.nombre}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" fxFlex="14" class="mr20">
+            <mat-label>Número Servicio</mat-label>
+            <input matInput [(ngModel)]="filters['numeroservicio']">
+            <button mat-button *ngIf="filters['numeroservicio']" matSuffix mat-icon-button
+                (click)="filters['numeroservicio'] = null">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" fxFlex="14" class="mr20">
+            <mat-label>Seleccione Fecha</mat-label>
+            <input [(ngModel)]="filters['fecha']" matInput [matDatepicker]="picker">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker touchUi #picker></mat-datepicker>
+        </mat-form-field>
+
+        <button  fxFlex="14" class="no-pb mr20" *ngIf="!filters['idCuadrilla']" mat-raised-button color="primary" matTooltip="Seleccionar Cuadrilla *"
+            (click)="selectCuadrilla()">
+            <span>
+                Seleccionar Cuadrilla *
+            </span> 
+        </button>
+        <div *ngIf="filters['idCuadrilla']" fxFlex="14" class="no-pb mr20" style="text-align: center;">
+            <div >
+                {{filters['idCuadrilla'].nombres + " " + filters['idCuadrilla'].apellidos + " (" +
+                filters['idCuadrilla'].numeroservicio + ")"}}
+                <button mat-icon-button color="primary" matTooltip="Cambiar Cuadrilla" (click)="selectCuadrilla()">
+                    <mat-icon>settings_backup_restore</mat-icon>
+                </button>
+            </div>
+        </div>
+
+        <div fxFlex="14" class="top-buttons mr20">
+            <button mat-icon-button class="mr20" matTooltip="Borrar filtros" (click)="resetFilters()"><i
+                    class="fas fa-backspace"></i></button>
+            <button mat-mini-fab color="primary" matTooltip="Buscar" (click)="search()"
+                [disabled]="!filters['idCuadrilla'] || loading">
+                <span *ngIf="!loading">
+                    <mat-icon>search</mat-icon>
+                </span>
+                <span *ngIf="loading"><i class="fas fa-spinner fa-spin"></i></span>
+            </button>
+        </div>
+    </div>
+
+    <mat-tab-group (selectedTabChange)="changeTab($event)">
+
+        <mat-tab label="Labores" position="0" [hidden]="!user['permisos']?.validar_labores?.labores?.listar">
+
+            <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+
+            <div class="mat-elevation-z4" [@animate]="{value:'*',params:{y:'100%'}}">
+
+                <table mat-table #table1 class="table-striped table-hover" [dataSource]="dataSourceLabores" matSort>
+
+                    <ng-container matColumnDef="nombrelabor">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Labor </th>
+                        <td mat-cell *matCellDef="let row"> 
+                            {{row.nombrelabor}} 
+                          
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="tiempolabor">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Tiempo labor </th>
+                        <td mat-cell *matCellDef="let row"> {{row.tiempolabor + " mins"}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="nombreestado">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+                        <td mat-cell *matCellDef="let row" matTooltip="{{row.justificacion}}"
+                            class="est-lab est-lab-{{row.idestadolabor}}"> {{row.nombreestado}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="nombretipooperacion">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo Operación </th>
+                        <td mat-cell *matCellDef="let row"> {{row.nombretipooperacion}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="idoperacionservicio">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Operación </th>
+                        <td mat-cell *matCellDef="let row">
+                            <button mat-icon-button color="accent" matTooltip="Ver Detalles" (click)="viewDetails(row)">
+                                <mat-icon>info</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="numeroservicio">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Número Servicio </th>
+                        <td mat-cell *matCellDef="let row"> <a href="#" class="link"
+                                [routerLink]="['/servicio', row.idservicio]">
+                                {{row.numeroservicio}}</a> </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="categorialabor">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Categoría </th>
+                        <td mat-cell *matCellDef="let row"> {{row.categorialabor}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="fechamodificacion">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> F.Modificacion </th>
+                        <td mat-cell *matCellDef="let row"> {{row.fechamodificacion | date : 'medium'}}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="validaciondocumento">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado Doc. </th>
+                        <td mat-cell *matCellDef="let row">
+                            {{row.validaciondocumento != null?(row.nombreestadodocumento ):'N/A'}}
+                            <button *ngIf="row.idestadodocumento == 1&& row.validaciondocumento != null" mat-icon-button color="accent" matTooltip="Ver detalles pendientes" (click)="mostrarDetallesPendientesLabor(row)">
+                                <mat-icon>info</mat-icon>
+                            </button>
+
+                            <!-- <button mat-icon-button [matMenuTriggerFor]="menu"  (click)="viewDetails(row)" color="accent" matTooltip="Ver detalles pendientes" aria-label="Example icon-button with a menu">
+                                <mat-icon>info</mat-icon>
+                              </button>
+                              <mat-menu #menu="matMenu">
+                                <button mat-menu-item>
+                                  <mat-icon>dialpad</mat-icon>
+                                  <span>Redial</span>
+                                </button>
+                                <button mat-menu-item disabled>
+                                  <mat-icon>voicemail</mat-icon>
+                                  <span>Check voice mail</span>
+                                </button>
+                                <button mat-menu-item>
+                                  <mat-icon>notifications_off</mat-icon>
+                                  <span>Disable alerts</span>
+                                </button>
+                                <h4>
+                                    Firmas Falta
+                                </h4>
+                                <h4>
+                                    Cedula Borrosa
+                                </h4>
+                              </mat-menu> -->
+                            <!-- <button mat-icon-button color="accent"
+                                *ngIf="user['permisos']['validar_labores']['labores']['validarDoc'] && row.categorialabor !='Soporte'" matTooltip="Editar"
+                                (click)="validarEstadoDocumento(row)">
+                                <mat-icon>edit</mat-icon>
+                            </button> -->
+                        </td>
+                    </ng-container>
+                 
+                    <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef>  </th>
+                        <td mat-cell *matCellDef="let row" class="align-r">
+                            <!-- {{row.validaciondocumento != null?obtenerestadoDoc(row.idestadodocumento):'No Aplica'}} -->
+                            <button mat-icon-button color="accent" 
+                                *ngIf="user['permisos']['validar_labores']['labores']['validarDoc'] && row.validaciondocumento" matTooltip="Validar Documento"
+                                (click)="validarEstadoDocumento(row)">
+                                <mat-icon>insert_drive_file</mat-icon>
+                            </button>
+                            <button mat-icon-button color="accent" [disabled]="row.idestadolabor != 1" *ngIf="user['permisos']['validar_labores']['labores']['editar']"   matTooltip="Editar Labor" (click)="editLabor(row)">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                            <button mat-icon-button color="accent"  matTooltip="Validar Labor"  (click)="calificar(row)">
+                                <mat-icon>check_circle</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumnsLabores"></tr>
+                    <!-- (dblclick)="calificar(row)" -->
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnsLabores;" (dblclick)="viewDetails(row)" >
+                    </tr>
+                </table>
+
+                <div *ngIf="dataSourceLabores?.data.length < 1" class="no-date-table">
+                    <span *ngIf="user['permisos']?.validar_labores?.labores?.listar">
+                        {{alreadySearchLabores ? "No hay labores para mostrar." : "Por favor haga una búsqueda con
+                        filtros."}}.</span>
+                    <span *ngIf="!user['permisos']?.validar_labores?.labores?.listar">No tienes permiso para listar
+                        labores.</span>
+                </div>
+
+                <mat-paginator #paginatorLabor  [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons="true"></mat-paginator>
+            </div>
+
+
+        </mat-tab>
+
+        <mat-tab label="Desplazamientos" position="1"
+            [hidden]="!user['permisos']?.validar_labores?.desplazamientos?.listar">
+
+            <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+
+            <div class="mat-elevation-z4" [@animate]="{value:'*',params:{y:'100%'}}">
+
+                <table mat-table #table2 class="table-striped table-hover" [dataSource]="dataSourceDesplazamientos"
+                    matSort>
+
+                    <ng-container matColumnDef="nombremunicipioinicio">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Desplazamiento </th>
+                        <td mat-cell *matCellDef="let row">
+                            {{row.nombremunicipioinicio + " - " + row.nombremunicipiofin + " ( " + row.kilometros + " Km
+                            / " + row.tiempo + " Mins )" }}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="nombreestado">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+                        <td mat-cell *matCellDef="let row" matTooltip="{{row.justificacion}}"
+                            class="est-lab est-lab-{{row.idestadolabor}}"> {{row.nombreestado}}
+                        </td>
+                    </ng-container>
+
+
+                    <ng-container matColumnDef="idoperacionservicio">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Operación </th>
+                        <td mat-cell *matCellDef="let row">
+                            <button *ngIf="row.idoperacionservicio" mat-icon-button color="accent"
+                                matTooltip="Ver Detalles" (click)="viewDetails(row)">
+                                <mat-icon>info</mat-icon> 
+                            </button>
+                            <span *ngIf="!row.idoperacionservicio">Sin Operación</span>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="numeroservicio">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Número Servicio </th>
+                        <td mat-cell *matCellDef="let row">
+                            <a *ngIf="row?.idservicio" href="#" class="link"
+                                [routerLink]="['/servicio', row.idservicio]"> {{row.numeroservicio}}</a>
+                            <span *ngIf="!row?.idservicio">Sin Servicio</span>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="fechacreacion">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> F.creación </th>
+                        <td mat-cell *matCellDef="let row"> {{row.fechacreacion | date : 'medium'}}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef>  </th>
+                        <td mat-cell *matCellDef="let row"> 
+                            <!-- {{row.fechacreacion | date : 'medium'}} -->
+                            <!-- *ngIf="user['permisos']['validar_labores']['labores']['editar']"  [disabled]="row.idestadolabor != 1"  -->
+                            <button mat-icon-button color="accent"  *ngIf="row.nombreestado=='Pendiente ' && user['permisos']['validar_labores']?.desplazamientos?.editar" matTooltip="Editar Desplazamiento" (click)="editarDesplazamientos(row)">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumnsDesplazamientos"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnsDesplazamientos;"
+                        (dblclick)="calificar(row)">
+                    </tr>
+                </table>
+
+                <div *ngIf="dataSourceDesplazamientos?.data.length < 1" class="no-date-table">
+                    <span *ngIf="user['permisos']?.validar_labores?.labores?.listar">
+                        {{alreadySearchLabores ? "No hay desplazamientos para mostrar." : "Por favor haga una búsqueda
+                        con filtros."}}.</span>
+                    <span *ngIf="!user['permisos']?.validar_labores?.labores?.listar">No tienes permiso para listar
+                        desplazamientos.</span>
+                </div>
+
+                <mat-paginator  #paginatorDesplazamiento [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons="true"></mat-paginator>
+            </div>
+
+
+        </mat-tab>
+
+        <mat-tab label="Casos Especiales" position="2"
+            [hidden]="!user['permisos']?.validar_labores?.casos_especiales?.listar">
+
+            <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+
+            <div class="mat-elevation-z4" [@animate]="{value:'*',params:{y:'100%'}}">
+
+                <table mat-table #table3 class="table-striped table-hover" [dataSource]="dataSourceCasosEspeciales"
+                    matSort>
+
+                    <ng-container matColumnDef="descripcion">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Caso </th>
+                        <td mat-cell *matCellDef="let row" matTooltip="{{row.descripcion}}">{{row.descripcion}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="tiempo">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Tiempo </th>
+                        <td mat-cell *matCellDef="let row">
+                            {{row.tiempo + " Minutos"}}
+                            <button mat-icon-button color="primary"
+                                *ngIf="user['permisos']?.validar_labores?.casos_especiales?.editar_cafilifacion"
+                                matTooltip="Modificar tiempo" (click)="editCasoEspecial(row)"><i class="fas fa-pen"></i>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="nombreestado">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+                        <td mat-cell *matCellDef="let row" matTooltip="{{row.justificacion}}"
+                            class="est-lab est-lab-{{row.idestadolabor}}"> {{row.nombreestado}}
+                        </td>
+                    </ng-container>
+
+
+                    <ng-container matColumnDef="idoperacionservicio">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Operación </th>
+                        <td mat-cell *matCellDef="let row">
+                            <button *ngIf="row.idoperacionservicio" mat-icon-button color="accent"
+                                matTooltip="Ver Detalles" (click)="viewDetails(row)">
+                                <mat-icon>info</mat-icon>
+                            </button>
+                            <span *ngIf="!row.idoperacionservicio">Sin Operación</span>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="numeroservicio">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Número Servicio </th>
+                        <td mat-cell *matCellDef="let row">
+                            <a *ngIf="row?.idservicio" href="#" class="link"
+                                [routerLink]="['/servicio', row.idservicio]"> {{row.numeroservicio}}</a>
+                            <span *ngIf="!row?.idservicio">Sin Servicio</span>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="fechacreacion">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> F.creación </th>
+                        <td mat-cell *matCellDef="let row"> {{row.fechacreacion | date : 'medium'}}
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumnsCasosEspeciales"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnsCasosEspeciales;"
+                        (dblclick)="calificar(row)">
+                    </tr>
+                </table>
+
+                <div *ngIf="dataSourceCasosEspeciales?.data.length < 1" class="no-date-table">
+                    <span *ngIf="user['permisos']?.validar_labores?.labores?.listar">
+                        {{alreadySearchLabores ? "No hay casos especiales para mostrar." : "Por favor haga una búsqueda
+                        con filtros."}}.</span>
+                    <span *ngIf="!user['permisos']?.validar_labores?.labores?.listar">No tienes permiso para listar
+                        casos especiales.</span>
+                </div>
+
+                <mat-paginator #paginatorCasos [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons="true"></mat-paginator>
+            </div>
+
+
+        </mat-tab>
+
+    </mat-tab-group>
+
+
+</mat-card>

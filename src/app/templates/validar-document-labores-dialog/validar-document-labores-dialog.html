@@ -1,0 +1,53 @@
+<mat-toolbar color="primary" class="toolbar-header-dialog">
+   <h2>Validación de documento</h2>
+</mat-toolbar>
+
+<div class="separator"></div>
+<div class="separator"></div>
+
+<div mat-dialog-content>
+   <div fxLayout="column">
+      <mat-progress-bar mode="indeterminate" *ngIf="cargando"></mat-progress-bar>
+      <div fxLayout="row" fxLayoutAlign="center center" fxFlex="1 0 auto">
+         <br>
+         <mat-form-field appearance="outline"  fxFlex="100" class="pr-20">
+            <mat-label>Estado</mat-label>
+            <mat-select [(ngModel)]="estadoSelected">
+               <!-- <mat-select [(ngModel)]="filters['estadolabor']"> -->
+               <mat-option *ngFor="let estado of estadosDef" [value]="estado['idestadodocumento']">
+                  {{estado['nombre']}}
+               </mat-option>
+            </mat-select>
+         </mat-form-field>
+
+      </div>
+      <div fxLayout="row" fxLayoutAlign="center center">
+         <span *ngIf="cargando"><i class="fas fa-spinner fa-spin fa-lg"></i></span>
+      </div>
+
+      <div  *ngIf="!cargando" fxLayout="row" fxLayoutAlign="center center" fxFlex="1 0 auto">
+         <mat-form-field appearance="outline"  fxFlex="100" *ngIf="estadoSelected==1" >
+            <mat-label>Estado de pendiente</mat-label>
+            <mat-select [(ngModel)]="estadoSelectedPendiente" multiple>
+               <!-- <mat-select [(ngModel)]="filters['estadolabor']"> -->
+               <mat-option *ngFor="let estado of estadosDefPendientes" [value]="estado['idestadodocumento']">
+                  {{estado['nombre']}}
+               </mat-option>
+            </mat-select>
+         </mat-form-field>
+         
+      </div>
+      <small style="color: red;"  *ngIf="estadoSelected==1 && estadoSelectedPendiente.length==0">*Diligencia Estados de pendientes</small>
+   </div>
+</div>
+
+
+<div mat-dialog-actions align="end">
+   <button color='primary' mat-raised-button (click)="selectEstado()"
+      [disabled]="(cargando|| (estadoSelected==1 && estadoSelectedPendiente.length==0 ))">
+				<span *ngIf="!cargando">Validar Documento </span>
+				<span *ngIf="cargando"><i class="fas fa-spinner fa-spin fa-lg"></i></span>
+      <!-- {{!cargando?'Editar':''}} <mat-spinner  *ngIf="cargando"></mat-spinner> -->
+   </button>
+   <button mat-raised-button [mat-dialog-close] cdkFocusInitial>Cancelar</button>
+</div>

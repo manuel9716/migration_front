@@ -1,0 +1,1048 @@
+<mat-toolbar color="{{isGestion ? 'accent' : 'primary'}}" class="header-pages" fxLayout="row" fxLayoutAlign="space-between center">
+
+	<div [@animate]="{value:'*',params:{x:'50px'}}">
+		<span class="title">Solicitud al servicio</span><br>
+		<span class="breadcrumb">Solicitud al servicio > ver </span>
+	</div>
+
+	<div fxLayout="row" fxLayoutAlign="end center">
+
+		<!-- Buttons -->
+		<div class="optionGestion" style="margin-right: 2em;">
+			<button *ngIf="isGestion && user['idtercero']==solicitud['idtercerogestion']['idtercero']" mat-icon-button matTooltip="Finalizar Gestión" (click)="finalizarGestio()">
+					<mat-icon style="font-size: 33px">logout</mat-icon>
+			</button>	
+			<button *ngIf="!isGestion" mat-icon-button matTooltip="Iniciar Gestión" (click)="iniciarGestion()">
+				<mat-icon   style="font-size: 33px">save_alt</mat-icon>
+			</button>
+		</div>
+
+		
+		<!-- Gestión -->
+		<div *ngIf="isGestion" [@animate]="{value:'*',params:{y:'-90px'}}" class="num-cuadrilla" style="margin-right: 2em;">
+			En gestión: <strong>{{nombreGestion}}</strong>
+			<span class="names-cuadrilla">Tomada desde el {{fechaGestion| date:'medium'}}</span>
+		</div>
+		<!-- <div *ngIf="isGestion" [@animate]="{value:'*',params:{y:'-90px'}}" class="grupGestion num-cuadrilla">
+			<div  class="gestion names-cuadrilla">
+				<strong>En gestión: </strong> {{nombreGestion}}
+			</div>
+			<div class="gestion names-cuadrilla">
+				<strong>Fecha: </strong> {{fechaGestion| date:'medium'}}
+			</div>
+		</div> -->
+
+	
+
+		<!-- Cuadrilla -->
+		<div *ngIf="selectedCuadrilla" [@animate]="{value:'*',params:{y:'50px'}}" class="num-cuadrilla">
+			Cuadrilla: <strong>{{selectedCuadrilla.numeroservicio}}</strong>
+			<button mat-icon-button matTooltip="Cambiar Cuadrilla" (click)="deleteCuadrilla()" *ngIf="cuadrillas.length > 1">
+				<mat-icon>autorenew</mat-icon>
+			</button>
+			<span class="names-cuadrilla">{{selectedCuadrilla.nombres + " " + selectedCuadrilla.apellidos}}</span>
+		</div>
+
+
+	</div>
+
+	<!-- <div>
+		{{1615922318204| date:'medium'}} 
+
+		Jeremias pajaro 
+	</div>  -->
+
+
+
+</mat-toolbar>
+<div class="banner-retiro" *ngIf="retiro" fxLayoutAlign=" center" >
+	<mat-icon style="margin-right: 5px">warning</mat-icon>Este servicio tiene un retiro en estado<strong style="margin: 0px 5px;">{{ retiro.nombreestadoretiro}}</strong>programado para el día {{retiro?.fecharetiro.timestamp*1000 | date}}
+</div>
+<div class="banner-retiro" *ngIf="suspension && suspension['idsuspension']" fxLayoutAlign=" center" >
+	<mat-icon style="margin-right: 5px">warning</mat-icon>
+	Este servicio tiene una suspensión programada entre los días {{suspension?.fechainicio.timestamp*1000 | date}} y {{suspension?.fechafin.timestamp*1000 | date}} 
+</div>
+
+<mat-card class="page-content-card">
+
+	<mat-progress-bar mode="indeterminate" *ngIf="!solicitud"></mat-progress-bar>
+
+	<!-- SOLICITUD -->
+	<div class="m-10" *ngIf="solicitud">
+
+		<div [@animate]="{value:'*',params:{y:'50px'}}">
+
+			<!-- <h2 fxLayoutAlign="center">Información de solicitud <button class="btn-form-submit" mat-raised-button color="primary" [routerLink]="['/servicio', solicitud.idservicio.idservicio]">Ir al servicio</button></h2> -->
+
+			<table class="vertical-table odd-children w-100">
+				<tr>
+					<td class="title">Tipo Solicitud: </td>
+					<td class="content" matTooltip="{{solicitud?.idtiposolicitudservicio.descripcion}}">
+						{{solicitud?.idtiposolicitudservicio.nombre}}</td>
+					<td class="title">Estado Solicitud: </td>
+					<td class="content" matTooltip="{{solicitud?.idestadosolicitudservicio.descripcion}}">
+						{{solicitud?.idestadosolicitudservicio.nombre}}</td>
+				</tr>
+				<tr>
+					<td class="title">Sub estado: </td>
+					<td class="content">{{solicitud?.subestado}}</td>
+					<td class="title">Nivel Solicitud: </td>
+					<td class="content" matTooltip="{{solicitud?.idnivelsolicitudservicio.descripcion }}">
+						{{solicitud?.idnivelsolicitudservicio.nombre}}</td>
+				</tr>
+				<tr>
+					<td class="title">Fecha creación: </td>
+					<td class="content">{{solicitud?.fechacreacion.timestamp*1000 | date:'medium'}}</td>
+					<td class="title">Fecha modificación: </td>
+					<td class="content">{{solicitud?.fechamodificacion.timestamp*1000 | date:'medium'}}</td>
+				</tr>
+				<tr>
+					<td class="title">Servicio: </td>
+					<td class="content">Número de servicio: <a class="link" href="#"
+							[routerLink]="['/servicio', solicitud.idservicio.idservicio]">{{solicitud?.idservicio.numeroservicio}}</a><br />
+						{{solicitud?.idservicio.idplan.descripcion}}<br />
+						<span
+							matTooltip="Número: {{solicitud?.idservicio.idtercero.numerotercero}}">{{solicitud?.idservicio.idtercero.nombres + ' ' + solicitud?.idservicio.idtercero.apellidos + '.'}}
+						</span><br />
+						{{solicitud?.idservicio.iddireccion.descripcion + ' (' + solicitud?.idservicio.iddireccion.idmunicipio.nombre + ' - ' + solicitud?.idservicio.iddireccion.idmunicipio.iddepartamento.nombre + ').'}}
+					</td>
+					<td class="title">Observaciones: </td>
+					<td class="content">{{solicitud?.observaciones}}</td>
+				<tr>
+					<td class="title">Contacto: </td>
+					<td class="content">
+						<span
+							*ngIf="solicitud.nombrecontacto && solicitud.telefonocontacto">{{solicitud.nombrecontacto + ' (' + solicitud.telefonocontacto + ')'}}</span>
+						<span *ngIf="!solicitud.nombrecontacto || !solicitud.telefonocontacto">Sin contacto.</span>
+					</td>
+					<td class="title">Creado por: </td>
+					<td class="content">
+						<span
+							matTooltip="Número: {{solicitud?.idempleado.numerotercero}}">{{solicitud?.idempleado.nombres + ' ' + solicitud?.idempleado.apellidos + '.'}}</span>
+					</td>
+				</tr>
+			</table>
+
+		</div>
+
+	</div>
+
+	<div class="separator20"></div>
+
+	<!-- CREAR OPERACION -->
+	<div *ngIf="solicitud && solicitud['idestadosolicitudservicio'].idestadosolicitudservicio != 3 && user['permisos']?.operaciones?.crear?.crear">
+		
+		<div *ngIf="!selectedCuadrilla && !load" [@animate]="{value:'*',params:{y:'50px'}}">
+			<div class="alert warning align-c">Por favor seleccione una cuadrilla para crear una operación.</div>
+			<div fxLayoutAlign="center center">
+				<mat-form-field fxFlex="50">
+					<mat-label>Seleccione una cuadrilla</mat-label>
+					<mat-select [(ngModel)]="selectedCuadrilla" name="Cuadrilla"
+						(selectionChange)="changeCuadrilla($event.value)">
+						<mat-option *ngFor="let cuadrilla of cuadrillas" [value]="cuadrilla">
+							{{cuadrilla.numeroservicio + " - " + cuadrilla.nombres + " " + cuadrilla.apellidos}}
+						</mat-option>
+					</mat-select>
+				</mat-form-field>
+			</div>
+		</div>
+	
+		<div *ngIf="!load && selectedCuadrilla">
+			<h2 class="m-10 c-primary" fxLayoutAlign="center">Crear operación</h2>
+			<div class="m-10" fxLayout="row wrap" fxLayoutAlign="start end" *ngIf="!currentClase" [@animate]="{value:'*',params:{x:'50px'}}">
+				<div class="card-wrapper" *ngFor="let tipo of clases" fxFlex="20" (click)="selectTipo(tipo)">
+					<mat-card class="clase-op-card">
+						<mat-card-header style="display: block; margin: 0 auto;">
+							<mat-card-title>{{tipo['name']}}</mat-card-title>
+						</mat-card-header>
+						<i class="icon {{tipo['icon']}}"></i>
+					</mat-card>
+				</div>
+			</div>
+		</div>
+	
+	</div>
+
+	<!-- TIPO OP -->
+	<div class="m-10" fxLayout="row" fxLayoutAlign="center center" *ngIf="currentClase && !currentTipo" [@animate]="{value:'*',params:{x:'50px'}}">
+		<div class="card-wrapper" *ngFor="let tipo of tipos" fxFlex="20" (click)="changeTipo(tipo)">
+			<mat-card class="tipo-op-card">
+				<mat-card-header style="display: block; margin: 0 auto;">
+					<mat-card-title>{{tipo['nombre']}}</mat-card-title>
+				</mat-card-header>
+				<i *ngIf="tipo['idtipooperacionservicio'] == 1" class="icon fas fa-home fa-5x"></i>
+				<i *ngIf="tipo['idtipooperacionservicio'] == 2" class="icon fas fa-phone fa-5x"></i>
+				<i *ngIf="tipo['idtipooperacionservicio'] > 2"  class="icon fas fa-info-circle fa-5x"></i>
+			</mat-card>
+		</div>
+	</div>
+
+
+	<!-- STEPPER -->
+	<div class="stepper-wrapper" class="mat-elevation-z2" *ngIf="currentClase"
+		[@animate]="{value:'*',params:{x:'-50px'}}">
+
+		<!-- TITLE -->
+		<h2 class="title-form" *ngIf="currentTipo && currentClase">
+			<div><i class="icon {{currentClase['icon']}}"></i></div><div>{{currentClase['name']}}</div>
+			<div style="margin: 0px 10px;">{{'>'}}</div>
+			<div>
+				<i *ngIf="currentTipo['idtipooperacionservicio'] == 1" class="icon2 fas fa-home"></i>
+				<i *ngIf="currentTipo['idtipooperacionservicio'] == 2" class="icon2 fas fa-phone"></i>
+				<i *ngIf="currentTipo['idtipooperacionservicio'] > 2"  class="icon2 fas fa-info-circle"></i>
+			</div><div>{{currentTipo['nombre']}}</div>
+		</h2>
+
+		<!-- FORMS -->
+		<div *ngIf="currentTipo && currentClase" [@animate]="{value:'*',params:{x:'-50px'}}">
+			
+			<!-- CambiarEstadoForm -->
+			<form [formGroup]="cambiarEstadoForm" *ngIf="currentClase['id'] == 1">
+				<mat-horizontal-stepper [linear]="true" #stepper>
+
+					<mat-step [stepControl]="cambiarEstadoForm">
+						<ng-template matStepLabel>Seleccionar Nuevo estado de solicitud</ng-template>
+						<mat-form-field class="w-100" appearance="outline">
+							<mat-label>Nuevo estado de solicitud</mat-label>
+							<mat-select formControlName="idestadosolicitudservicio" name="nuevo-estado">
+								<mat-option *ngFor="let estadoSol of estadosSolServicios" [value]="estadoSol" matTooltip="{{estadoSol.descripcion}}">
+									{{estadoSol.nombre}}
+								</mat-option>
+							</mat-select>
+							<mat-error>Nuevo estado de solicitud requerido.</mat-error>
+						</mat-form-field>
+						<div class="btns-stepper">
+							<button mat-button (click)="currentClase = null; currentTipo = null">Cancelar</button>
+							<button mat-button color="primary" matStepperNext>Siguiente</button>
+						</div>
+					</mat-step>
+
+					<mat-step [stepControl]="cambiarEstadoForm" optional>
+						<ng-template matStepLabel>Observaciones</ng-template>
+						<mat-form-field appearance="outline" class="w-100">
+							<mat-label>Observaciones</mat-label>
+							<textarea matInput formControlName="observaciones"></textarea>
+							<mat-hint>{{cambiarEstadoForm.controls['observaciones'].value?.length}} de 450</mat-hint>
+							<mat-error>Máximo 450 caracteres</mat-error>
+						</mat-form-field>
+						<div class="btns-stepper">
+							<button mat-button matStepperPrevious>Atrás</button>
+							<button mat-raised-button color="primary" matStepperNext (click)="createOp()" [disabled]="loading">
+								<span *ngIf="!loading">Crear Operación</span>
+								<span *ngIf="loading"><i class="fas fa-spinner fa-spin"></i></span>
+							</button>
+						</div>
+					</mat-step>
+				</mat-horizontal-stepper>
+			</form>
+
+			<!-- OperacionForm -->
+			<form [formGroup]="operacionForm" *ngIf="currentClase['id'] == 2">
+				<mat-horizontal-stepper [linear]="true" #stepper>
+
+					<!-- Labores -->
+					<mat-step [stepControl]="operacionForm" optional>
+
+						<ng-template matStepLabel>Labores</ng-template>
+
+						<div fxLayout="row" fxLayoutAlign="space-around center">
+							<div fxLayoutAlign="center center" fxFlex="50">
+								<!-- <ng-select fxFlex="80" [items]="labores" [virtualScroll]="true" appendTo="body"
+									dropdownPosition="bottom" bindLabel="nombre" bindValue="idlabor"
+									placeholder="Seleccione una labor" formControlName="tempLabor"
+									(change)="addLabor($event)">
+								</ng-select> -->
+							</div>
+
+							<div fxLayoutAlign="center center" fxFlex="50" style="border-left: 1px solid gray;">
+								<table class="table-c">
+									<thead class="align-l">
+										<tr>
+											<th>Labores realizadas</th>
+										</tr>
+									</thead>
+									<tbody class="tbody">
+										<tr
+											*ngFor="let labor of operacionForm.controls['labores']?.value; let idx=index">
+											<td matTooltip="{{labor?.descripcion}}">{{labor.nombre}}</td>
+											<td>{{labor.cantidad}}</td>
+											<td>
+												<button mat-icon-button color="warn" matTooltip="Eliminar"
+													(click)="deleteLabor(idx)">
+													<mat-icon>delete</mat-icon>
+												</button>
+											</td>
+										</tr>
+										<tr *ngIf="operacionForm.controls['labores']?.value.length == 0">
+											<td colspan="4">
+												<p class="no-date-table">Por favor ingrese una labor.</p>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+
+						</div>
+
+						<div class="btns-stepper">
+							<button mat-button (click)="currentClase = null; currentTipo = null">Cancelar</button>
+							<button mat-button color="primary" matStepperNext>Siguiente</button>
+						</div>
+					</mat-step>
+
+					<!-- Consumos -->
+					<mat-step [stepControl]="operacionForm" optional>
+						<ng-template matStepLabel>Consumos</ng-template>
+						<div fxLayout="row" fxLayoutAlign="space-around center">
+							<div fxLayoutAlign="center center" fxFlex="40">
+								<!-- <ng-select fxFlex="80" [items]="materiales" [virtualScroll]="true" appendTo="body"
+									dropdownPosition="bottom" bindLabel="nombre" bindValue="idmaterial"
+									placeholder="Seleccione un material" formControlName="tempMaterial"
+									(change)="addConsumo($event)">
+									<ng-template ng-option-tmp let-item="item">
+										<div matTooltip="{{item.descripcion}}">
+											{{item.nombre + ' (' + item.unidadmedida  + ')'}}
+										</div>
+									</ng-template>
+								</ng-select> -->
+							</div>
+							<div fxLayoutAlign="center center" fxFlex="60" style="border-left: 1px solid gray;">
+								<table class="table-c consumos" fxFlex="90">
+									<thead class="align-l">
+										<tr>
+											<th>Material</th>
+											<th>Cantidad utilizada</th>
+											<th>Unidad de medida</th>
+											<th></th>
+										</tr>
+									</thead>
+									<tbody class="tbody">
+										<tr *ngFor="let consumo of operacionForm.controls['consumos']?.value; let idx=index"
+											class="tbody">
+											<td matTooltip="{{consumo?.descripcion}}">{{consumo.nombre}}</td>
+											<td>{{consumo.cantidad}}</td>
+											<td>{{consumo.unidadmedida}}</td>
+											<td>
+												<button mat-icon-button color="warn" matTooltip="Eliminar"
+													(click)="deleteConsumo(idx)">
+													<mat-icon>delete</mat-icon>
+												</button>
+											</td>
+										</tr>
+										<tr *ngIf="operacionForm.controls['consumos']?.value.length == 0">
+											<td colspan="4">
+												<p class="no-date-table">Por favor ingrese un consumo de material.</p>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+						<div class="btns-stepper">
+							<button type="button" mat-button matStepperPrevious>Atrás</button>
+							<button type="button" mat-button color="primary" matStepperNext>Siguiente</button>
+						</div>
+					</mat-step>
+
+					<mat-step [stepControl]="operacionForm" optional>
+						<ng-template matStepLabel>Observaciones</ng-template>
+
+						<mat-form-field appearance="outline" class="w-100">
+							<mat-label>Observaciones</mat-label>
+							<textarea matInput formControlName="observaciones"></textarea>
+							<mat-hint>{{operacionForm.controls['observaciones'].value?.length}} de 450</mat-hint>
+							<mat-error>Máximo 450 caracteres</mat-error>
+						</mat-form-field>
+
+						<div class="btns-stepper">
+							<button mat-button matStepperPrevious>Atrás</button>
+							<button mat-raised-button color="primary" matStepperNext (click)="createOp()" [disabled]="loading">
+								<span *ngIf="!loading">Crear Operación</span>
+								<span *ngIf="loading"><i class="fas fa-spinner fa-spin"></i></span>
+							</button>
+						</div>
+					</mat-step>
+
+				</mat-horizontal-stepper>
+			</form>
+
+			<!-- AgendaForm -->
+			<form [formGroup]="agendaForm" *ngIf="currentClase['id'] == 3">
+				<mat-horizontal-stepper [linear]="true" #stepper>
+
+					<mat-step [stepControl]="agendaForm">
+						<ng-template matStepLabel>Asignar Cuadrilla</ng-template>
+
+							<div fxLayout="column" fxFlex fxLayoutAlign="center center">
+
+								<div>
+									<button type="button" mat-raised-button color="accent" (click)="selectCuadrillaAgenda()">{{agendaForm.controls['idserviciocuadrillaagenda'].value ? "Cambiar Cuadrilla" : "Seleccionar Cuadrilla" }}</button>
+								</div>
+
+								<div class="table-cuadrilla" *ngIf="agendaForm.controls['idserviciocuadrillaagenda'].value">
+									<span class="title">Representante:</span>
+									<span class="content">{{agendaForm.controls['idserviciocuadrillaagenda']?.value?.nombres + ' ' + agendaForm.controls['idserviciocuadrillaagenda']?.value?.apellidos}}</span>
+									<button type="button" mat-icon-button matTooltip="Ver agendas de cuadrilla" (click)="showAgendaCuadrilla()">
+										<mat-icon>perm_contact_calendar</mat-icon>
+									</button>
+									<br/>
+									<span class="title">Número cuadrilla:</span>
+									<span class="content">{{agendaForm.controls['idserviciocuadrillaagenda']?.value?.numeroservicio}}</span>
+								</div>
+								<br/><br/>
+								<div *ngIf="agendaForm.controls['idserviciocuadrillaagenda'].value">
+									<mat-checkbox formControlName="sendsmstocuadrilla">Enviar notificación vía SMS a la cuadrilla.</mat-checkbox>
+								</div>
+
+							</div>
+
+						<div class="btns-stepper">
+							<button mat-button (click)="currentClase = null; currentTipo = null">Cancelar</button>
+							<button mat-button color="primary" matStepperNext>Siguiente</button>
+						</div>
+					</mat-step>
+
+					<mat-step [stepControl]="agendaForm" optional>
+						<ng-template matStepLabel>Observaciones</ng-template>
+						<mat-form-field appearance="outline" class="w-100">
+							<mat-label>Observaciones</mat-label>
+							<textarea matInput formControlName="observaciones"></textarea>
+							<mat-hint>{{agendaForm.controls['observaciones'].value?.length}} de 450</mat-hint>
+							<mat-error>Máximo 450 caracteres</mat-error>
+						</mat-form-field>
+						<div class="btns-stepper">
+							<button mat-button matStepperPrevious>Atrás</button>
+							<button mat-raised-button color="primary" matStepperNext (click)="createOp()" [disabled]="loading">
+								<span *ngIf="!loading">Crear Operación</span>
+								<span *ngIf="loading"><i class="fas fa-spinner fa-spin"></i></span>
+							</button>
+						</div>
+					</mat-step>
+				</mat-horizontal-stepper>
+			</form>
+
+			<!-- EscalarForm -->
+			<form [formGroup]="escalarForm" *ngIf="currentClase['id'] == 4">
+				<mat-horizontal-stepper [linear]="true" #stepper>
+
+					<mat-step [stepControl]="escalarForm">
+						<ng-template matStepLabel>Seleccionar Nuevo nivel</ng-template>
+
+						<mat-form-field class="w-100" appearance="outline">
+							<mat-label>Nuevo nivel</mat-label>
+							<mat-select formControlName="idnivelsolicitudservicio" name="Clase">
+								<mat-option *ngFor="let nivel of nivelesSolServicio" [value]="nivel" matTooltip="{{nivel.descripcion}}">
+									{{nivel.nombre}}
+								</mat-option>
+							</mat-select>
+							<mat-error>Nivel solicitud requerido requerido.</mat-error>
+						</mat-form-field>
+
+						<div class="btns-stepper">
+							<button mat-button (click)="currentClase = null; currentTipo = null">Cancelar</button>
+							<button mat-button color="primary" matStepperNext>Siguiente</button>
+						</div>
+					</mat-step>
+
+					<mat-step [stepControl]="escalarForm" optional>
+						<ng-template matStepLabel>Observaciones</ng-template>
+						<mat-form-field appearance="outline" class="w-100">
+							<mat-label>Observaciones</mat-label>
+							<textarea matInput formControlName="observaciones"></textarea>
+							<mat-hint>{{escalarForm.controls['observaciones'].value?.length}} de 450</mat-hint>
+							<mat-error>Máximo 450 caracteres</mat-error>
+						</mat-form-field>
+						<div class="btns-stepper">
+							<button mat-button matStepperPrevious>Atrás</button>
+							<button mat-raised-button color="primary" matStepperNext (click)="createOp()" [disabled]="loading">
+								<span *ngIf="!loading">Crear Operación</span>
+								<span *ngIf="loading"><i class="fas fa-spinner fa-spin"></i></span>
+							</button>
+						</div>
+					</mat-step>
+				</mat-horizontal-stepper>
+			</form>
+
+			<!-- ActivacionesForm -->
+			<form [formGroup]="activacionesForm" *ngIf="currentClase['id'] == 5">
+				<mat-horizontal-stepper [linear]="true" #stepper>
+
+					<mat-step [stepControl]="activacionesForm.controls['idtipoactivacion']">
+						<ng-template matStepLabel>Seleccionar tipo de activación</ng-template>
+
+						<mat-form-field class="w-100" appearance="outline">
+							<mat-label>Tipo activacion</mat-label>
+							<mat-select formControlName="idtipoactivacion" name="Tipo activacion">
+								<mat-option value="6">Activación Inicial</mat-option>
+								<mat-option value="7">Activación por cambio de equipo</mat-option>
+								<mat-option value="8">Activación por cambio de domicilio</mat-option>
+								<mat-option value="10">Activación por Reconexión/Suspensión</mat-option>
+							</mat-select>
+							<mat-error>Tipo de activación requerida.</mat-error>
+						</mat-form-field>
+
+						<div class="btns-stepper">
+							<button mat-button (click)="currentClase = null; currentTipo = null">Cancelar</button>
+							<button mat-button color="primary" matStepperNext>Siguiente</button>
+						</div>
+					</mat-step>
+
+					<mat-step [stepControl]="activacionesForm && !activateError['status']">
+						<ng-template matStepLabel>Datos de activación</ng-template>
+						
+						<div fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto">
+							<div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+
+								<mat-form-field appearance="outline" class="pr20" fxFlex="15">
+									<mat-label>Octeto 1</mat-label>
+									<input matInput formControlName="octeto1" (input)="buildIp()" required>
+									<mat-hint>{{activacionesForm.controls['octeto1'].value?.length}} de 3</mat-hint>
+									<mat-error>
+										<span *ngIf="activacionesForm.controls['octeto1'].hasError('required')">Octeto 1 es
+											requerido.</span>
+										<!-- <span *ngIf="activateForm.controls['octeto1'].hasError('maxlength')"> Máximo 3
+											caracteres.</span> -->
+										<span *ngIf="activacionesForm.controls['octeto1'].hasError('max')">Números entre 0 y 255.</span>
+										<span *ngIf="activacionesForm.controls['octeto1'].hasError('pattern')">Número inválido.</span>
+									</mat-error>
+								</mat-form-field>
+
+								<mat-form-field appearance="outline" class="pr20" fxFlex="15">
+									<mat-label>Octeto 2</mat-label>
+									<input matInput formControlName="octeto2" (input)="buildIp()" required>
+									<mat-hint>{{activacionesForm.controls['octeto2'].value?.length}} de 3</mat-hint>
+									<mat-error>
+										<span *ngIf="activacionesForm.controls['octeto2'].hasError('required')">Octeto 2 es
+											requerido.</span>
+										<!-- <span *ngIf="activacionesForm.controls['octeto2'].hasError('maxlength')"> Máximo 3
+											caracteres.</span> -->
+										<span *ngIf="activacionesForm.controls['octeto2'].hasError('max')">Números entre 0 y 255.</span>
+										<span *ngIf="activacionesForm.controls['octeto2'].hasError('pattern')">Número inválido.</span>
+									</mat-error>
+								</mat-form-field>
+
+								<mat-form-field appearance="outline" class="pr20" fxFlex="15">
+									<mat-label>Octeto 3</mat-label>
+									<input matInput formControlName="octeto3" (input)="buildIp()" required>
+									<mat-hint>{{activacionesForm.controls['octeto3'].value?.length}} de 3</mat-hint>
+									<mat-error>
+										<span *ngIf="activacionesForm.controls['octeto3'].hasError('required')">Octeto 3 es
+											requerido</span>
+										<!-- <span *ngIf="activacionesForm.controls['octeto3'].hasError('maxlength')">Máximo 3
+											caracteres</span> -->
+											<span *ngIf="activacionesForm.controls['octeto3'].hasError('max')">Números entre 0 y 255.</span>
+											<span *ngIf="activacionesForm.controls['octeto3'].hasError('pattern')">Número inválido.</span>
+									</mat-error>
+								</mat-form-field>
+
+								<mat-form-field appearance="outline" class="pr20" fxFlex="15">
+									<mat-label>Octeto 4</mat-label>
+									<input matInput formControlName="octeto4" (input)="buildIp()" required>
+									<mat-hint>{{activacionesForm.controls['octeto4'].value?.length}} de 3</mat-hint>
+									<mat-error>
+										<span *ngIf="activacionesForm.controls['octeto4'].hasError('required')">Octeto 4 es
+											requerido</span>
+										<!-- <span *ngIf="activateForm.controls['octeto4'].hasError('maxlength')">Máximo 3
+											caracteres</span> -->
+											<span *ngIf="activacionesForm.controls['octeto4'].hasError('max')">Números entre 0 y 255.</span>
+											<span *ngIf="activacionesForm.controls['octeto4'].hasError('pattern')">Número inválido.</span>
+									</mat-error>
+								</mat-form-field>
+
+								<mat-form-field appearance="outline" fxFlex>
+									<mat-label>IP</mat-label>
+									<input matInput formControlName="ip" required>
+								</mat-form-field>
+
+							</div>
+
+							<div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+								<mat-form-field appearance="outline" fxFlex class="pr20">
+									<mat-label>Puerto Caja NAP</mat-label>
+									<input matInput formControlName="puertocaja" required>
+									<mat-hint>{{activacionesForm.controls['puertocaja'].value?.length}} de 3</mat-hint>
+									<mat-error>
+										<span *ngIf="activacionesForm.controls['puertocaja'].hasError('required')">Puerto
+											caja NAP requerido</span>
+										<span *ngIf="activacionesForm.controls['puertocaja'].hasError('maxlength')">Máximo 3
+											caracteres</span>
+									</mat-error>
+								</mat-form-field>
+
+								<mat-form-field appearance="outline" fxFlex class="pr20">
+									<mat-label>Número caja NAP</mat-label>
+									<input matInput formControlName="ncajanap" required>
+									<mat-hint>{{activacionesForm.controls['ncajanap'].value?.length}} de 8</mat-hint>
+									<mat-error>
+										<span *ngIf="activacionesForm.controls['ncajanap'].hasError('required')">Número caja
+											NAP requerido</span>
+										<span *ngIf="activacionesForm.controls['ncajanap'].hasError('maxlength')">Máximo 8
+											caracteres</span>
+									</mat-error>
+								</mat-form-field>
+
+								<mat-form-field appearance="outline" fxFlex>
+									<mat-label>Serial ONT</mat-label>
+									<input matInput formControlName="serialont" required>
+									<mat-hint>{{activacionesForm.controls['serialont'].value?.length}} de 16</mat-hint>
+									<mat-error>
+										<span *ngIf="activacionesForm.controls['serialont'].hasError('required')">Serial ONT
+											requerida</span>
+										<span *ngIf="activacionesForm.controls['serialont'].hasError('maxlength')">Máximo 16
+											caracteres</span>
+									</mat-error>
+								</mat-form-field>
+							</div>
+
+							<div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+								<mat-form-field appearance="outline" fxFlex class="pr20">
+									<mat-label>ONT ID</mat-label>
+									<input matInput formControlName="ontid" required>
+									<mat-hint>{{activacionesForm.controls['ontid'].value?.length}} de 3</mat-hint>
+									<mat-error>
+										<span *ngIf="activacionesForm.controls['ontid'].hasError('required')">ONT ID
+											requerido</span>
+										<span *ngIf="activacionesForm.controls['ontid'].hasError('maxlength')">Máximo 3
+											caracteres</span>
+									</mat-error>
+								</mat-form-field>
+
+								<mat-form-field appearance="outline" fxFlex class="pr20">
+									<mat-label>Potencia caja NAP (XX.XX)</mat-label>
+									<input matInput formControlName="potcajanap" required>
+									<mat-error>
+										<span *ngIf="activacionesForm.controls['potcajanap'].hasError('required')">Potencia
+											caja NAP requerida</span>
+										<span *ngIf="activacionesForm.controls['potcajanap'].hasError('pattern')">Formato
+											invalido (XX.XX)</span>
+									</mat-error>
+								</mat-form-field>
+
+								<mat-form-field appearance="outline" fxFlex>
+									<mat-label>Potencia ONT (XX.XX)</mat-label>
+									<input matInput formControlName="potont" required>
+									<mat-error>
+										<span *ngIf="activacionesForm.controls['potont'].hasError('required')">Potencia ONT
+											requerida</span>
+										<span *ngIf="activacionesForm.controls['potont'].hasError('pattern')">Formato
+											invalido (XX.XX)</span>
+									</mat-error>
+								</mat-form-field>
+
+							</div>
+
+							<div fxFlex *ngIf="activateError['msg']" class="active-error {{activateError['status']}}">{{activateError['msg']}}</div>
+						</div>
+
+
+						<div class="btns-stepper">
+							<button mat-button matStepperPrevious>Atrás</button>
+							<button mat-button color="primary" matStepperNext>Siguiente</button>
+						</div>
+					</mat-step>
+
+					<mat-step [stepControl]="activacionesForm" optional>
+						<ng-template matStepLabel>Observaciones</ng-template>
+						<mat-form-field appearance="outline" class="w-100">
+							<mat-label>Observaciones</mat-label>
+							<textarea matInput formControlName="observaciones"></textarea>
+							<mat-hint>{{activacionesForm.controls['observaciones'].value?.length}} de 450</mat-hint>
+							<mat-error>Máximo 450 caracteres</mat-error>
+						</mat-form-field>
+						<div class="btns-stepper">
+							<button mat-button matStepperPrevious>Atrás</button>
+							<button mat-raised-button color="primary" matStepperNext (click)="createOp()" [disabled]="loading">
+								<span *ngIf="!loading">Crear Operación</span>
+								<span *ngIf="loading"><i class="fas fa-spinner fa-spin"></i></span>
+							</button>
+						</div>
+					</mat-step>
+				</mat-horizontal-stepper>
+			</form>
+
+			<!-- FinalizarForm -->
+			<form [formGroup]="finalizarForm" *ngIf="currentClase['id'] == 6">
+				<mat-horizontal-stepper [linear]="true" #stepper>
+
+					<mat-step [stepControl]="finalizarForm" optional *ngIf="solicitud['idtiposolicitudservicio']['idtiposolicitudservicio'] == 23">
+						<ng-template matStepLabel>¿Cambiar Estado del servicio?</ng-template>
+
+						<div class="align-c">
+							<h3>
+								¿Desea cambiar el estado del servicio 
+								<a href="#" class="link" [routerLink]="['/servicio', solicitud['idservicio']['idservicio']]">{{solicitud['idservicio']['numeroservicio']}}</a> 
+								a estado: <span class="c-secondary">Terminación de contrato?</span>
+							</h3>
+							<mat-checkbox style="font-size: 1.2em;font-weight: bold;" formControlName="changestatusserv">{{finalizarForm.controls['changestatusserv'].value ? 'Si' : 'No'}}</mat-checkbox>
+						</div>
+						
+
+
+						<div class="btns-stepper">
+							<button mat-button (click)="currentClase = null; currentTipo = null">Cancelar</button>
+							<button mat-button color="primary" matStepperNext>Siguiente</button>
+						</div>
+					</mat-step>
+
+					<mat-step [stepControl]="finalizarForm" optional>
+						<ng-template matStepLabel>Observaciones</ng-template>
+						<mat-form-field appearance="outline" class="w-100">
+							<mat-label>Observaciones</mat-label>
+							<textarea matInput formControlName="observaciones"></textarea>
+							<mat-hint>{{finalizarForm.controls['observaciones'].value?.length}} de 450</mat-hint>
+							<mat-error>Máximo 450 caracteres</mat-error>
+						</mat-form-field>
+						<div class="btns-stepper">
+							<button mat-button matStepperPrevious *ngIf="solicitud['idtiposolicitudservicio']['idtiposolicitudservicio'] == 23">Atrás</button>
+							<button mat-button *ngIf="solicitud['idtiposolicitudservicio']['idtiposolicitudservicio'] != 23" (click)="currentClase = null; currentTipo = null">Cancelar</button>
+
+							<button mat-raised-button color="primary" matStepperNext (click)="createOp()" [disabled]="loading">
+								<span *ngIf="!loading">Crear Operación</span>
+								<span *ngIf="loading"><i class="fas fa-spinner fa-spin"></i></span>
+							</button>
+						</div>
+					</mat-step>
+
+					<!-- changestatusserv -->
+				</mat-horizontal-stepper>
+			</form>
+
+			<!-- CancelarFinalizarForm -->
+			<form [formGroup]="cancelarFinalizarForm" *ngIf="currentClase['id'] == 7">
+				<mat-horizontal-stepper [linear]="true" #stepper>
+
+					<mat-step [stepControl]="cancelarFinalizarForm">
+						<ng-template matStepLabel>Seleccionar motivo</ng-template>
+
+						<mat-form-field class="w-100" appearance="outline">
+							<mat-label>Motivo</mat-label>
+							<mat-select formControlName="idestadoservicio" name="Clase">
+								<mat-option *ngFor="let estado of estadosServicios" [value]="estado" matTooltip="{{estado.descripcion}}">
+									{{estado.nombre}}
+								</mat-option>
+							</mat-select>
+							<mat-error>Motivo requerido requerido.</mat-error>
+						</mat-form-field>
+
+						<div class="btns-stepper">
+							<button mat-button (click)="currentClase = null; currentTipo = null">Cancelar</button>
+							<button mat-button color="primary" matStepperNext>Siguiente</button>
+						</div>
+					</mat-step>
+
+					<mat-step [stepControl]="cancelarFinalizarForm" optional>
+						<ng-template matStepLabel>Observaciones</ng-template>
+						<mat-form-field appearance="outline" class="w-100">
+							<mat-label>Observaciones</mat-label>
+							<textarea matInput formControlName="observaciones"></textarea>
+							<mat-hint>{{cancelarFinalizarForm.controls['observaciones'].value?.length}} de 450</mat-hint>
+							<mat-error>Máximo 450 caracteres</mat-error>
+						</mat-form-field>
+						<div class="btns-stepper">
+							<button mat-button matStepperPrevious>Atrás</button>
+							<button mat-raised-button color="primary" matStepperNext (click)="createOp()" [disabled]="loading">
+								<span *ngIf="!loading">Crear Operación</span>
+								<span *ngIf="loading"><i class="fas fa-spinner fa-spin"></i></span>
+							</button>
+						</div>
+					</mat-step>
+				</mat-horizontal-stepper>
+			</form>
+
+			<!-- ProgramarRetiroForm -->
+			<form [formGroup]="programarRetiroForm" *ngIf="currentClase['id'] == 8">
+				<mat-horizontal-stepper [linear]="true" #stepper>
+
+					<mat-step [stepControl]="programarRetiroForm.controls.fecharetiro">
+						<ng-template matStepLabel>Fecha de retiro</ng-template>
+
+						<mat-form-field appearance="outline" class="w-100">
+							<mat-label>Fecha de retiro de servicio</mat-label>
+							<input matInput [min]="minDateRetiro" [matDatepicker]="picker" formControlName="fecharetiro" required>
+							<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+							<mat-datepicker #picker></mat-datepicker>
+							<mat-error>Fecha de retiro requerida</mat-error>
+						</mat-form-field>
+
+						<div class="btns-stepper">
+							<button mat-button (click)="currentClase = null; currentTipo = null">Cancelar</button>
+							<button mat-button color="primary" matStepperNext>Siguiente</button>
+						</div>
+					</mat-step>
+
+					<mat-step [stepControl]="desinstalarEquipoForm.controls.idmotivoretiro">
+						<ng-template matStepLabel>Motivo del retiro</ng-template>
+
+						<mat-form-field class="w-100" appearance="outline">
+							<mat-label>Motivo del retiro</mat-label>
+							<mat-select formControlName="idmotivoretiro" name="motivo">
+								<mat-option *ngFor="let motivo of motivosRetiros" [value]="motivo.idmotivoretiro" matTooltip="{{motivo.descripcion}}">
+									{{motivo.nombre}}
+								</mat-option>
+							</mat-select>
+							<mat-error>Motivo de retiro requerido.</mat-error>
+						</mat-form-field>
+
+						<div class="btns-stepper">
+							<button mat-button matStepperPrevious>Atrás</button>
+							<button mat-button color="primary" matStepperNext>Siguiente</button>
+						</div>
+					</mat-step>
+
+					<mat-step [stepControl]="programarRetiroForm" optional>
+						<ng-template matStepLabel>Observaciones</ng-template>
+						<mat-form-field appearance="outline" class="w-100">
+							<mat-label>Observaciones</mat-label>
+							<textarea matInput formControlName="observaciones"></textarea>
+							<mat-hint>{{programarRetiroForm.controls['observaciones'].value?.length}} de 450</mat-hint>
+							<mat-error>Máximo 450 caracteres</mat-error>
+						</mat-form-field>
+						<div class="btns-stepper">
+							<button mat-button matStepperPrevious>Atrás</button>
+							<button mat-raised-button color="primary" matStepperNext (click)="createOp()" [disabled]="loading">
+								<span *ngIf="!loading">Crear Operación</span>
+								<span *ngIf="loading"><i class="fas fa-spinner fa-spin"></i></span>
+							</button>
+						</div>
+					</mat-step>
+				</mat-horizontal-stepper>
+			</form>
+
+			<!-- CancelarRetiroForm -->
+			<form [formGroup]="cancelarRetiroForm" *ngIf="currentClase['id'] == 9">
+				<mat-horizontal-stepper [linear]="true" #stepper>
+					<mat-step [stepControl]="cancelarRetiroForm" optional>
+						<ng-template matStepLabel>Observaciones</ng-template>
+						<mat-form-field appearance="outline" class="w-100">
+							<mat-label>Observaciones</mat-label>
+							<textarea matInput formControlName="observaciones"></textarea>
+							<mat-hint>{{cancelarRetiroForm.controls['observaciones'].value?.length}} de 450</mat-hint>
+							<mat-error>Máximo 450 caracteres</mat-error>
+						</mat-form-field>
+						<div class="btns-stepper">
+							<button mat-button (click)="currentClase = null; currentTipo = null">Cancelar</button>
+							<button mat-raised-button color="primary" matStepperNext (click)="createOp()" [disabled]="loading">
+								<span *ngIf="!loading">Crear Operación</span>
+								<span *ngIf="loading"><i class="fas fa-spinner fa-spin"></i></span>
+							</button>
+						</div>
+					</mat-step>
+				</mat-horizontal-stepper>
+			</form>
+
+			<!-- DesinstalarEquipoForm -->
+			<form [formGroup]="desinstalarEquipoForm" *ngIf="currentClase['id'] == 10">
+				<mat-horizontal-stepper [linear]="true" #stepper>
+
+					<mat-step [stepControl]="desinstalarEquipoForm.controls.idestadiretiro">
+						<ng-template matStepLabel>Nuevo estado del retiro</ng-template>
+
+						<mat-form-field class="w-100" appearance="outline">
+							<mat-label>Nuevo estado del retiro</mat-label>
+							<mat-select formControlName="idestadiretiro" name="Clase">
+								<mat-option *ngFor="let estado of estadosRetiros" [value]="estado.idestadoretiro" matTooltip="{{estado.descripcion}}" [disabled]="estado.idestadoretiro == 1">
+									{{estado.nombre}}
+								</mat-option>
+							</mat-select>
+							<mat-error>Estado de retiro requerido.</mat-error>
+						</mat-form-field>
+
+						<div class="btns-stepper">
+							<button mat-button (click)="currentClase = null; currentTipo = null">Cancelar</button>
+							<button mat-button color="primary" matStepperNext>Siguiente</button>
+						</div>
+					</mat-step>
+
+					<mat-step [stepControl]="desinstalarEquipoForm.controls.observaciones" optional>
+						<ng-template matStepLabel>Observaciones</ng-template>
+						<mat-form-field appearance="outline" class="w-100">
+							<mat-label>Observaciones</mat-label>
+							<textarea matInput formControlName="observaciones"></textarea>
+							<mat-hint>{{desinstalarEquipoForm.controls['observaciones'].value?.length}} de 450</mat-hint>
+							<mat-error>Máximo 450 caracteres</mat-error>
+						</mat-form-field>
+						<div class="btns-stepper">
+							<button mat-button matStepperPrevious>Atrás</button>
+							<button mat-raised-button color="primary" matStepperNext (click)="createOp()" [disabled]="loading">
+								<span *ngIf="!loading">Crear Operación</span>
+								<span *ngIf="loading"><i class="fas fa-spinner fa-spin"></i></span>
+							</button>
+						</div>
+					</mat-step>
+				</mat-horizontal-stepper>
+			</form>
+
+			<!-- ProgramarSuspenciónForm -->
+			<form [formGroup]="programarSuspencionForm" *ngIf="currentClase['id'] == 11">
+				<mat-horizontal-stepper [linear]="true" #stepper>
+
+					<mat-step [stepControl]="programarSuspencionForm.controls.fechainiciosuspension">
+						<ng-template matStepLabel>Fecha Inicio Suspensión</ng-template>
+
+						<mat-form-field appearance="outline" class="w-100">
+							<mat-label>Fecha de inicio de suspención</mat-label>
+							<input matInput (dateChange)="getMinDate2($event)" [min]="minDateSuspencion" [matDatepicker]="picker" formControlName="fechainiciosuspension" required>
+							<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+							<mat-datepicker #picker></mat-datepicker>
+							<mat-error>Fecha de inicio requerida</mat-error>
+						</mat-form-field>
+
+						<div class="btns-stepper">
+							<button mat-button (click)="currentClase = null; currentTipo = null">Cancelar</button>
+							<button mat-button color="primary" matStepperNext>Siguiente</button>
+						</div>
+					</mat-step>
+
+					<mat-step [stepControl]="programarSuspencionForm.controls.fechafinsuspension">
+						<ng-template matStepLabel>Fecha Finalización Suspensión</ng-template>
+
+						<mat-form-field appearance="outline" class="w-100">
+							<mat-label>Fecha de finalización de suspensión</mat-label>
+							<input matInput [min]="minDateSuspencion2" [matDatepicker]="picker2" formControlName="fechafinsuspension" required>
+							<mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+							<mat-datepicker #picker2></mat-datepicker>
+							<mat-error>Fecha de finalización requerida</mat-error>
+						</mat-form-field>
+						
+						<div class="btns-stepper">
+							<button type="button" mat-button matStepperPrevious>Atrás</button>
+							<button type="button" mat-button color="primary" matStepperNext>Siguiente</button>
+						</div>
+					</mat-step>
+
+					<mat-step [stepControl]="programarSuspencionForm" optional>
+						<ng-template matStepLabel>Observaciones</ng-template>
+						<mat-form-field appearance="outline" class="w-100">
+							<mat-label>Observaciones</mat-label>
+							<textarea matInput formControlName="observaciones"></textarea>
+							<mat-hint>{{programarSuspencionForm.controls['observaciones'].value?.length}} de 450</mat-hint>
+							<mat-error>Máximo 450 caracteres</mat-error>
+						</mat-form-field>
+						<div class="btns-stepper">
+							<button mat-button matStepperPrevious>Atrás</button>
+							<button mat-raised-button color="primary" matStepperNext (click)="createOp()" [disabled]="loading">
+								<span *ngIf="!loading">Crear Operación</span>
+								<span *ngIf="loading"><i class="fas fa-spinner fa-spin"></i></span>
+							</button>
+						</div>
+					</mat-step>
+				</mat-horizontal-stepper>
+			</form>
+
+			<!-- CancelarSuspenciónForm -->
+			<form [formGroup]="cancelarSuspencionForm" *ngIf="currentClase['id'] == 12">
+				<mat-horizontal-stepper [linear]="true" #stepper>
+					<mat-step [stepControl]="cancelarSuspencionForm" optional>
+						<ng-template matStepLabel>Observaciones</ng-template>
+						<mat-form-field appearance="outline" class="w-100">
+							<mat-label>Observaciones</mat-label>
+							<textarea matInput formControlName="observaciones"></textarea>
+							<mat-hint>{{cancelarSuspencionForm.controls['observaciones'].value?.length}} de 450</mat-hint>
+							<mat-error>Máximo 450 caracteres</mat-error>
+						</mat-form-field>
+						<div class="btns-stepper">
+							<button mat-button (click)="currentClase = null; currentTipo = null">Cancelar</button>
+							<button mat-raised-button color="primary" matStepperNext (click)="createOp()" [disabled]="loading">
+								<span *ngIf="!loading">Crear Operación</span>
+								<span *ngIf="loading"><i class="fas fa-spinner fa-spin"></i></span>
+							</button>
+						</div>
+					</mat-step>
+				</mat-horizontal-stepper>
+			</form>
+
+			<span class="error" *ngIf="error" [@animate]="{value:'*',params:{y:'50px'}}">{{error}}</span>
+		</div>
+	</div>
+
+	<div class="separator20"></div>
+
+	<!-- OPERACIONES -->
+	<div class="m-10" *ngIf="solicitud && user['permisos']?.operaciones?.listar?.listar">
+		<h2 class="c-primary" fxLayoutAlign="center">Operaciones</h2>
+
+		<mat-progress-bar mode="indeterminate" *ngIf="loadingOperaciones"></mat-progress-bar>
+
+		<div class="header-pages-tools  m-10" fxLayout="row" fxLayoutAlign="start center">
+			<div class="top-filters" fxLayout="row" fxLayoutAlign="start center" fxFlex>
+				<mat-form-field appearance="outline" fxFlex="100">
+					<mat-label>Buscar operación</mat-label>
+					<input matInput (keyup)="applyFilter($event.target.value)" [(ngModel)]="OpSearch">
+					<mat-icon matPrefix class="secondary-text">search</mat-icon>
+					<button mat-button *ngIf="OpSearch" matSuffix mat-icon-button aria-label="Clear"
+						(click)="OpSearch=''; applyFilter('')">
+						<mat-icon>close</mat-icon>
+					</button>
+				</mat-form-field>
+			</div>
+		</div>
+
+		<div class="mat-elevation-z5 m-10">
+
+			<table mat-table class="table-striped table-hover" #sortOp="matSort" [dataSource]="dataSourceAct" matSort>
+
+				<ng-container matColumnDef="nombretipo">
+					<th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo </th>
+					<td mat-cell *matCellDef="let row" matTooltip="{{row.descripciontipo}}">
+						{{row.nombretipo}} </td>
+				</ng-container>
+
+				<ng-container matColumnDef="nombreclase">
+					<th mat-header-cell *matHeaderCellDef mat-sort-header> Clase </th>
+					<td mat-cell *matCellDef="let row" matTooltip="{{row.descripcionclase}}">
+						{{row.nombreclase}} </td>
+				</ng-container>
+
+				<ng-container matColumnDef="nombrescuadrilla">
+					<th mat-header-cell *matHeaderCellDef mat-sort-header> Cuadrilla </th>
+					<td mat-cell *matCellDef="let row">
+						{{row.nombrescuadrilla + ' ' + row.apellidoscuadrilla + " (" +  row.numerocuadrilla + ")" }}
+					</td>
+				</ng-container>
+
+				<ng-container matColumnDef="fechacreacion">
+					<th mat-header-cell *matHeaderCellDef mat-sort-header> F. creación </th>
+					<td mat-cell *matCellDef="let row"> {{row.fechacreacion.timestamp*1000 | date:'short'}} </td>
+				</ng-container>
+
+				<ng-container matColumnDef="fechafinal">
+					<th mat-header-cell *matHeaderCellDef mat-sort-header> F. finalización </th>
+					<td mat-cell *matCellDef="let row">
+						<span *ngIf="!row.fechafinal">En proceso...</span>
+						<span *ngIf="row.fechafinal">{{row.fechafinal.timestamp*1000 | date:'short'}}</span>
+					</td>
+				</ng-container>
+
+				<ng-container matColumnDef="observaciones">
+					<th mat-header-cell *matHeaderCellDef mat-sort-header> Observaciones </th>
+					<td mat-cell *matCellDef="let row">
+						<div class="cut-text-500" matTooltip="{{row.observaciones}}">
+							{{row.observaciones ? row.observaciones : 'Sin observaciones.'}}</div>
+					</td>
+				</ng-container>
+
+				<!-- <ng-container matColumnDef="actions">
+					<th mat-header-cell *matHeaderCellDef></th>
+					<td mat-cell *matCellDef="let row" class="align-r">
+						<button mat-icon-button color="accent" matTooltip="Ver Detalles" (click)="viewDetails(row)">
+							<mat-icon>info</mat-icon>
+						</button>
+					</td>
+				</ng-container> -->
+
+				<tr mat-header-row *matHeaderRowDef="displayedColumnsAct"></tr>
+				<tr mat-row class="c-pointer" *matRowDef="let row; columns: displayedColumnsAct;"
+					(dblclick)="viewDetails(row)"></tr>
+			</table>
+
+			<div *ngIf="dataSourceAct?.data?.length === 0" class="no-date-table">
+				No hay operaciones.
+			</div>
+
+			<mat-paginator #paginatorOp [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons="true">
+			</mat-paginator>
+		</div>
+	</div>
+
+
+</mat-card>

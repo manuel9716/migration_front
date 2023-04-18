@@ -1,0 +1,71 @@
+<mat-card class="page-content-card">
+    <div fxLayout="row" [formGroup]="formConsulta" fxLayoutAlign="center center">
+        <mat-form-field [formGroup]="formConsulta" class="no-pb pr20" fxFlex="25"
+             appearance="outline">
+            <mat-label>Selecione Variable </mat-label>
+            <mat-select formControlName="tipoBusquedaForm"
+                (selectionChange)="select(formConsulta.controls.tipoBusquedaForm.value)">
+                <mat-option *ngFor="let variable of slectItems " [value]="variable.value">
+                    {{traducir(variable.name)}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field fxFlex="25" class="no-pb " appearance="outline">
+            <mat-label>Selecione Mes</mat-label>
+            <!-- [min]="minDate" -->
+            <input formControlName="date"  [max]="maxDate" matInput [matDatepicker]="date">
+            <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
+            <mat-datepicker  #date startView="multi-year" (yearSelected)="chosenYearHandler($event)"
+            (monthSelected)="chosenMonthHandler($event, date)" panelClass="example-month-picker" ></mat-datepicker>
+        </mat-form-field>
+        <!-- <mat-form-field appearance="fill">
+            <mat-label>Month and Year</mat-label>
+            <input matInput [matDatepicker]="date" formControlName="date">
+            <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
+            <mat-datepicker #date
+                            startView="multi-year"
+                            (yearSelected)="chosenYearHandler($event)"
+                            (monthSelected)="chosenMonthHandler($event, date)"
+                            panelClass="example-month-picker">
+            </mat-datepicker>
+          </mat-form-field> -->
+    </div>
+    <div class="texto-Info">
+        <small *ngIf="formConsulta.controls.tipoBusquedaForm.value<=3">
+            Basado en
+            <strong>
+                {{cantsolicitudes}}
+            </strong>
+            solicitudes de retiro.
+        </small>
+        <smal *ngIf="formConsulta.controls.tipoBusquedaForm.value>3">
+            Basado en
+            <strong>
+                {{cantretiros}}
+            </strong>
+            retiros programados.
+        </smal>
+    </div>
+
+    <mat-progress-bar mode="indeterminate" *ngIf="cargando"></mat-progress-bar>
+    <table mat-table [dataSource]="setKey" class="mat-elevation-z8 table-striped table-hover" *ngIf="!noDataDB && !cargando">
+        <div *ngFor=" let colum  of displayedColumns; let i = index">
+            <ng-container [matColumnDef]="colum">
+                <th mat-header-cell *matHeaderCellDef> {{colum}} </th>
+                <td mat-cell *matCellDef="let element"> {{ i==0 ? element: obtnerdato(datosGenerados[i-1]?.value,
+                    element) }} </td>
+                <td class="bold" mat-footer-cell *matFooterCellDef> {{ i == 0 ? 'TOTAL' : getTotal(colum)}} </td>
+            </ng-container>
+        </div>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
+    </table>
+    <div *ngIf="noDataDB && !cargando" fxLayout="row"  fxLayoutAlign="center center">
+        <span>
+            No se encontrarion datos
+        </span>
+    </div>
+
+</mat-card>

@@ -1,0 +1,289 @@
+<div class="center">
+	<h1 style="font-size: 25px;margin-top: 16px;" mat-dialog-title>Detalle de operacion de servicio</h1>
+	<h3 mat-dialog-title>
+		<span *ngIf="!operacion"><i class="fas fa-spinner fa-spin"></i></span>
+		<span *ngIf="operacion"> Cuadrilla:
+			{{operacion['nombrescuadrilla'] + " " + operacion['apellidoscuadrilla'] + " (" + operacion['numeroserviciocuadrilla'] + ")"}}</span>
+	</h3>
+</div>
+
+<div mat-dialog-content>
+
+	<mat-tab-group *ngIf="operacion">
+
+		<!-- OPERACION -->
+		<mat-tab label="Operación">
+			<ng-template matTabContent>
+				<div class="separator16"></div>
+				<table class="vertical-table odd-children w-100">
+					<tr>
+						<td class="title">ID:</td>
+						<td class="content">{{operacion['idoperacionservicio']}}</td>
+					</tr>
+					<tr>
+						<td class="title">Fecha Inicio:</td>
+						<td class="content">{{operacion['fechainicial'] | date:'medium'}}</td>
+					</tr>
+					<tr>
+						<td class="title">Fecha Fin:</td>
+						<td class="content">
+							<span *ngIf="operacion['fechafinal']">{{operacion['fechafinal']| date:'medium'}}</span>
+							<span *ngIf="!operacion['fechafinal']"> En proceso...</span>
+						</td>
+					</tr>
+					<tr>
+						<td class="title">Coordenadas:</td>
+						<td class="content link" (click)="goToCoor()">{{operacion['coordenadas']}}</td>
+					</tr>
+					<tr>
+						<td class="title">Clase Operación:</td>
+						<td class="content">{{operacion['nombreclaseoperacion']}}</td>
+					</tr>
+					<tr>
+						<td class="title">Tipo Operación:</td>
+						<td class="content">{{operacion['nombretipooperacion']}}</td>
+					</tr>
+					<tr>
+						<td class="title">Observaciones:</td>
+						<td class="content">
+							{{operacion['observaciones'] ? operacion['observaciones'] : 'Sin observaciones.'}}</td>
+					</tr>
+				</table>
+			</ng-template>
+		</mat-tab>
+
+		<!-- AGENDA -->
+		<mat-tab label="Agenda {{agenda ? '(1)' : '(0)'}}">
+			<ng-template matTabContent>
+				<div class="separator16"></div>
+				<div class="no-data" *ngIf="!agenda">Esta operación no generó agenda.</div>
+				<table class="vertical-table odd-children w-100" *ngIf="agenda">
+					<tr>
+						<td class="title">Fecha Inicio:</td>
+						<td class="content">{{agenda['fechacreado'] | date:'medium'}}</td>
+					</tr>
+					<tr>
+						<td class="title">Fecha Finalizción:</td>
+						<td class="content">
+							{{agenda['fechaagenda'] ? (agenda['fechaagenda'] | date:'medium') : 'Pendiente por realizar'}}
+						</td>
+					</tr>
+					<tr>
+						<td class="title">Cuadrilla Asignada:</td>
+						<td class="content">
+							{{agenda['nombrescuadrilla'] + " " + agenda['apellidoscuadrilla'] + " (" + agenda['numeroserviciocuadrilla'] + ")"}}
+						</td>
+					</tr>
+					<tr>
+						<td class="title">Observaciones:</td>
+						<td class="content">
+							{{agenda['observaciones'] ? agenda['observaciones'] : 'Sin observaciones.'}}</td>
+					</tr>
+				</table>
+			</ng-template>
+		</mat-tab>
+
+		<!-- LABORES -->
+		<mat-tab label="Labores {{'(' + labores.length + ')'}}">
+			<ng-template matTabContent>
+				<div class="separator16"></div>
+				<div class="no-data" *ngIf="labores.length == 0">Esta operación no generó labores.</div>
+
+				<h3 class="total-labores" *ngIf="labores.length > 0">Total Labores: <span class="total">{{operacion['totalLabores'] + ' mins'}}</span></h3>
+
+				<mat-card class="inline-card left" *ngFor="let labor of labores">
+					<table class="vertical-table odd-children">
+						<tr>
+							<td class="title">Labor:</td>
+							<td class="content">{{labor['nombrelabor']}}</td>
+						</tr>
+						<tr>
+							<td class="title">Categoría:</td>
+							<td class="content">{{labor['categorialabor']}}</td>
+						</tr>
+						<tr>
+							<td class="title">Tiempo Normal:</td>
+							<td class="content">{{labor['tiemponormal'] + ' (mins)'}}</td>
+						</tr>
+						<tr>
+							<td class="title">Tiempo Promedio:</td>
+							<td class="content">{{labor['promedio'] + ' (mins)'}}</td>
+						</tr>
+						<tr>
+							<td class="title center c-secondary" colspan="2">
+								VALIDAR ESTADO LABORES: 
+								<button mat-icon-button color="primary" matTooltip="Calificar" (click)="calificar(labor)" *ngIf="user['permisos']?.validar_labores?.labores?.calificar_operaciones && labor['categorialabor'] == 'Operaciones' || user['permisos']?.validar_labores?.labores?.calificar_soporte && labor['categorialabor'] == 'Soporte'">
+									<i class="fas fa-pen"></i>
+								</button>
+							</td>
+						</tr>
+			
+						<tr>
+							<td class="title">Estado:</td>
+							<td class="content est-lab est-lab-{{labor.idestadolabor}}">{{labor['nombreestado']}}</td>
+						</tr>
+						<tr>
+							<td class="title">Justificacion:</td>
+							<td class="content">
+								{{labor['justificacion'] ? labor['justificacion'] : 'Sin justificación.'}}
+							</td>
+						</tr>
+	
+						<tr>
+							<td class="title center c-secondary" colspan="2">
+								VALIDAR ESTADO DOCUMENTO:
+								<button mat-icon-button color="primary" matTooltip="Validar" (click)="validarDocumentso(labor)" *ngIf="user['permisos']['validar_labores']['labores']['validarDoc'] && labor['validaciondocumento']!= null">
+									<i class="fas fa-pen"></i>
+								</button>
+							</td>
+						</tr>
+						<tr>
+							<td class="title">Estado Doc.:</td>
+							<td class="content">
+								{{labor['validaciondocumento']!= null?obtenerestadoDoc(labor['idestadodocumento']):'No Aplica'}}
+							</td>
+						</tr>
+						<!-- <tr>
+							<td class="title">Estado validacion documento:</td>
+							<td class="content est-lab est-lab-{{labor.idestadolabor}}">{{labor['idestadodocumento']}}</td>
+						</tr> -->
+					</table>
+				</mat-card>
+
+			</ng-template>
+		</mat-tab>
+
+		<!-- DESPLAZAMIENTO -->
+		<mat-tab label="Desplazamiento {{desplazamiento ? '(1)' : '(0)'}}" >
+			<ng-template matTabContent>
+				<div class="separator16"></div>
+				<div class="no-data" *ngIf="!desplazamiento">Esta operación no generó desplazamiento.</div>
+				<table class="vertical-table odd-children w-100" *ngIf="desplazamiento">
+					<tr>
+						<td class="title">Origen:</td>
+						<td class="content">
+							{{desplazamiento['municipioinicio'] + " (" + desplazamiento['departamentoinicio']  + ")"}}
+						</td>
+					</tr>
+					<tr>
+						<td class="title">Destino:</td>
+						<td class="content">
+							{{desplazamiento['municipiofin'] + " (" + desplazamiento['departamentofin']  + ")"}}</td>
+					</tr>
+					<tr>
+						<td class="title">Fecha Creación:</td>
+						<td class="content">
+							{{desplazamiento['fechacreacion'] | date:'medium'}}
+						</td>
+					</tr>
+					<tr>
+						<td class="title center c-secondary" colspan="2">
+							VALIDACIÓN: 
+							<button mat-icon-button color="primary" matTooltip="Calificar" (click)="calificar(desplazamiento)" 
+							*ngIf="(desplazamiento['idestadolabor'] == 1 && user['permisos']?.validar_labores?.desplazamientos?.calificar) || (desplazamiento['idestadolabor'] > 1 && user['permisos']?.validar_labores?.desplazamientos?.editar_cafilifacion)">
+								<i class="fas fa-pen"></i>
+							</button>
+						</td>
+					</tr>
+					<tr>
+						<td class="title">Estado:</td>
+						<td class="content est-lab est-lab-{{desplazamiento.idestadolabor}}">
+							{{desplazamiento['nombreestado']}}
+						</td>
+					</tr>
+					<tr>
+						<td class="title">Justificación:</td>
+						<td class="content">
+							{{desplazamiento['justificacion'] ? desplazamiento['justificacion'] : 'Sin justificación.'}}
+						</td>
+					</tr>
+				</table>
+			</ng-template>
+		</mat-tab>
+
+		<!-- CASOS ESPECIALES -->
+		<mat-tab label="Casos Especiales {{'(' + casosEspeciales.length + ')'}}">
+			<ng-template matTabContent>
+				<div class="separator16"></div>
+				<div class="no-data" *ngIf="casosEspeciales.length == 0">Esta operación no generó casos especiales.
+				</div>
+				<mat-card class="inline-card left" *ngFor="let casoEspecial of casosEspeciales">
+					<table class="vertical-table odd-children">
+						<tr>
+							<td class="title">Descripcion:</td>
+							<td class="content">{{casoEspecial['descripcion']}}</td>
+						</tr>
+						<tr>
+							<td class="title">Tiempo (Mins):</td>
+							<td class="content">
+								{{casoEspecial['tiempo']}}
+								<button mat-icon-button color="primary" *ngIf="user['permisos']?.validar_labores?.casos_especiales?.editar_cafilifacion"
+                                    matTooltip="Modificar tiempo" (click)="editCasoEspecial(casoEspecial)"><i class="fas fa-pen"></i>
+                                </button>
+							</td>
+						</tr>
+						<tr>
+							<td class="title">Fecha Creación:</td>
+							<td class="content">{{casoEspecial['fechacreacion'] | date:'medium'}}
+							</td>
+						</tr>
+						<tr>
+							<td class="title">Observaciones:</td>
+							<td class="content">
+								{{casoEspecial['observaciones'] ? casoEspecial['observaciones'] : 'Sin observaciones.'}}
+							</td>
+						</tr>
+						<tr>
+							<td class="title center c-secondary" colspan="2">
+								VALIDACIÓN: 
+								<button mat-icon-button color="accent" matTooltip="Calificar" (click)="calificar(casoEspecial)" 
+								*ngIf="(casoEspecial['idestadolabor'] == 1 && user['permisos']?.validar_labores?.casos_especiales?.calificar) || (casoEspecial['idestadolabor'] > 1 && user['permisos']?.validar_labores?.casos_especiales?.editar_cafilifacion)">
+									<i class="fas fa-pen"></i>
+								</button>
+							</td>
+						</tr>
+						<tr>
+							<td class="title">Estado:</td>
+							<td class="content est-lab est-lab-{{casoEspecial.idestadolabor}}">{{casoEspecial['nombreestado']}}</td>
+						</tr>
+						<tr>
+							<td class="title">Justificacion:</td>
+							<td class="content">
+								{{casoEspecial['justificacion'] ? casoEspecial['justificacion'] : 'Sin justificación.'}}
+							</td>
+						</tr>
+					</table>
+
+				</mat-card>
+
+			</ng-template>
+		</mat-tab>
+
+		<!-- CONSUMOS -->
+		<mat-tab label="Consumos {{'(' + consumos.length + ')'}}">
+			<ng-template matTabContent>
+				<div class="separator16"></div>
+				<div class="no-data" *ngIf="consumos.length == 0">Esta operación no generó consumos.</div>
+				<mat-card class="inline-card left" *ngFor="let consumo of consumos">
+					<table class="vertical-table odd-children">
+						<tr>
+							<td class="title">Material:</td>
+							<td class="content">{{consumo['nombre']}}</td>
+						</tr>
+						<tr>
+							<td class="title">Cantidad:</td>
+							<td class="content">{{consumo['cantidad'] + " " + consumo['unidadmedida']}}</td>
+						</tr>
+					</table>
+				</mat-card>
+			</ng-template>
+		</mat-tab>
+
+
+	</mat-tab-group>
+
+</div>
+
+<div mat-dialog-actions class="mat-dialog-actions">
+	<button mat-raised-button [mat-dialog-close]="true" cdkFocusInitial>Cerrar</button>
+</div>

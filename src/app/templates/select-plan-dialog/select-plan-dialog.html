@@ -1,0 +1,130 @@
+<!-- <h1 mat-dialog-title>POR FAVOR SELECCIONE UN PLAN</h1> -->
+<mat-toolbar color="primary" class="toolbar-header-dialog">
+   <h2>POR FAVOR SELECCIONE UN PLAN</h2>
+</mat-toolbar>
+
+<mat-dialog-content>
+
+   <div class="top-filters m-10">
+      <mat-form-field appearance="outline" fxFlex="100" class="no-pb">
+         <mat-label>Buscar plan</mat-label>
+         <input matInput (keyup)="applyFilter($event.target.value)" [(ngModel)]="planSearch">
+         <mat-icon matPrefix class="secondary-text">search</mat-icon>
+         <button mat-button *ngIf="planSearch" matSuffix mat-icon-button aria-label="Clear"
+            (click)="planSearch=''; applyFilter('')">
+            <mat-icon>close</mat-icon>
+         </button>
+      </mat-form-field>
+   </div>
+
+   <div class="mat-elevation-z5 m-10 of-auto">
+
+
+      <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+
+      <table mat-table class="compact-table table-striped table-hover" [dataSource]="dataSource" matSort [hidden]="loading">
+
+         <ng-container matColumnDef="nombre">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
+            <td mat-cell *matCellDef="let row"> {{row.nombre}} </td>
+         </ng-container>
+
+         <ng-container matColumnDef="valorsiniva">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Vlr. sin iva </th>
+            <td mat-cell *matCellDef="let row"> {{row.valorsiniva | currency : 'USD' : 'symbol' : '1.0'}} </td>
+         </ng-container>
+
+         <ng-container matColumnDef="iva">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Iva </th>
+            <td mat-cell *matCellDef="let row"> {{row.iva}}% </td>
+         </ng-container>
+
+         <ng-container matColumnDef="mesespermanencia">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Permanencia </th>
+            <td mat-cell *matCellDef="let row"> {{row.mesespermanencia}} meses</td>
+         </ng-container>
+
+         <ng-container matColumnDef="idgeografia">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Geografía </th>
+            <td mat-cell *matCellDef="let row"> {{geografias[row.idgeografia-1]?.name}} </td>
+         </ng-container>
+
+         <ng-container matColumnDef="idtipoplan">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo plan </th>
+            <td mat-cell *matCellDef="let row"> {{tiposPlanes[row.idtipoplan-1]?.name}} </td>
+         </ng-container>
+
+         <ng-container matColumnDef="idtiposervicio">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo servicio </th>
+            <td mat-cell *matCellDef="let row"> {{tiposServicios[row.idtiposervicio-1]?.name}} </td>
+         </ng-container>
+
+         <ng-container matColumnDef="valorinstalacionclausula">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Inst. clausula </th>
+            <td mat-cell *matCellDef="let row"> {{row.valorinstalacionclausula | currency : 'USD' : 'symbol' : '1.0'}}
+            </td>
+         </ng-container>
+
+         <ng-container matColumnDef="valorinstalacionsinclausula">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Inst. sin clausula </th>
+            <td mat-cell *matCellDef="let row">
+               {{row.valorinstalacionsinclausula | currency : 'USD' : 'symbol' : '1.0'}}
+            </td>
+         </ng-container>
+
+         <ng-container matColumnDef="velmaxdescargambps">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Vel. max. descarga </th>
+            <td mat-cell *matCellDef="let row"> {{row.velmaxdescargambps}} Mbps </td>
+         </ng-container>
+
+         <ng-container matColumnDef="velmaxcargambps">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Vel. max. carga </th>
+            <td mat-cell *matCellDef="let row"> {{row.velmaxcargambps}} Mbps</td>
+         </ng-container>
+
+         <ng-container matColumnDef="reuso">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Reuso </th>
+            <td mat-cell *matCellDef="let row"> {{row.reuso}} </td>
+         </ng-container>
+
+         <ng-container matColumnDef="ipv4publica">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Ipv4 pública </th>
+            <td mat-cell *matCellDef="let row"> {{row.ipv4publica ? 'Gratis' : 'De pago'}} </td>
+         </ng-container>
+
+         <ng-container matColumnDef="ipv6publica">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Ipv6 pública </th>
+            <td mat-cell *matCellDef="let row"> {{row.ipv6publica ? 'Gratis' : 'De pago'}} </td>
+         </ng-container>
+
+         <ng-container matColumnDef="aperturapuertos">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Apertura puertos </th>
+            <td mat-cell *matCellDef="let row"> {{row.aperturapuertos ? 'Gratis' : 'De pago'}} </td>
+         </ng-container>
+
+         <ng-container matColumnDef="actions" stickyEnd>
+            <th mat-header-cell *matHeaderCellDef> </th>
+            <td mat-cell *matCellDef="let row">
+               <button mat-icon-button color="primary" matTooltip="Seleccionar" (click)="selectPlan(row)">
+                  <mat-icon>check</mat-icon>
+               </button>
+            </td>
+         </ng-container>
+
+         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+         <tr mat-row *matRowDef="let row; columns: displayedColumns;" (dblclick)="selectPlan(row)"></tr>
+      </table>
+
+      <div *ngIf="dataSource?.data?.length === 0" class="no-date-table">
+         No hay Planes
+      </div>
+
+      <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons="true"></mat-paginator>
+   </div>
+
+
+   <div mat-dialog-actions align="end">
+      <button mat-raised-button [mat-dialog-close] cdkFocusInitial>Cerrar</button>
+   </div>
+
+</mat-dialog-content>

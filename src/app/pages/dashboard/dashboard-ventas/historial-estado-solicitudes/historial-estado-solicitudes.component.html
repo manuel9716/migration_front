@@ -1,0 +1,110 @@
+<mat-toolbar color="primary" class="header-pages">
+    
+    <div fxLayout="row" fxLayoutAlign="space-around center" id="barra_opciones">
+        <div fxFlex="4" class="top-buttons buttonSize">
+            <button mat-mini-fab color="primary" matTooltip="Atras" routerLink="/dashboard/ventas">
+                <mat-icon>arrow_back</mat-icon>
+            </button>
+        </div>
+        <div [@animate]="{value:'*',params:{x:'50px'}}" fxLayout="72" id="containerTitulo">
+            <span class="title"> Estado de solicitudes </span>
+            <span class="breadcrumb">Dashboard > Ventas </span>
+        </div>
+        <mat-form-field appearance="outline" fxFlex="20" class="no-pb mr20">
+            <mat-label>Seleccione Fecha</mat-label>
+            <input matInput [matDatepicker]="dp" [formControl]="date">
+            <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+            <mat-datepicker #dp startView="multi-year" (yearSelected)="chosenYearHandler($event)"
+                (monthSelected)="chosenMonthHandler($event, dp)" panelClass="example-month-picker">
+            </mat-datepicker>
+        </mat-form-field>
+        <div fxFlex="4" class="top-buttons buttonSize">
+            <button mat-mini-fab color="primary" matTooltip="Buscar" (click)="buscar()" [disabled]="loading" >
+                <mat-icon *ngIf="!loading">search</mat-icon>
+                <span *ngIf="loading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                </span>
+            </button>
+        </div>
+    </div>
+</mat-toolbar>
+
+<mat-card class="page-content-card">
+    <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+
+    <div class="mat-elevation-z5" [@animate]="{value:'*',params:{y:'100%'}}">
+
+
+        <table mat-table [dataSource]="dataSource" matSort>
+
+            <ng-container matColumnDef="estadoOperacion">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 550px;"> Estado operación </th>
+                <td mat-cell *matCellDef="let row"> {{row.estadoOperacion}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="mes1">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 130px;"> 
+                    <div *ngIf="dataSource?.data?.length < 1; else elseBlock">Mes1</div> 
+                    <ng-template #elseBlock>{{stringMeses[0]}}</ng-template>
+                </th>
+                <td mat-cell *matCellDef="let row"> {{row.mes1}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="mes2">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 130px;"> 
+                    <div *ngIf="dataSource?.data?.length < 1; else elseBlock">Mes2</div> 
+                    <ng-template #elseBlock>{{stringMeses[1]}}</ng-template>
+                </th>
+                <td mat-cell *matCellDef="let row"> {{row.mes2}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="mes3">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 130px;"> 
+                    <div *ngIf="dataSource?.data?.length < 1; else elseBlock">Mes3</div> 
+                    <ng-template #elseBlock>{{stringMeses[2]}}</ng-template>
+                </th>
+                <td mat-cell *matCellDef="let row"> {{row.mes3}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="mes4">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 130px;">
+                    <div *ngIf="dataSource?.data?.length < 1; else elseBlock">Mes4</div> 
+                    <ng-template #elseBlock>{{stringMeses[3]}}</ng-template>
+                </th>
+                <td mat-cell *matCellDef="let row"> {{row.mes4}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="mes5">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 130px;">
+                    <div *ngIf="dataSource?.data?.length < 1; else elseBlock">Mes5</div> 
+                    <ng-template #elseBlock>{{stringMeses[4]}}</ng-template>
+                </th>
+                <td mat-cell *matCellDef="let row"> {{row.mes5}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="mes6">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 130px;">
+                    <div *ngIf="dataSource?.data?.length < 1; else elseBlock">Mes6</div> 
+                    <ng-template #elseBlock>{{stringMeses[5]}}</ng-template>
+                </th>
+                <td mat-cell *matCellDef="let row"> {{row.mes6}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="mes7">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 130px;">
+                    <div *ngIf="dataSource?.data?.length < 1; else elseBlock">Mes7</div> 
+                    <ng-template #elseBlock>{{stringMeses[6]}}</ng-template>
+                </th>
+                <td mat-cell *matCellDef="let row"> {{row.mes7}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <div *ngIf="dataSource?.data?.length < 1 || dataSource?.data?.length === undefined" class="no-date-table">
+            No hay solicitudes para mostrar
+        </div>
+
+    </div>
+</mat-card>

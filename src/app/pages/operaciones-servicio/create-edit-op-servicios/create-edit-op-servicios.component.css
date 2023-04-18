@@ -1,0 +1,61 @@
+table {
+  border-collapse: collapse;
+}
+
+.tbody tr:nth-child(even) {
+  background-color: #f4f4f4;
+}
+
+table {
+  width: 100%;
+  margin-top: 15px;
+}
+
+.consumos tr {
+  text-align: center;
+}
+
+th {
+  padding: 5px 10px;
+  color: var(--primary);
+}
+
+td {
+  padding: 0px 10px;
+}
+
+.table-cuadrilla{
+  margin-top: 30px;
+}
+
+.table-cuadrilla .title{
+  font-weight: bold;
+  color: var(--primary);
+  margin-right: 10px;
+}
+
+.table-cuadrilla .content{
+  
+}
+
+.active-error.true {
+  color: green;
+}
+
+.active-error.false {
+  color: red;
+}
+
+.names-cuadrilla{
+  display: block;
+  font-size: 12px;
+  line-height: 10px;
+}
+
+.num-cuadrilla{
+  text-align: left;
+}
+
+
+
+

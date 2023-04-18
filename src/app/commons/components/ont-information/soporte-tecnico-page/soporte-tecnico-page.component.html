@@ -1,0 +1,107 @@
+<!-- <link rel="stylesheet" type="text/css" href="/soporte-tecnico-page/bootstrap.min.css"> -->
+
+<div class="d-flex justify-content-center align-items-center">
+    <app-loading *ngIf="!loading; else smartReady" class="text-center"></app-loading>
+</div>
+
+<ng-template #smartReady class="d-flex flex-column mb-3">
+    <div class="d-flex flex-column mb-2">
+        <div class="container d-flex flex-wrap justify-content-center">
+            <app-smartolt-estado-ont></app-smartolt-estado-ont>
+        </div>
+        <div class="container">
+            <mat-tab-group dynamicHeight class="m-3">
+                <mat-tab label="Conectados a ethernet" *ngIf="ontStatus">
+                    <ng-template mat-tab-label>
+                        <fa-layers>
+                            <fa-icon [icon]="connectedIcon" class="text-dark"></fa-icon>                    
+                        </fa-layers>
+                        &nbsp;
+                        Conectados a ethernet
+                        &nbsp;
+                        <span class="badge rounded-circle text-white bg-{{statusEthernet}}">{{qConnectedEthernet}}</span>
+                    </ng-template>
+                    <br>
+                    <div class="container d-flex flex-wrap justify-content-center">
+                        <app-dispositivos-conectados-ethernet class="col shadow-sm p-2 mb-5 bg-body rounded"></app-dispositivos-conectados-ethernet>
+                    </div>
+                </mat-tab>
+
+                <mat-tab label="Conectados a WiFI" *ngIf="ontStatus">
+                    <ng-template mat-tab-label>
+                        <fa-icon [icon]="wifiIcon" class="fs-6"></fa-icon>
+                        &nbsp;
+                        Conectados a WiFI
+                        &nbsp;
+                        <div *ngIf="loadingConnectedWifi else charging" >
+                            <span class="badge rounded-circle text-white bg-{{statusWigfi}}">{{qConnectedWifi}}</span>
+                        </div>
+                    </ng-template>
+                    <br>
+                    <div class="container d-flex flex-wrap justify-content-center">
+                        <app-dispositivos-conectados-wifi class="col shadow-sm p-2 mb-5 bg-body rounded"></app-dispositivos-conectados-wifi>
+                    </div>
+                </mat-tab>
+
+                <mat-tab label="Conectados a WiFI" *ngIf="ontStatus">
+                    <ng-template mat-tab-label>
+                        <fa-icon [icon]="pingIcon" class="fs-6"></fa-icon>
+                        &nbsp;
+                        Ping Mikrotik
+                        &nbsp;
+                        <div *ngIf="loadingPing else charging" >
+                            <span class="badge rounded-circle text-{{statusPing}} bg-{{statusPing}}">-</span>
+                        </div>
+                    </ng-template>
+                    <br>
+                    <div class="container d-flex flex-wrap justify-content-center">
+                        <app-ping-mkt-servicio class="col shadow-sm p-2 mb-5 bg-body rounded"></app-ping-mkt-servicio>
+                    </div>
+                </mat-tab>
+
+                <mat-tab label="Estado de red"  *ngIf="loadingSmartolt">
+                    <ng-template mat-tab-label>
+                        <fa-icon [icon]="statusIcon" class="fs-6"></fa-icon>
+                        &nbsp;
+                        Estado de red
+                        &nbsp;
+                        <div *ngIf="loadingPrtg else charging" >
+                            <span class="badge rounded-circle text-{{statusPrtg}} bg-{{statusPrtg}}">-</span>
+                        </div>
+                    </ng-template>
+                    <br>
+                    <div class="container d-flex flex-wrap justify-content-center">
+                        <app-prtg></app-prtg>
+                    </div>
+                </mat-tab>
+                
+                <mat-tab label="Historial ONT"  *ngIf="loadingSmartolt">
+                    <ng-template mat-tab-label>
+                        <fa-icon [icon]="historyIcon" class="fs-6"></fa-icon>
+                        &nbsp;
+                        Historial ONT
+                    </ng-template>
+                    <br>
+                    <div class="container d-flex flex-wrap justify-content-center">
+                        <app-smartolt-historial class="col shadow-sm p-2 mb-5 bg-body rounded"></app-smartolt-historial>
+                    </div>
+                </mat-tab>
+
+                
+
+            </mat-tab-group>
+            
+        </div>
+
+    </div>
+</ng-template>
+
+<ng-template #charging>
+    <div class="spinner-border text-secondary spinner-border-sm" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</ng-template>
+
+<ng-template #failWifi>
+    <fa-icon [icon]="failIcon" class="fs-fileicon text-danger"></fa-icon>
+</ng-template>

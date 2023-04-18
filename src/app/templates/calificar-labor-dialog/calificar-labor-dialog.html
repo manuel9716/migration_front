@@ -1,0 +1,41 @@
+<mat-toolbar fxLayout="row" fxLayoutAlign="center center" color="primary">
+	<h4>CALIFICAR LABOR</h4>
+</mat-toolbar>
+
+<div class="separator"></div>
+
+<form name="form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+	<div fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto">
+
+		<div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+			<mat-form-field appearance="outline" fxFlex="100">
+				<mat-label>Nuevo Estado</mat-label>
+				<mat-select formControlName="idestadolabor" required>
+					<mat-option *ngFor="let estado of estadosLabores" [value]="estado">{{estado.nombre}}
+					</mat-option>
+				</mat-select>
+				<mat-error>El estado es requerido.</mat-error>
+			</mat-form-field>
+		</div>
+
+		<div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+			<mat-form-field appearance="outline" fxFlex="100">
+				<mat-label>Justificación</mat-label>
+				<textarea  #valueInput matInput formControlName="justificacion"> </textarea>
+				<mat-hint>{{form.controls['justificacion'].value?.length}} de 300</mat-hint>
+				<mat-error>Máximo 300 caracteres.</mat-error>
+			</mat-form-field>
+		</div>
+
+		<div class="separator"></div>
+
+		<div class="content-form-submit">
+			<button mat-raised-button class="btn-form-submit" type="button" (click)="cancel()">Cancelar</button>
+			<button mat-raised-button class="btn-form-submit" type="submit" color="primary"
+				[disabled]="form.invalid">Aceptar</button>
+		</div>
+
+	</div>
+
+</form>

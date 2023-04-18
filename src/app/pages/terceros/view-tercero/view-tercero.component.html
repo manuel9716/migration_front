@@ -1,0 +1,271 @@
+<mat-toolbar color="primary" class="header-pages">
+	<div [@animate]="{value:'*',params:{x:'50px'}}">
+		<span class="title">Tercero</span>
+		<span *ngIf="load"><i class="fas fa-spinner fa-xs fa-spin" style="margin-left: 10px;"></i></span><br>
+		<span class="breadcrumb">Tercero > {{breadcrumb}}</span>
+	</div>
+</mat-toolbar>
+
+<mat-card class="page-content-card">
+	
+	<app-entity-information *ngIf="tercero && idTercero" [data]="tercero" [view]="'viewTercero'"></app-entity-information>
+
+	<mat-progress-bar mode="indeterminate" *ngIf="load"></mat-progress-bar>
+
+	<mat-tab-group *ngIf="!load" [selectedIndex]="selectedTab" (selectedTabChange)="changeTab($event)">
+
+		<!-- TERCERO -->
+		<mat-tab label="Información">
+			<ng-template matTabContent>
+
+				<form name="form" [formGroup]="form" class="mt20" (ngSubmit)="onSubmit()" fxLayout="column"
+					fxLayoutAlign="start" fxFlex="1 0 auto" [@animate]="{value:'*',params:{y:'50px'}}">
+
+					<div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto" *ngIf="idTercero">
+						<mat-form-field appearance="outline" fxFlex="50" class="pr20">
+							<mat-label>Id tercero</mat-label>
+							<input matInput formControlName="idtercero">
+							<i matSuffix class="fas fa-id-badge" data-fa-transform="grow-6 up-6 left-10"></i>
+						</mat-form-field>
+
+						<mat-form-field appearance="outline" fxFlex="50">
+							<mat-label>Número tercero</mat-label>
+							<input matInput formControlName="numerotercero">
+							<i matSuffix class="far fa-id-badge" data-fa-transform="grow-6 up-6 left-10"></i>
+						</mat-form-field>
+					</div>
+
+					<div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+						<mat-form-field appearance="outline" fxFlex="50" class="pr20">
+							<mat-label>Nombres</mat-label>
+							<input matInput formControlName="nombres" required class="text-upp">
+							<mat-icon matSuffix class="secondary-text">account_circle</mat-icon>
+							<mat-hint>{{form.controls['nombres'].value?.length}} de 100</mat-hint>
+							<mat-error>
+								<span *ngIf="form.controls['nombres'].hasError('required')">Nombres es requerido</span>
+								<span *ngIf="form.controls['nombres'].hasError('maxlength')">Máximo 100 caracteres</span>
+							</mat-error>
+						</mat-form-field>
+
+						<mat-form-field appearance="outline" fxFlex="50">
+							<mat-label>Apellidos</mat-label>
+							<input matInput formControlName="apellidos" class="text-upp">
+							<mat-icon matSuffix class="secondary-text">account_circle</mat-icon>
+							<mat-hint>{{form.controls['apellidos'].value?.length}} de 100</mat-hint>
+							<mat-error>Máximo 100 caracteres</mat-error>
+						</mat-form-field>
+					</div>
+
+					<div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+						<mat-form-field appearance="outline" fxFlex="50" class="pr20">
+							<mat-label><i class="fas fa-mouse-pointer"></i> Tipo identificación</mat-label>
+							<mat-select formControlName="idtipodocumento" required>
+								<mat-option *ngFor="let tiposdocumentos of tiposdocumentos"
+									[value]="tiposdocumentos.idtipo">
+									{{tiposdocumentos.nombre}}
+								</mat-option>
+							</mat-select>
+							<mat-error>Tipo identificación es requerido</mat-error>
+						</mat-form-field>
+
+						<mat-form-field appearance="outline" fxFlex="50">
+							<mat-label>Identificación</mat-label>
+							<input matInput formControlName="identificacion" required>
+							<i matSuffix class="far fa-id-card" data-fa-transform="grow-6 up-6 left-10"></i>
+							<mat-hint>{{form.controls['identificacion'].value?.length}} de 20</mat-hint>
+							<mat-error>
+								<span *ngIf="form.controls['identificacion'].hasError('required')">Identificación es
+									requerido</span>
+								<span *ngIf="form.controls['identificacion'].hasError('maxlength')">Máximo 20
+									caracteres</span>
+								<span *ngIf="form.controls['identificacion'].hasError('pattern')">Número inválido</span>
+							</mat-error>
+						</mat-form-field>
+					</div>
+
+					<div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+						<mat-form-field appearance="outline" fxFlex="50" class="pr20">
+							<mat-label><i class="fas fa-venus-mars"></i> Sexo</mat-label>
+							<mat-select formControlName="sexo">
+								<mat-option [value]="'f'">Femenino</mat-option>
+								<mat-option [value]="'m'">Masculino</mat-option>
+							</mat-select>
+						</mat-form-field>
+
+						<mat-form-field appearance="outline" fxFlex="50">
+							<mat-label>F. nacimiento</mat-label>
+							<input matInput [matDatepicker]="picker" formControlName="fnacimiento">
+							<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+							<mat-datepicker #picker></mat-datepicker>
+						</mat-form-field>
+					</div>
+
+					<div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">					
+						<mat-form-field appearance="outline" fxFlex="50" class="pr20">
+							<mat-label><i class="fas fa-mouse-pointer"></i> Tipos de tercero</mat-label>
+							<mat-select formControlName="idtiposterceros" multiple>
+								<mat-option *ngFor="let tipoTercero of tiposterceros" [value]="tipoTercero.idtipo">{{tipoTercero.nombre}}
+								</mat-option>
+							</mat-select>
+						</mat-form-field>
+					
+						<mat-form-field appearance="outline" fxFlex="50">
+							<mat-label><i class="fas fa-user-tie"></i> Cargos</mat-label>
+							<mat-select formControlName="idcargos" multiple>
+								<mat-option *ngFor="let cargo of cargos" [value]="cargo.idcargo">{{cargo.nombre}}
+								</mat-option>
+							</mat-select>
+						</mat-form-field>
+					</div>
+
+					<div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+						<mat-form-field appearance="outline" fxFlex="50" class="pr20">
+							<mat-label><i class="far fa-building"></i> Área</mat-label>
+							<mat-select formControlName="idarea" required>
+								<mat-option *ngFor="let area of areas" [value]="area.idarea">{{area.nombre}}
+								</mat-option>
+							</mat-select>
+							<mat-error>Área es requerida</mat-error>
+						</mat-form-field>
+
+						<mat-slide-toggle fxFlex="50" formControlName="facagrupada">Factura agrupada</mat-slide-toggle>
+					</div>
+
+					<div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto" *ngIf="idTercero">
+
+						
+						<mat-form-field appearance="outline" fxFlex="50" class="pr20">
+							<mat-label>F. creación</mat-label>
+							<input matInput formControlName="creado">
+							<mat-icon matSuffix class="secondary-text">date_range</mat-icon>
+						</mat-form-field>
+
+						<mat-form-field appearance="outline" fxFlex="50">
+							<mat-label>F. edición</mat-label>
+							<input matInput formControlName="editado">						
+							<mat-icon matSuffix class="secondary-text">date_range</mat-icon>
+						</mat-form-field>
+					</div>
+
+
+					<div class="separator"></div>
+					<span class="error" *ngIf="error" [@animate]="{value:'*',params:{y:'50px'}}">{{error}}</span>
+
+					<div class="content-form-submit">
+						<button mat-raised-button class="btn-form-submit" type="button" (click)="cancel()"
+							[disabled]="loading">Cancelar</button>
+							
+						<button mat-raised-button class="btn-form-submit" type="submit" color="primary"	[disabled]="form.invalid || loading" 
+						*ngIf="(!idTercero && user['permisos']?.terceros?.crear) || (idTercero && user['permisos']?.terceros?.editar)">
+							<span *ngIf="!loading">{{idTercero ? 'Editar' : 'Crear'}}</span>
+							<span *ngIf="loading"><i class="fas fa-spinner fa-spin"></i></span>
+						</button>
+					</div>
+
+
+				</form>
+
+				<!-- <div [@animate]="{value:'*',params:{y:'50px'}}">
+
+					<h2 fxLayoutAlign="center">Información del tercero</h2>
+					<table class="vertical-table odd-children w-100">
+						<tr>
+							<td class="title">Id tercero: </td>
+							<td class="content">{{tercero?.idtercero}}</td>
+						</tr>
+						<tr>
+							<td class="title">Número tercero: </td>
+							<td class="content">{{tercero?.numerotercero}}</td>
+						</tr>
+						<tr>
+							<td class="title">Nombres: </td>
+							<td class="content">{{tercero?.nombres}}</td>
+						</tr>
+						<tr>
+							<td class="title">Apellidos: </td>
+							<td class="content">{{tercero?.apellidos}}</td>
+						</tr>
+						<tr>
+							<td class="title">Tipo identificación: </td>
+							<td class="content" matTooltip="{{tercero?.idtipodocumento.descripcion}}">{{tercero?.idtipodocumento.nombre}}</td>
+						</tr>
+						<tr>
+							<td class="title">Identificación: </td>
+							<td class="content">{{tercero?.identificacion}}</td>
+						</tr>
+						<tr>
+							<td class="title">Sexo: </td>
+							<td class="content">{{tercero?.sexo == 'm' ? 'Masculino' : 'Femenino'}}</td>
+						</tr>
+						<tr>
+							<td class="title">Area: </td>
+							<td class="content">{{tercero?.idarea.nombre}}</td>
+						</tr>
+						<tr>
+							<td class="title">F. nacimiento: </td>
+							<td class="content">{{tercero.fnacimiento ? (tercero.fnacimiento.timestamp*1000 | date )  : 'No hay información'}}</td>
+						</tr>
+						<tr>
+							<td class="title">Última edición: </td>
+							<td class="content">{{tercero.editado ? (tercero.editado.timestamp*1000 | date) : 'No hay información'}}</td>
+						</tr>
+						<tr>
+							<td class="title">Fecha creación: </td>
+							<td class="content">{{tercero.creado ? (tercero.creado.timestamp*1000 | date)  : 'No hay información'}}</td>
+						</tr>
+						<tr>
+							<td class="title">Factura Agrupada : </td>
+							<td class="content">{{tercero.facAgrupada  ? 'Si'  : 'No'}}</td>
+						</tr>
+					</table>
+
+				</div> -->
+
+			</ng-template>
+		</mat-tab>
+
+		<!-- SERVICIOS -->
+		<mat-tab label="Servicios" *ngIf="idTercero && user['permisos']?.terceros?.servicios?.listar">
+			<ng-template matTabContent>
+				<app-servicios-tercero></app-servicios-tercero>
+			</ng-template>
+		</mat-tab>
+
+		<!-- ACUERDOS PAGOS -->
+		<mat-tab label="Acuerdos pago" *ngIf="idTercero && user['permisos']?.terceros?.acuerdos?.listar">
+			<ng-template matTabContent>
+				<app-acuerdos-tercero></app-acuerdos-tercero>
+			</ng-template>
+		</mat-tab>
+
+		<!-- SOLICITUDES -->
+		<mat-tab label="Solicitudes" *ngIf="idTercero && user['permisos']?.terceros?.solicitudes?.listar">
+			<ng-template matTabContent>
+				<app-solicitudes-tercero [userData]="tercero"></app-solicitudes-tercero>
+			</ng-template>
+		</mat-tab>
+
+		<!-- CUADRILLAS -->
+		<mat-tab label="Cuadrillas" *ngIf="idTercero && user['permisos']?.terceros?.cuadrillas?.listar">
+			<ng-template matTabContent>
+				<app-cuadrilla-tercero></app-cuadrilla-tercero>
+			</ng-template>
+		</mat-tab>
+
+		<!-- DIRECCIONES -->
+		<mat-tab label="Direcciones" *ngIf="idTercero && user['permisos']?.terceros?.direcciones?.listar">
+			<ng-template matTabContent>
+				<app-direcciones-tercero></app-direcciones-tercero>
+			</ng-template>
+		</mat-tab>
+
+		<!-- PERMISOS -->
+		<mat-tab label="Permisos" *ngIf="idTercero && user['permisos']?.terceros?.permisos?.listar">
+			<ng-template matTabContent>
+				<app-permisos-tercero></app-permisos-tercero>
+			</ng-template>
+		</mat-tab>
+
+	</mat-tab-group>
+
+</mat-card>

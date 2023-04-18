@@ -1,0 +1,19 @@
+<h2 mat-dialog-title>Seleccione Fecha de Reporte</h2>
+
+<div mat-dialog-content>
+	
+	<form name="form" [formGroup]="form" (ngSubmit)="onSubmit()">
+		<mat-form-field appearance="outline" style="width: 100%;">
+			<mat-label>Fecha Reporte</mat-label>
+			<input formControlName="date" matInput [max]="maxDate" [matDatepicker]="fechaReporte">
+			<mat-datepicker-toggle matSuffix [for]="fechaReporte"></mat-datepicker-toggle>
+			<mat-datepicker touchUi #fechaReporte></mat-datepicker>
+		</mat-form-field>
+	</form>
+</div>
+
+
+<div mat-dialog-actions align="end">
+	<button mat-raised-button [mat-dialog-close] cdkFocusInitial>Cerrar</button>
+	<button mat-raised-button type="submit" color="primary" [disabled]="form.invalid" (click)="onSubmit()">Generar Informe</button>
+</div>

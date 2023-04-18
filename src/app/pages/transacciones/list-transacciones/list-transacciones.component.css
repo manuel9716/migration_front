@@ -1,0 +1,15 @@
+.estado-transaccion{
+    font-weight: 500;
+}
+
+.estado-transaccion-1{
+    color: #98c221;
+}
+
+.estado-transaccion-2{
+    color: #edb200;
+}
+
+.estado-transaccion-3{
+    color: red;
+}

@@ -1,0 +1,46 @@
+<style>
+  .mat-dialog-actions {
+    display: inherit;
+  }
+
+  .center {
+    text-align: center;
+  }
+
+  p {
+    font-weight: bold;
+    /* margin-bottom: 2em; */
+  }
+
+  table {
+    width: 100%;
+
+  }
+
+  td {
+    text-align: center !important;
+  }
+
+  th {
+    text-align: center !important;
+  }
+</style>
+
+<div class="center">
+  <h1 mat-dialog-title>Municipios Vs {{variableAnalisis}} Retiro Programado </h1>
+  <div mat-dialog-content>
+    <!-- <p>esto esta andando</p> -->
+    <table mat-table [dataSource]="variables" class="mat-elevation-z8">
+      <div *ngFor=" let colum  of displayedColumns; let i = index">
+        <ng-container [matColumnDef]=colum>
+          <th mat-header-cell *matHeaderCellDef> {{colum}} </th>
+          <td mat-cell *matCellDef="let element"> {{i==0 && variableAnalisis=='Motivo' ? motivosRetiros[element].nombre
+            : i==0 && variableAnalisis=='Estado' ? estadosRetiros[element].nombre : obtenervalue(i-1,element) }} </td>
+        </ng-container>
+      </div>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+  </div>
+</div>

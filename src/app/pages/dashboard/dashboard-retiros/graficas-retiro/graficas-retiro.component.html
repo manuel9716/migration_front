@@ -1,0 +1,34 @@
+
+<mat-card class="page-content-card">
+
+
+    <!-- CONTENIDO   -->
+    <div class="" fxLayout="column" *ngIf="datosFiltrados">
+        <div fxLayout="column" fxLayoutAlign="space-around center" class=" info-graficos">
+            <div>
+                Gráfico de Barras
+            </div>
+            <p>
+                (Basado en <strong>{{cont}}</strong>  {{variable}})
+            </p>
+          
+        </div>
+        <div class="" div fxLayout="row" fxLayoutAlign="space-around center">
+
+            <ngx-charts-bar-vertical [view]="viewSTNPq" [scheme]="colorScheme" [results]="datosFiltrados"
+                [legendPosition]="legendPositionPie" [gradient]="gradientBarS" [xAxis]="showXAxisBarS"
+                [yAxis]="showYAxisBarS" [legend]="showLegendBarS" [showXAxisLabel]="showXAxisLabelBarS"
+                [legendTitle]="legendTitleBarS" [showYAxisLabel]="showYAxisLabelBarS" [xAxisLabel]="xAxisLabelBarS"
+                [yAxisLabel]="yAxisLabelBarS" (select)="onSelect($event)">
+            </ngx-charts-bar-vertical>
+
+            <ngx-charts-number-card [view]="viewBanerPq" [scheme]="colorScheme" [results]="datosFiltrados"
+                [cardColor]="cardColor" (select)="onSelect($event)">
+            </ngx-charts-number-card>
+        </div>        
+    </div>
+
+
+
+
+</mat-card>

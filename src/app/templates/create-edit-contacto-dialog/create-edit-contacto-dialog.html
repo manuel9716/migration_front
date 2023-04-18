@@ -1,0 +1,73 @@
+<mat-toolbar fxLayout="row" fxLayoutAlign="center center" color="primary">
+	<h4>{{data.entity ? 'EDITAR CONTACTO' : 'CREAR CONTACTO'}}</h4>
+</mat-toolbar>
+
+<div class="separator"></div>
+
+<form name="form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+	<div fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto">
+
+		<div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+			<mat-form-field appearance="outline" fxFlex="100">
+				<mat-label>Nombres</mat-label>
+				<input matInput formControlName="nombres" required>
+				<mat-icon matSuffix class="secondary-text">account_circle</mat-icon>
+				<mat-hint>{{form.controls['nombres']?.value?.length}} de 50</mat-hint>
+				<mat-error>
+					<span *ngIf="form.controls['nombres'].hasError('required')">Nombres es requerido</span>
+					<span *ngIf="form.controls['nombres'].hasError('maxlength')">Máximo 50 caracteres</span>
+				</mat-error>
+			</mat-form-field>
+		</div>
+
+		<div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+			<mat-form-field appearance="outline" fxFlex="50" class="pr20">
+				<mat-label>Teléfono 1</mat-label>
+				<input matInput formControlName="telefono" required>
+				<i matSuffix class="fas fa-phone" data-fa-transform="grow-6 up-6 left-5"></i>
+				<mat-hint>{{form.controls['telefono']?.value?.length}} de 10</mat-hint>
+				<mat-error>
+					<span *ngIf="form.controls['telefono'].hasError('required')">Teléfono de contacto es
+						requerido</span>
+					<span *ngIf="form.controls['telefono'].hasError('maxlength')">Máximo 10
+						caracteres</span>
+					<span *ngIf="form.controls['telefono'].hasError('pattern')">Número inválido</span>
+				</mat-error>
+			</mat-form-field>
+			<mat-form-field appearance="outline" fxFlex="50">
+				<mat-label>Teléfono 2</mat-label>
+				<input matInput formControlName="telefono2">
+				<i matSuffix class="fas fa-phone" data-fa-transform="grow-6 up-6 left-5"></i>
+				<mat-hint>{{form.controls['telefono2']?.value?.length}} de 10</mat-hint>
+				<mat-error>
+					<span *ngIf="form.controls['telefono2'].hasError('maxlength')">Máximo 10
+						caracteres</span>
+					<span *ngIf="form.controls['telefono2'].hasError('pattern')">Número inválido</span>
+				</mat-error>
+			</mat-form-field>
+		</div>
+
+		<div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+			<mat-form-field appearance="outline" fxFlex="100">
+				<mat-label>Observaciones</mat-label>
+				<textarea matInput formControlName="observaciones"></textarea>
+				<mat-hint>{{form.controls['observaciones']?.value?.length}} de 200</mat-hint>
+				<mat-error>Máximo 200 caracteres</mat-error>
+			</mat-form-field>
+		</div>
+
+		<div class="separator"></div>
+		<span class="error" *ngIf="error" [@animate]="{value:'*',params:{y:'50px'}}">{{error}}</span>
+
+		<div class="content-form-submit">
+			<button mat-raised-button class="btn-form-submit" type="button" (click)="cancel()"
+				[disabled]="loading">Cancelar</button>
+			<button mat-raised-button class="btn-form-submit" type="submit" color="primary"
+				[disabled]="form.invalid || loading">{{data.entity ? 'Editar' : 'Crear'}}</button>
+		</div>
+
+		<mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+	</div>
+
+</form>

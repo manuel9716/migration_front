@@ -1,0 +1,92 @@
+#login {
+   height: 100%;
+   font-family: Muli, 'Helvetica Neue', Arial, sans-serif;
+   background: url(../../../assets/backgrounds/dark-material-bg.jpg) 0 0/cover no-repeat;
+}
+
+#login-intro {
+   flex: 1 1 0%;
+   box-sizing: border-box;
+   color: #fff;
+   padding: 128px;
+   width: 100%;
+   overflow: hidden;
+   /* background: url(../../../assets/backgrounds/dark-material-bg.jpg) 0 0/cover no-repeat; */
+}
+
+.inner-scroll {
+   flex-direction: row;
+   box-sizing: border-box;
+   display: flex;
+   place-content: stretch flex-start;
+   align-items: stretch;
+}
+
+#login .logo {
+   width: 300px;
+   margin-bottom: 32px;
+   margin: 0;
+}
+
+#login .logo img {
+   width: 300px;
+}
+
+#login .title {
+   font-size: 42px;
+   font-weight: 300;
+   line-height: 1;
+}
+
+#login .description {
+   padding-top: 16px;
+   font-size: 14px;
+   max-width: 600px;
+}
+
+#login-form-wrapper {
+   background: #fff;
+   width: 400px;
+   min-width: 400px;
+   max-width: 400px;
+   overflow: auto;
+   -webkit-overflow-scrolling: touch;
+   box-shadow: 0 8px 10px -5px rgba(0, 0, 0, .2), 0 16px 24px 2px rgba(0, 0, 0, .14), 0 6px 30px 5px rgba(0, 0, 0, .12);
+}
+
+#login-form {
+   padding: 128px 48px 48px;
+}
+
+#login-form .title {
+   font-size: 21px;
+}
+
+#login-form form {
+   width: 100%;
+   padding-top: 32px;
+}
+
+#login-form form .submit-button {
+   width: 100%;
+   margin: 16px auto;
+   display: block;
+}
+
+#login-form form mat-form-field {
+   width: 100%;
+}
+
+#login-form form .remember-forgot-password {
+   margin-top: 8px;
+   font-size: 16px;
+}
+
+#login-form form .remember-forgot-password .forgot-password {
+   font-size: 13px;
+   margin-bottom: 16px;
+}
+
+#login-form-wrapper #login-form form .remember-forgot-password .remember-me {
+   margin-bottom: 16px;
+}

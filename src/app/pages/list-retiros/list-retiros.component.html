@@ -1,0 +1,164 @@
+<mat-toolbar color="primary" class="header-pages" fxLayout="row" fxLayoutAlign="space-between center">
+    <div [@animate]="{value:'*',params:{x:'50px'}}">
+        <span class="title">Retiros</span><br>
+        <span class="breadcrumb">Retiros > Lista</span>
+    </div>
+</mat-toolbar>
+
+<mat-card class="page-content-card">
+
+    <div fxLayout="row" fxLayoutAlign="start center" [@animate]="{value:'*',params:{x:'-50px'}}" >
+
+		<mat-form-field appearance="outline" fxFlex="18" class="pr20 no-pb">
+            <mat-label>Buscar Retiro</mat-label>
+            <input matInput (keyup)="applyFilter($event.target.value)" [(ngModel)]="retiroSearch">
+            <mat-icon matPrefix class="secondary-text">search</mat-icon>
+            <button mat-button *ngIf="retiroSearch" matSuffix mat-icon-button aria-label="Clear"
+                (click)="retiroSearch=''; applyFilter('')">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-form-field>
+
+		<mat-form-field appearance="outline" fxFlex="18" class="pr20 no-pb" [formGroup]="formFiltros">
+			<mat-label>Estado</mat-label>
+			<mat-select  formControlName="idestadoretiro" [(value)]="filters['idestadoretiro']" multiple>
+                <mat-option (onSelectionChange)="selectTodo(formFiltros,'idestadoretiro',estadosRetiros,'idestadoretiro')">
+                    <strong>
+                        Selecionar Todo
+                    </strong>
+                </mat-option>
+				<mat-option *ngFor="let estado of estadosRetiros" [value]="estado.idestadoretiro">
+					{{estado.nombre}}</mat-option>
+			</mat-select>
+        </mat-form-field>
+    
+        <mat-form-field appearance="outline" fxFlex="18" class="pr20 no-pb" [formGroup]="formFiltros">
+			<mat-label>Motivo</mat-label>
+			<mat-select formControlName="idmotivoretiro" [(value)]="filters['idmotivoretiro']" multiple>
+                <mat-option (onSelectionChange)="selectTodo(formFiltros,'idmotivoretiro',motivosRetiros,'idmotivoretiro')">
+                    <strong>
+                        Selecionar Todo
+                    </strong>
+                </mat-option>
+				<mat-option *ngFor="let motivo of motivosRetiros" [value]="motivo.idmotivoretiro">
+					{{motivo.nombre}}</mat-option>
+			</mat-select>
+        </mat-form-field>    
+        <mat-form-field appearance="outline" fxFlex="18" class="pr20 no-pb" [formGroup]="formFiltros">
+			<mat-label>Municipio</mat-label>
+			<mat-select formControlName="municipios" [(value)]="filters['idmuicipio']" multiple>
+                <mat-option (onSelectionChange)="selectTodo(formFiltros,'municipios',municipios,'idmunicipio')">
+                    <strong>
+                        Selecionar Todo
+                    </strong>
+                </mat-option>
+				<mat-option *ngFor="let municipio of municipios" [value]="municipio.idmunicipio">
+					{{municipio.nombre}}</mat-option>
+			</mat-select>
+        </mat-form-field>
+        
+        <mat-form-field appearance="outline" fxFlex="18" class="pr20 no-pb">
+            <mat-label>Fecha Retiro</mat-label>
+            <input [(ngModel)]="filters['fecharetiro']" matInput [matDatepicker]="picker">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker touchUi #picker></mat-datepicker>
+        </mat-form-field>
+
+        
+
+		<div fxFlex class="top-buttons">
+			<button mat-icon-button class="pr20" matTooltip="Borrar filtros" (click)="resetFilters()"><i class="fas fa-backspace"></i></button>
+			<button mat-mini-fab color="primary" matTooltip="Buscar" (click)="search()"><mat-icon>search</mat-icon></button>
+		</div>
+
+	</div>
+
+
+    <div class="header-pages-tools">
+        <div class="top-filters" [@animate]="{value:'*',params:{x:'-50px'}}">
+            
+        </div>
+    </div>
+
+    <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+
+    <div class="mat-elevation-z5" [@animate]="{value:'*',params:{y:'100%'}}">
+
+        <table mat-table class="table-striped table-hover" [dataSource]="dataSource" matSort>
+
+            <ng-container matColumnDef="idestado">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+                <td mat-cell *matCellDef="let row"> 
+                    <span class="est-ret est-ret-{{ row['idestadoretiro']}}">{{ row['nombreestadoretiro'] }}</span>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="idmotivo">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Motivo </th>
+                <td mat-cell *matCellDef="let row">{{getMotivoRetiro(row.idmotivoretiro) ? row['nombremotivoretiro'] : ' - '}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="fecharetiro">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> F. Retiro </th>
+                <td mat-cell *matCellDef="let row"> {{row.fecharetiro| date }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="fechacreacion">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> F. Creado </th>
+                <td mat-cell *matCellDef="let row"> {{row.fechacreacion| date }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="numeroservicio">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> N. Servicio </th>
+                <td mat-cell *matCellDef="let row">
+                    <a href="#" class="link" [routerLink]="['/servicio', row.idservicio]">{{row.numeroservicio}}</a> 
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="plan">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Plan </th>
+                <td mat-cell *matCellDef="let row">
+                    <a href="#" class="link" [routerLink]="['/plan', row.idplan]">{{row.plan}}</a> 
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="nombrestercero">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Tercero </th>
+                <td mat-cell *matCellDef="let row">
+                    <a href="#" class="link" [routerLink]="['/tercero', row.idtercero]">{{row.nombrestercero + ' ' + row.apellidostercero}}</a>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="municipio">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Municipio </th>
+                <td mat-cell *matCellDef="let row"> {{row.municipio}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="observaciones">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Observaciones </th>
+                <td mat-cell *matCellDef="let row"> <div class="cut-text-200" matTooltip="{{row.observaciones}}">{{row.observaciones}}</div></td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+				<th mat-header-cell *matHeaderCellDef class="w-10p"> </th>
+				<td mat-cell *matCellDef="let row" class="w-10p align-r">
+					<button *ngIf="row.idestadoretiro  != 2 && user['permisos']?.retiros?.listar?.cambiar_estado" mat-icon-button color="primary" matTooltip="Cambiar Estado" (click)="cambiarEstado(row)">
+						<mat-icon>cached</mat-icon>
+					</button>
+				</td>
+			</ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+        </table> 
+
+        
+
+        <div *ngIf="dataSource?.data.length < 1" class="no-date-table">
+            No hay retiros para mostrar.
+        </div>
+
+        <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons="true"></mat-paginator>
+    </div>
+</mat-card>

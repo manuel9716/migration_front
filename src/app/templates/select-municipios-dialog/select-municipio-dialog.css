@@ -1,0 +1,26 @@
+.mat-dialog-content{
+	padding-bottom: 20px;
+	margin: 20px;
+}
+
+.mat-dialog-actions {
+	display: inherit;
+}
+
+.center {
+	text-align: center;
+}
+
+.grupo-wrapper{
+	text-align: left;
+    padding: 15px;
+    margin: 10px;
+    border-radius: 15px;
+}
+
+.name-grupo {
+    text-align: center;
+    font-size: 1.4em;
+	color: var(--primary);
+	margin-bottom: 5px;
+}

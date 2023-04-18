@@ -1,0 +1,33 @@
+.panel-informacion{
+    background-color: #59b2e6f5;
+    color: #fff;
+    padding: 1em;
+
+}
+.panel-grtaficas{
+   
+
+}
+
+.title-graficas-retiro{
+    text-align: center;
+    text-transform: uppercase;
+
+}
+.icon-informacion{
+    width: 2em;
+    height: 2em;
+}
+
+.info-graficos{
+    font-size: xx-large;
+    margin-top: 16px;
+
+    margin-bottom: 20px;
+    
+}
+.info-graficos  p{
+    margin-top: 0px;
+    font-size: small;
+    
+}

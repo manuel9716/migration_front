@@ -1,0 +1,165 @@
+<mat-toolbar color="primary" class="header-pages">
+	<div [@animate]="{value:'*',params:{x:'50px'}}">
+		<span class="title">Crear solicitud al servicio</span><br>
+		<span class="breadcrumb">Solicitud al servicio > Crear</span>
+	</div>
+</mat-toolbar>
+
+<mat-card class="page-content-card">
+
+	<div class="mb-24">
+
+		<!-- <div *ngIf="load"> -->
+			<div *ngIf="!servicio">
+				<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+			</div>
+	
+	
+			<form [formGroup]="form" class="mat-card mat-elevation-z4 p-24" fxLayout="row" fxLayoutAlign="start center"
+				fxFlex="1 0 auto" *ngIf="servicio">
+
+			<mat-horizontal-stepper [linear]="true" #solServicioStepper fxFlex="100">
+
+				<!-- CONTACTO -->
+				<mat-step [stepControl]="form.controls['nombrecontacto'].valid && form.controls['celularcontacto'].valid">
+					<ng-template matStepLabel>Contacto</ng-template>
+					<div xLayout="row" fxLayoutAlign="center center" fxFlex="1 0 auto">
+						<mat-form-field appearance="outline" fxFlex="50" class="pr20">
+							<mat-label>Nombre de contacto</mat-label>
+							<input matInput id="input0" autofocus formControlName="nombrecontacto">
+							<mat-icon matSuffix class="secondary-text">account_circle</mat-icon>
+							<mat-hint>{{form.controls['nombrecontacto'].value.length}} de 50</mat-hint>
+							<mat-error>
+								<!-- <span *ngIf="form.controls['nombrecontacto'].hasError('required')">Nombre de contacto es
+									requerido</span> -->
+								<span *ngIf="form.controls['nombrecontacto'].hasError('maxlength')">Máximo 50
+									caracteres</span>
+							</mat-error>
+						</mat-form-field>
+						<mat-form-field appearance="outline" fxFlex="50" class="pr20">
+							<mat-label>Teléfono de contacto</mat-label>
+							<input matInput formControlName="celularcontacto" (keydown.enter)="goForward()">
+							<i matSuffix class="fas fa-phone" data-fa-transform="grow-6 up-6 left-5"></i>
+							<mat-hint>{{form.controls['celularcontacto'].value.length}} de 10</mat-hint>
+							<mat-error>
+								<!-- <span *ngIf="form.controls['celularcontacto'].hasError('required')">Teléfono de contacto
+									es
+									requerido</span> -->
+								<span *ngIf="form.controls['celularcontacto'].hasError('maxlength')">Máximo 10
+									caracteres</span>
+								<span *ngIf="form.controls['celularcontacto'].hasError('pattern')">Número
+									inválido</span>
+							</mat-error>
+						</mat-form-field>
+					</div>
+					<!-- Controls -->
+					<div class="separator30"></div>
+					<div class="align-c">
+						<button type="button" mat-button [routerLink]="['/servicio', servicio['idservicio']]">Cancelar</button>
+						<button type="button" mat-raised-button color="primary"
+							[disabled]="!form.controls['nombrecontacto'].valid || !form.controls['celularcontacto'].valid"
+							matStepperNext>Siguiente</button>
+					</div>
+				</mat-step>
+
+				<!-- TIPO SOLICITUD -->
+				<mat-step [stepControl]="form.controls['idtiposolicitudservicio']">
+					<ng-template matStepLabel>Tipo Solicitud</ng-template>
+					<div xLayout="row" fxLayoutAlign="space-between none" fxFlex="1 0 auto">
+						<mat-action-list fxFlex="40" class="pr20">
+							<h3 mat-subheader>GRUPO</h3>
+							<mat-list-item *ngFor="let grupo of grupos"
+								[ngClass]="currentGrupo?.idgruposolicitudservicio == grupo?.idgruposolicitudservicio ? 'active-grupo' : ''"
+								(click)="seleccionarGrupo(grupo)">
+								{{grupo.nombre}}
+							</mat-list-item>
+						</mat-action-list>
+						<div fxLayoutAlign="center center" fxFlex="10" class="pr20">
+							<i style="color: #757575" class="fas fa-arrow-right"></i>
+						</div>
+						<mat-action-list fxFlex="40">
+							<h3 mat-subheader>{{tiposFiltrados ? 'TIPO' : 'Por favor seleccione un grupo.'}}</h3>
+							<mat-list-item *ngFor="let tipo of tiposFiltrados"
+								[ngClass]="currentTipo?.idtiposolicitudservicio == tipo?.idtiposolicitudservicio ? 'active-tipo' : ''"
+								(click)="seleccionarTipo(tipo)">
+								{{tipo.nombre}}
+							</mat-list-item>
+						</mat-action-list>
+					</div>
+					<!-- Controls -->
+					<div class="separator30"></div>
+					<div class="align-c">
+						<button type="button" mat-button matStepperPrevious>Atrás</button>
+						<button type="button" mat-raised-button color="primary" [disabled]="!form.controls['idtiposolicitudservicio'].valid" matStepperNext>Siguiente</button>
+					</div>
+				</mat-step>
+
+				<!-- OBSERVACIONES -->
+				<mat-step [stepControl]="form.controls['observaciones']">
+					<ng-template matStepLabel>Observaciones</ng-template>
+					<div class="align-c">
+
+						<div fxLayout="row" fxLayoutAlign="start center">
+							<mat-form-field appearance="outline" fxFlex="100" class="pr20">
+								<mat-label>Observaciones</mat-label>
+								<textarea matInput formControlName="observaciones"></textarea>
+								<mat-hint>{{form.controls['observaciones'].value?.length}} de 300</mat-hint>
+								<mat-error>Máximo 300 caracteres</mat-error>
+							</mat-form-field>
+						</div>
+
+						<!-- Controls -->
+						<div class="separator30"></div>
+						<button type="button" mat-button matStepperPrevious>Atrás</button>
+						<button type="button" mat-raised-button color="primary" [disabled]="!form.controls['observaciones'].valid" matStepperNext>Siguiente</button>
+					</div>
+				</mat-step>
+
+				<!-- FINALIZAR -->
+				<mat-step>
+					<ng-template matStepLabel>Finalizar</ng-template>
+					<div class="align-c">
+						<h3>Crear Solicitud de Servicio</h3>
+						<table class="vertical-table" [@animate]="{value:'*',params:{y:'50px'}}">
+							<tr>
+								<td class="title">Número servicio: </td>
+								<td class="content">{{servicio['numeroservicio']}}</td>
+							</tr>
+							<tr>
+								<td class="title">Tercero: </td>
+								<td class="content" matTooltip="{{'Número: ' + servicio['numerotercero']}}">{{servicio['nombres'] + ' ' + servicio['apellidos']}}</td>
+							</tr>
+							<tr>
+								<td class="title">Dirección: </td>
+								<td class="content">{{servicio['direccion'] + ' (' + servicio['barrio'] + ' - ' + servicio['municipio'] + ' - ' + servicio['departamento'] + ')' }}</td>
+							</tr>
+							<tr>
+								<td class="title">Contacto: </td>
+								<td class="content">
+									{{form.controls['nombrecontacto']?.value + ' (' + form.controls['celularcontacto']?.value + ')'}}
+								</td>
+							</tr>
+							<tr *ngIf="currentGrupo && currentTipo">
+								<td class="title">Tipo Solicitud: </td>
+								<td class="content">{{currentGrupo['nombre'] +' > ' + currentTipo['nombre']}}</td>
+							</tr>
+						</table>
+
+						<div class="separator30"></div>
+						<span class="error" *ngIf="error" [@animate]="{value:'*',params:{y:'50px'}}">{{error}}</span>
+						<div class="separator"></div>
+						<button type="button" mat-button matStepperPrevious [disabled]="loading">Atrás</button>
+						<button type="button" mat-raised-button color="primary" [disabled]="!form.valid || loading"
+							(click)="createSolicitud()">Crear solicitud</button>
+						<div class="separator"></div>
+						<mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+					</div>
+				</mat-step>
+
+			</mat-horizontal-stepper>
+
+		</form>
+
+	</div>
+
+</mat-card>

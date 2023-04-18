@@ -1,0 +1,75 @@
+<div class="header-pages-tools  m-10" fxLayout="row" fxLayoutAlign="start center">
+
+	<div class="top-filters" fxLayout="row" fxLayoutAlign="start center" fxFlex>
+		<mat-form-field appearance="outline" fxFlex="100" class="pr20">
+			<mat-label>Buscar Excepción</mat-label>
+			<input matInput (keyup)="applyFilter($event.target.value)" [(ngModel)]="ExcepSearch">
+			<mat-icon matPrefix class="secondary-text">search</mat-icon>
+			<button mat-button *ngIf="ExcepSearch" matSuffix mat-icon-button aria-label="Clear"
+				(click)="ExcepSearch=''; applyFilter('')">
+				<mat-icon>close</mat-icon>
+			</button>
+		</mat-form-field>
+	</div>
+
+	<div class="top-buttons" fxFlex="5" *ngIf="user['permisos']?.servicios?.excepciones?.crear">
+		<button mat-mini-fab color="accent" matTooltip="Crear Excepción" (click)="createEditExcepcionDialog(null)" [disabled]="disabledCreate">
+			<mat-icon>add</mat-icon>
+		</button>
+	</div>
+
+</div>
+
+
+<div class="mat-elevation-z5 m-10">
+
+	<mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+
+	<table mat-table [dataSource]="dataSource" matSort>
+
+		<ng-container matColumnDef="estado">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+			<td mat-cell *matCellDef="let row">
+				<span color="primary" class="box-status" matTooltip="{{row.estado ? 'Activo':'Inactivo'}}"
+					[ngClass]="row.estado ? 'bg-pri':'bg-sec'"></span>
+			</td>
+		</ng-container>
+
+		<ng-container matColumnDef="fechacreacion">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header> F. Creación </th>
+			<td mat-cell *matCellDef="let row"> {{row.fechacreacion.timestamp*1000 | date}} </td>
+		</ng-container>
+
+		<ng-container matColumnDef="fechafinalizacion">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header> F. Finalización </th>
+			<td mat-cell *matCellDef="let row"> {{row.fechafinalizacion.timestamp*1000 | date}} </td>
+		</ng-container>
+
+		<ng-container matColumnDef="observaciones">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header> Observaciones </th>
+			<td mat-cell *matCellDef="let row">{{row.observaciones}} </td>
+		</ng-container>
+
+		<ng-container matColumnDef="actions">
+			<th mat-header-cell *matHeaderCellDef class="w-15p"> </th>
+			<td mat-cell *matCellDef="let row" class="w-15p align-r">
+				<button mat-icon-button color="primary" matTooltip="Editar" (click)="createEditExcepcionDialog(row)" *ngIf="user['permisos']?.servicios?.excepciones?.editar">
+					<mat-icon>edit</mat-icon>
+				</button>
+				<button mat-icon-button color="warn" matTooltip="Eliminar" (click)="delete(row)" *ngIf="user['permisos']?.servicios?.excepciones?.eliminar">
+					<mat-icon>delete</mat-icon>
+				</button>
+			</td>
+		</ng-container>
+
+		<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+		<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+	</table>
+
+
+	<div *ngIf="dataSource?.data?.length === 0" class="no-date-table">
+		No hay excepciones del servicio.
+	</div>
+
+	<mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons="true"></mat-paginator>
+</div>

@@ -1,0 +1,80 @@
+<h2 class="text-center fs-5 fw-bold">
+    ESTADO MUNICIPIO:
+    <span class="text-success" *ngIf="prtgStatus.status.status == 'RUNNING'">Sin Problemas</span>
+    <span class="text-warning" *ngIf="prtgStatus.status.status == 'FAIL'">Con problemas</span>
+    <span class="text-danger" *ngIf="prtgStatus.status.status == 'OFFLINE'">Sonda desconectada</span>
+    <span class="text-secondary" *ngIf="prtgStatus.status.status == 'NO_PROBE' || prtgStatus.status.status == 'NO_FOUND'">Municipio sin sonda</span>
+</h2>
+
+
+<table class="table table-striped" *ngIf="prtgStatus.status.status != 'OFFLINE' && prtgStatus.status.status != 'NO_PROBE' && prtgStatus.status.status != 'NO_FOUND'">
+    <tbody>
+        <tr>
+            <th scope="row ">Ping Nacional (ms)</th>
+            <td>{{prtgStatus.values.pingNat}}</td>
+            <td>
+                <fa-icon 
+                        [icon]="statusOk" 
+                        class="text-success" 
+                        *ngIf="prtgStatus.values.pingNat < 25; else iconAlert"
+                ></fa-icon>
+            </td>
+        </tr>
+        <tr>
+            <th scope="row">Ping Internacional (ms)</th>
+            <td>{{prtgStatus.values.pingInt}}</td>
+            <td>
+                <fa-icon 
+                        [icon]="statusOk" 
+                        class="text-success"
+                        *ngIf="prtgStatus.values.pingInt < 150; else iconAlert"
+                ></fa-icon>
+            </td>
+        </tr>
+        <tr>
+            <th scope="row ">Perdida de Paquetes Nacional (%)</th>
+            <td>{{prtgStatus.values.ppNat}}</td>
+            <td>
+                <fa-icon 
+                        [icon]="statusOk" 
+                        class="text-success" 
+                        *ngIf="prtgStatus.values.ppNat < 40; else iconAlert"
+                ></fa-icon>
+            </td>
+        </tr>
+        <tr>
+            <th scope="row">Perdida de Paquetes Internacional (%)</th>
+            <td>{{prtgStatus.values.ppInt}}</td>
+            <td>
+                <fa-icon 
+                        [icon]="statusOk" 
+                        class="text-success"
+                        *ngIf="prtgStatus.values.ppInt < 40; else iconAlert" 
+                ></fa-icon>
+            </td>
+        </tr>
+        <tr>
+            <th scope="row ">Jitter Nacional (ms)</th>
+            <td>{{prtgStatus.values.jitterNat}}</td>
+            <td>
+                <fa-icon 
+                        [icon]="statusOk" 
+                        class="text-success"
+                        *ngIf="prtgStatus.values.jitterNat < 15; else iconAlert"
+                ></fa-icon>
+            </td>
+        </tr>
+        <!-- <tr>
+            <th scope="row">Jitter Internacional (ms)</th>
+            <td>50</td>
+            <td></td>
+        </tr> -->
+    </tbody>
+</table>
+
+<ng-template #iconAlert>
+    <fa-icon 
+            [icon]="statusAlert" 
+            class="text-warning"
+    ></fa-icon>
+</ng-template>

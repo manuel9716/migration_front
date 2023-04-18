@@ -1,0 +1,7 @@
+.estado-cuenta{
+    color: #a5a5a5;
+}
+
+.estado-cuenta.pago{
+    color: #98c221;
+}

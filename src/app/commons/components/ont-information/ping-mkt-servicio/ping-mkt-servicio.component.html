@@ -1,0 +1,51 @@
+<!-- <div class="card mt-2">
+    <div class="card-header bg-primary bg-opacity-75 mb-3">
+        <div class="d-flex">
+            <div class=""><b class="text-white">Conexión Mikrotik y ONT</b></div>
+            <div class="ms-auto"><fa-icon [icon]="reloadIcon" (click)="reload();" class="fs-6 button-reload"></fa-icon></div>
+        </div>
+    </div>
+    
+    <div class="d-flex justify-content-center align-items-center m-3" *ngIf="!loadingPing; else ping">
+        <app-loading  class="text-center"></app-loading>
+    </div>    
+    
+</div> -->
+
+<div *ngIf="!loadingPing; else ping" class="d-flex justify-content-center align-items-center m-3">
+    <app-loading  class="text-center"></app-loading>
+</div>    
+
+<ng-template #ping>
+    <div class="container">
+        <div class="row row-cols-3 d-flex align-items-center m-1 pb-2">
+            <div class="col">
+                <div class="col text-primary text-center"><b>Paquetes enviados:</b></div>
+                <div class="col rounded-4 bg-secondary bg-opacity-25 text-dark text-center"> {{ pingStatus.pSend }} </div>
+            </div>
+            <div class="col">
+                <div class="col text-primary text-center"><b>Paquetes perdidos:</b></div>
+                <div class="col rounded-4 bg-secondary bg-opacity-25 text-dark text-center"> {{ pingStatus.pLost }} </div>
+            </div>
+            <div class="col">
+                <div class="col text-primary text-center"><b>Tamaño paquetes:</b></div>
+                <div class="col rounded-4 bg-secondary bg-opacity-25 text-dark text-center"> {{ pingStatus.sizePqt }} bytes</div>
+            </div>
+        </div>
+        <div class="row row-cols-3 d-flex align-items-center m-1 pb-2">
+            <div class="col">
+                <div class="col text-primary text-center"><b>Ping mínimo:</b></div>
+                <div class="col rounded-4 bg-secondary bg-opacity-25 text-dark text-center"> {{ pingStatus.minPing }} </div>
+            </div>
+            <div class="col">
+                <div class="col text-primary text-center"><b>Ping promedio:</b></div>
+                <div class="col rounded-4 bg-secondary bg-opacity-25 text-dark text-center"> {{ pingStatus.avgPing }}  </div>
+            </div>
+            <div class="col">
+                <div class="col text-primary text-center"><b>Ping máximo:</b></div>
+                <div class="col rounded-4 bg-secondary bg-opacity-25 text-dark text-center"> {{ pingStatus.maxPing }} </div>
+            </div>
+        </div>
+    </div>
+   
+</ng-template>

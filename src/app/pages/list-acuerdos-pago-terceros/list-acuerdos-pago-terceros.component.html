@@ -1,0 +1,134 @@
+
+
+<mat-toolbar color="primary" class="header-pages" fxLayout="row" fxLayoutAlign="space-between center">
+    <div [@animate]="{value:'*',params:{x:'50px'}}">
+        <span class="title">Acuerdos Pago Terceros</span><br>
+        <span class="breadcrumb">Acuerdos Pago Terceros > Lista</span>
+    </div>
+</mat-toolbar>
+
+<mat-card class="page-content-card">
+
+
+    <!-- <div class="header-pages-tools">
+        <div class="top-filters" [@animate]="{value:'*',params:{x:'-50px'}}">
+
+            <mat-form-field appearance="outline" class="w-100 pr20" >
+                <mat-label>Buscar Acuerod de Pago</mat-label>
+                <input matInput (keyup)="applyFilter($event.target.value)" [(ngModel)]="acuerdoPagoSearch">
+                <mat-icon matPrefix class="secondary-text">search</mat-icon>
+                <button mat-button *ngIf="acuerdoPagoSearch" matSuffix mat-icon-button aria-label="Clear"
+                    (click)="acuerdoPagoSearch=''; applyFilter('')">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" fxFlex class="pr20 no-pb">
+                <mat-label>Identificación</mat-label>
+                <input matInput [(ngModel)]="filters['identificacion']">
+                <button mat-button *ngIf="filters['identificacion']" matSuffix mat-icon-button aria-label="Clear"
+                    (click)="filters['identificacion'] = null">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+
+        </div>
+    </div> -->
+
+    <div fxLayout="row" fxLayoutAlign="start center" [@animate]="{value:'*',params:{x:'-50px'}}">
+        <mat-form-field appearance="outline" fxFlex class="pr20 no-pb">
+            <mat-label>Buscar Acuerdo de Pago</mat-label>
+            <input matInput (keyup)="applyFilter($event.target.value)" [(ngModel)]="acuerdoPagoSearch">
+            <mat-icon matPrefix class="secondary-text">search</mat-icon>
+            <button mat-button *ngIf="acuerdoPagoSearch" matSuffix mat-icon-button aria-label="Clear"
+                (click)="acuerdoPagoSearch=''; applyFilter('')">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" fxFlex class="pr20 no-pb">
+            <mat-label>Identificación</mat-label>
+            <input matInput [(ngModel)]="filters['identificacion']" (keyup.enter)="search()">
+            <button mat-button *ngIf="filters['identificacion']" matSuffix mat-icon-button aria-label="Clear"
+                (click)="filters['identificacion'] = null">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-form-field>
+
+        <div fxFlex="10" class="top-buttons">
+            <button mat-icon-button class="pr20" matTooltip="Borrar filtros" (click)="resetFilters()"><i
+                    class="fas fa-backspace"></i></button>
+            <button mat-mini-fab color="primary" matTooltip="Buscar" (click)="search()">
+                <mat-icon>search</mat-icon>
+            </button>
+        </div>
+
+    </div>
+
+    <div class="separator20"></div>
+
+    <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+
+    <div class="mat-elevation-z5" [@animate]="{value:'*',params:{y:'100%'}}">
+
+        <table mat-table class="table-striped table-hover" [dataSource]="dataSource" matSort>
+
+            <ng-container matColumnDef="checkboxes">
+                <th mat-header-cell *matHeaderCellDef>
+                    <mat-checkbox 
+                        [(ngModel)]="checkboxMaster['status']"
+                        [disabled]="checkboxMaster['disabled']" 
+                        (click)="selectMaster($event)"
+                        *ngIf="user['permisos']['acuerdos_pago_terceros']['listar']['eliminar']">
+                    </mat-checkbox>
+                    <button mat-icon-button color="warn" matTooltip="Eliminar seleccionados" (click)="deleteSelected()" *ngIf="user['permisos']['acuerdos_pago_terceros']['listar']['eliminar']">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </th>
+                <td mat-cell *matCellDef="let row">
+                    <mat-checkbox [(ngModel)]="row.selected" *ngIf="user['permisos']['acuerdos_pago_terceros']['listar']['eliminar']"></mat-checkbox>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="fechasolicitud">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> F. Solicitud </th>
+                <td mat-cell *matCellDef="let row"> {{row.fechasolicitud.timestamp*1000 | date :'medium'}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="fechapago">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> F. Pago </th>
+                <td mat-cell *matCellDef="let row"> {{row.fechapago.timestamp*1000 | date}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="observaciones">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Observaciones </th>
+                <td mat-cell *matCellDef="let row" matTooltip="{{row.observaciones}}">
+                    <div class="cut-text-200">{{row.observaciones}} </div>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="nombrestercero">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Tercero </th>
+                <td mat-cell *matCellDef="let row">
+                    <a href="#" class="link"
+                        [routerLink]="['/tercero', row.idtercero]">{{row.nombrestercero + ' ' + row.apellidostercero}}</a>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="identificacion">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Identificación </th>
+                <td mat-cell *matCellDef="let row">{{row.identificacion}}</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+        </table>
+
+        <div *ngIf="dataSource?.data.length < 1" class="no-date-table">
+            No hay acuerdos de pago de terceros para mostrar.
+        </div>
+
+        <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons="true"></mat-paginator>
+    </div>
+</mat-card>

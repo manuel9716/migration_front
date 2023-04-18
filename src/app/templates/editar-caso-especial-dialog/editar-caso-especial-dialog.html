@@ -1,0 +1,44 @@
+<mat-toolbar fxLayout="row" fxLayoutAlign="center center" color="primary">
+	<h4>EDITAR CASO ESPECIAL</h4>
+</mat-toolbar>
+
+<div class="separator"></div>
+
+<form name="form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+	<div fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto">
+
+
+		<div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+			<mat-form-field appearance="outline" fxFlex="100">
+				<mat-label>Justificación</mat-label>
+				<textarea  matInput formControlName="descripcion"> </textarea>
+				<mat-hint>{{form.controls['descripcion'].value?.length}} de 200</mat-hint>
+				<mat-error>Máximo 200 caracteres.</mat-error>
+			</mat-form-field>
+		</div>
+
+		<div class="separator"></div>
+
+		<div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+			<mat-form-field appearance="outline" fxFlex="100">
+				<mat-label>Tiempo (Minutos)</mat-label>
+				<input matInput #valueInput type="number" formControlName="tiempo">
+				<mat-error>El tiempo es requerido.</mat-error>
+			</mat-form-field>
+		</div>
+
+
+		<div class="separator"></div>
+
+		<div class="content-form-submit">
+			<button mat-raised-button class="btn-form-submit" type="button" (click)="cancel()">Cancelar</button>
+			<button mat-raised-button class="btn-form-submit" type="submit" color="primary" [disabled]="form.invalid || loading">
+				<span *ngIf="!loading">Editar</span>
+				<span *ngIf="loading"><i class="fas fa-spinner fa-spin"></i></span>
+			</button>
+		</div>
+
+	</div>
+
+</form>

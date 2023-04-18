@@ -1,0 +1,102 @@
+<!-- <h1 mat-dialog-title>POR FAVOR SELECCIONE UN PLAN</h1> -->
+<mat-toolbar color="primary" class="toolbar-header-dialog">
+   <h2>POR FAVOR SELECCIONE UN TERCERO</h2>
+</mat-toolbar>
+
+
+<div class="top-filters m-10" style="text-align: center" fxLayout="row" fxLayoutAlign="space-between center">
+
+   <mat-checkbox *ngIf="data['onlyEmployees']" fxFlex="15" class="pr20"
+      matTooltip="Si selecciona esta opción, solo se buscarán tercero que tengan usuario"
+      [(ngModel)]="searchCriteria['onlyusers']">Solo empleados</mat-checkbox>
+
+   <mat-form-field appearance="outline" fxFlex class="pr20">
+      <mat-label>Parámetros</mat-label>
+      <mat-select [(value)]="searchCriteria['criteria']" multiple>
+         <mat-option value="nombres">Nombres</mat-option>
+         <mat-option value="apellidos">Apellidos</mat-option>
+         <mat-option value="numerotercero">Número</mat-option>
+         <mat-option value="identificacion">Identificación</mat-option>
+         <mat-option value="email">email</mat-option>
+      </mat-select>
+   </mat-form-field>
+
+   <mat-form-field appearance="outline" fxFlex>
+      <mat-label>Parámetros de búsqueda</mat-label>
+      <input matInput [(ngModel)]="searchCriteria['value']" (keyup.enter)="search()">
+      <mat-icon matSuffix class="secondary-text">filter_list</mat-icon>
+   </mat-form-field>
+
+   <div fxFlex="15">
+      <button mat-icon-button class="pr20" matTooltip="Borrar filtros" (click)="resetFilters()"><i
+            class="fas fa-backspace"></i></button>
+      <button mat-mini-fab color="primary" matTooltip="Buscar" (click)="search()"
+         [disabled]="searchCriteria['criteria'].length == 0 || searchCriteria['value'].length == 0">
+         <mat-icon>search</mat-icon>
+      </button>
+   </div>
+
+</div>
+
+<div mat-dialog-content>
+
+
+   <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+
+   <div class="mat-elevation-z5 m-10 of-auto">
+      <table mat-table class="compact-table" [dataSource]="dataSource" matSort>
+
+         <ng-container matColumnDef="idtercero">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+            <td mat-cell *matCellDef="let row"> {{row.idtercero}} </td>
+         </ng-container>
+
+         <ng-container matColumnDef="numerotercero">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Número tercero </th>
+            <td mat-cell *matCellDef="let row"> {{row.numerotercero}} </td>
+         </ng-container>
+
+         <ng-container matColumnDef="nombres">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombres </th>
+            <td mat-cell *matCellDef="let row"> {{row.nombres}} </td>
+         </ng-container>
+
+         <ng-container matColumnDef="apellidos">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Apellidos </th>
+            <td mat-cell *matCellDef="let row"> {{row.apellidos}}</td>
+         </ng-container>
+
+         <ng-container matColumnDef="identificacion">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Identificación </th>
+            <td mat-cell *matCellDef="let row"> {{row.identificacion}} </td>
+         </ng-container>
+
+         <ng-container matColumnDef="actions" stickyEnd>
+            <th mat-header-cell *matHeaderCellDef> </th>
+            <td mat-cell *matCellDef="let row">
+               <button mat-icon-button color="primary" matTooltip="Seleccionar" (click)="selectTercero(row)">
+                  <mat-icon>check</mat-icon>
+               </button>
+            </td>
+         </ng-container>
+
+         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+         <tr mat-row *matRowDef="let row; columns: displayedColumns;" (dblclick)="selectTercero(row)"></tr>
+      </table>
+
+      <div *ngIf="dataSource?.data?.length === 0 && alreadySearch" class="no-date-table" style="margin:20px">
+         No hay terceros que coincidan con los parámetros de búsqueda.
+      </div>
+
+      <div *ngIf="!alreadySearch" class="no-date-table" style="margin:20px">
+         Por favor haga un búsqueda.
+      </div>
+   </div>
+
+   <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons="true"></mat-paginator>
+</div>
+
+
+<div mat-dialog-actions align="end">
+   <button mat-raised-button [mat-dialog-close] cdkFocusInitial>Cerrar</button>
+</div>

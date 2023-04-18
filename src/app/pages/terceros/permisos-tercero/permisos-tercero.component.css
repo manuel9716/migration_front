@@ -1,0 +1,65 @@
+.permisos{
+    position: relative;
+
+}
+
+.btns-bar{
+    padding: 10px;
+    text-align: right;
+}
+
+.btn-copy{
+    margin-right: 20px;
+}
+
+.btn-save{
+
+}
+
+
+
+/* MAIN CARD */
+
+.main-mat-card{
+    display: block;
+    margin: 25px 5px 0 5px;
+}
+
+.main-mat-card .mat-card-title{
+    color: var(--primary);
+}
+
+.main-mat-card .mat-card-content {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+
+/* SECONDARY CARD */
+
+.secondary-mat-card{
+    display: inline-block;
+    width: 20%;
+    margin: 16px 16px 0 0;
+}
+
+.secondary-mat-card .mat-card-title{
+    font-size: 18px;
+    color: var(--secondary);
+
+    /* width: 100px; */
+    text-overflow:ellipsis;
+    white-space:nowrap; 
+    overflow:hidden;
+}
+
+.secondary-mat-card .mat-card-content{
+    display: block;
+}
+
+.secondary-mat-card .mat-card-content .mat-checkbox{
+    display: block;
+    margin-left: 16px;
+    margin-bottom: 5px;
+}
+

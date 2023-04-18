@@ -1,0 +1,40 @@
+<mat-toolbar fxLayout="row" fxLayoutAlign="center center" color="primary">
+	<h4>PROGRAMAR SUSPENSIÓN DE SERVICIO</h4>
+</mat-toolbar>
+
+<div class="separator"></div>
+
+<form name="form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+	<div fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto">
+
+		<div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+			<mat-form-field appearance="outline" fxFlex="100">
+				<mat-label>Fecha de inicio de suspención</mat-label>
+				<input matInput (dateChange)="getMinDate2($event)" [min]="minDate" [matDatepicker]="picker" formControlName="fechainicio" required>
+				<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+				<mat-datepicker #picker></mat-datepicker>
+				<mat-error>Fecha de inicio requerida</mat-error>
+			</mat-form-field>
+		</div>
+		<div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+			<mat-form-field appearance="outline" fxFlex="100">
+				<mat-label>Fecha de finalización de suspensión</mat-label>
+				<input matInput [min]="minDate2" [matDatepicker]="picker2" formControlName="fechafin" required [disabled]="!form.controls['fechainicio'].value">
+				<mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+				<mat-datepicker #picker2></mat-datepicker>
+				<mat-error>Fecha de finalización requerida</mat-error>
+			</mat-form-field>
+		</div>
+
+		<div class="separator"></div>
+
+		<div class="content-form-submit">
+			<button mat-raised-button class="btn-form-submit" type="button" (click)="cancel()">Cancelar</button>
+			<button mat-raised-button class="btn-form-submit" type="submit" color="primary"
+				[disabled]="form.invalid">Aceptar</button>
+		</div>
+
+	</div>
+
+</form>

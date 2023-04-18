@@ -1,0 +1,7 @@
+mat-action-list mat-list-item.active-grupo{
+    color: var(--primary);
+}
+
+mat-action-list mat-list-item.active-tipo{
+    color: var(--secondary);
+}

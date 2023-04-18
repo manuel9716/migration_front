@@ -1,0 +1,83 @@
+<mat-toolbar fxLayout="row" fxLayoutAlign="center center" color="primary"><h4>CELULARES DE CUADRILLA</h4></mat-toolbar>
+
+
+
+<div mat-dialog-content class="flex-container" style="margin-top:24px;">
+	
+	<mat-form-field appearance="standard" style="width: 100%;">
+		<mat-chip-list #chipList aria-label="Celulares de cuadrilla" >
+			<mat-chip *ngFor="let celuCuadrilla of celularesCuadrilla" [removable]="data.user['permisos']?.terceros?.cuadrillas?.eliminar_celulares" (removed)="remove(celuCuadrilla)">
+				{{celuCuadrilla.celular}}
+				<mat-icon matChipRemove *ngIf="data.user['permisos']?.terceros?.cuadrillas?.eliminar_celulares">cancel</mat-icon>
+			</mat-chip>
+			<input placeholder="{{data.user['permisos']?.terceros?.cuadrillas?.crear_celulares ? 'Agregar nuevo celular...' : ''}}"
+			[matChipInputFor]="chipList"
+			[matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+			[matChipInputAddOnBlur]="false"
+			(matChipInputTokenEnd)="add($event)"
+			maxlength="10"
+			[disabled]="loading || !data.user['permisos']?.terceros?.cuadrillas?.crear_celulares">
+		</mat-chip-list>
+	</mat-form-field>
+	
+	<div class="loader" *ngIf="loading"><i class="fas fa-spinner fa-spin"></i></div>
+
+</div>
+
+<div mat-dialog-actions align="end">
+	<button mat-raised-button  [mat-dialog-close]="true" cdkFocusInitial>Cerrar</button>
+</div>
+
+<style>
+	.flex-container {
+		display: -ms-flexbox;
+		display: -webkit-flex;
+		display: flex;
+		-webkit-flex-direction: row;
+		-ms-flex-direction: row;
+		flex-direction: row;
+		-webkit-flex-wrap: nowrap;
+		-ms-flex-wrap: nowrap;
+		flex-wrap: nowrap;
+		-webkit-justify-content: flex-start;
+		-ms-flex-pack: start;
+		justify-content: flex-start;
+		-webkit-align-content: stretch;
+		-ms-flex-line-pack: stretch;
+		align-content: stretch;
+		-webkit-align-items: center;
+		-ms-flex-align: center;
+		align-items: center;
+		align-content: space-between;
+	}
+	
+	.flex-item:nth-child(1) {
+		-webkit-order: 0;
+		-ms-flex-order: 0;
+		order: 0;
+		-webkit-flex: 1 1 auto;
+		-ms-flex: 1 1 auto;
+		flex: 1 1 auto;
+		-webkit-align-self: auto;
+		-ms-flex-item-align: auto;
+		align-self: auto;
+	}
+	
+	.flex-item:nth-child(2) {
+		
+		-webkit-order: 0;
+		-ms-flex-order: 0;
+		order: 0;
+		-webkit-flex: 0 1 auto;
+		-ms-flex: 0 1 auto;
+		flex: 0 1 auto;
+		-webkit-align-self: auto;
+		-ms-flex-item-align: auto;
+		align-self: auto;
+	}
+
+	.loader{
+		margin-left: 14px !important;
+		color: var(--primary) !important;
+	}
+</style>

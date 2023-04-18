@@ -1,0 +1,114 @@
+<mat-toolbar color="primary" class="header-pages" fxLayout="row" fxLayoutAlign="space-between center">
+    <div [@animate]="{value:'*',params:{x:'50px'}}">
+        <span class="title">Terceros</span><br>
+        <span class="breadcrumb">Terceros > Listar</span>
+    </div>
+
+    <div [@animate]="{value:'*',params:{x:'100px'}}" *ngIf="user['permisos']?.terceros?.crear">
+        <button mat-fab matTooltip="Crear servicio" routerLink="/tercero">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
+</mat-toolbar>
+
+<mat-card class="page-content-card">
+
+    <div fxLayout="row" fxLayoutAlign="start center" [@animate]="{value:'*',params:{x:'-50px'}}">
+
+        <mat-form-field appearance="outline" fxFlex class="pr20 no-pb">
+            <mat-label>Parámetros</mat-label>
+            <mat-select [(value)]="searchCriteria['criteria']" multiple>
+                <mat-option value="nombres">Nombres</mat-option>
+                <mat-option value="apellidos">Apellidos</mat-option>
+                <mat-option value="numerotercero">Número</mat-option>
+                <mat-option value="identificacion">Identificación</mat-option>
+                <mat-option value="email">email</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" fxFlex class="pr20 no-pb">
+            <mat-label>Parámetros de búsqueda</mat-label>
+            <input matInput [(ngModel)]="searchCriteria['value']" (keyup.enter)="search(null)">
+            <mat-icon matSuffix class="secondary-text">filter_list</mat-icon>
+        </mat-form-field>
+
+        <mat-checkbox fxFlex="20" class="pr20 no-pb"
+            matTooltip="Si activa esta opción, solo se buscarán tercero que tengan usuario"
+            [(ngModel)]="searchCriteria['onlyusers']">Terceros con usuario
+        </mat-checkbox>
+
+        <div fxFlex="10" class="top-buttons">
+            <button mat-icon-button class="pr20" matTooltip="Borrar filtros" (click)="resetFilters()"><i
+                    class="fas fa-backspace"></i></button>
+            <button mat-mini-fab color="primary" matTooltip="Buscar" (click)="search(null)" [disabled]="searchCriteria['criteria'].length == 0 || searchCriteria['value'].length == 0">
+                <mat-icon>search</mat-icon>
+            </button>
+        </div>
+
+    </div>
+
+    <div class="separator20"></div>
+
+    <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+
+    <div class="mat-elevation-z5" [@animate]="{value:'*',params:{y:'100%'}}">
+
+        <table mat-table class="table-striped table-hover" [dataSource]="dataSource" matSort>
+
+            <!-- <ng-container matColumnDef="idtercero">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+                <td mat-cell *matCellDef="let row"> {{row.idtercero}} </td>
+            </ng-container> -->
+
+            <ng-container matColumnDef="numerotercero">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Número tercero </th>
+                <td mat-cell *matCellDef="let row"> {{row.numerotercero}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="nombres">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombres </th>
+                <td mat-cell *matCellDef="let row"> {{row.nombres}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="apellidos">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Apellidos </th>
+                <td mat-cell *matCellDef="let row"> {{row.apellidos}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="identificacion">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Identificación </th>
+                <td mat-cell *matCellDef="let row"> {{row.identificacion}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef class="w-15p"> </th>
+                <td mat-cell *matCellDef="let row" class="w-15p align-r">
+                    <button mat-icon-button color="primary" matTooltip="Editar"
+                        [routerLink]="['/tercero', row.idtercero]">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" (dblclick)="editCreateTercero(row)"></tr>
+        </table>
+
+        <div *ngIf="dataSource?.data?.length < 1" class="no-date-table">
+            No hay Terceros para mostrar
+        </div>
+
+        <mat-paginator
+        #paginator
+		[length]="length"
+		[pageSizeOptions]="[10, 25, 50, 100]" 
+		showFirstLastButtons="true"
+        (page)="pageEvent = search($event)"
+        >
+        </mat-paginator>
+
+    </div>
+
+
+</mat-card>

@@ -1,0 +1,44 @@
+.mat-dialog-actions {
+	display: inherit;
+}
+
+.center {
+	text-align: center;
+}
+
+.mat-dialog-content {
+	padding: 24px !important;
+}
+
+.vertical-table .title {
+    width: 150px;
+}
+
+.inline-card {
+    display: inline-block;
+    margin: 16px;
+    max-width: 28%;
+    vertical-align: text-top;
+}
+
+.no-data.ng-star-inserted {
+    display: block;
+    text-align: center;
+    margin-top: 32px;
+    font-size: 1.2em;
+    color: gray;
+}
+
+.mat-dialog-actions{
+    display: block;
+    text-align: center;
+}
+
+.total-labores{
+    margin: 16px 0 0 16px;
+
+}
+
+.total-labores .total{
+    color: var(--primary);
+}

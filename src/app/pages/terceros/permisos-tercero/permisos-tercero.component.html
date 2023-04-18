@@ -1,0 +1,37 @@
+<div class="permisos">
+
+	<div class="btns-bar" *ngIf="user['permisos']?.terceros?.permisos?.editar">
+		<button class="btn-copy" mat-stroked-button color="accent" [disabled]="!usuario || loading" (click)="copy()">Copiar permisos</button>
+
+		<button class="btn-save" mat-fab color="primary" aria-label="Editar" [disabled]="!usuario || loading" (click)="save()">
+			<mat-icon *ngIf="!loading">save</mat-icon>
+			<div *ngIf="loading">
+				<i class="fas fa-spinner fa-spin fa-lg"></i>
+			</div>
+		</button>
+	</div>
+
+
+	<div *ngIf="usuario && haveUser">
+		<mat-card class="main-mat-card" *ngFor='let key1 of Object.keys(permisos)'>
+			<mat-card-header>
+				<mat-card-title>{{traducciones[key1]}}</mat-card-title>
+			</mat-card-header>
+			<mat-divider></mat-divider>
+			<mat-card-content>
+
+				<mat-card class="secondary-mat-card" *ngFor='let key2 of Object.keys(permisos[key1])'>
+					<mat-card-title>{{traducciones[key2]}}</mat-card-title>
+					<mat-card-content>
+						<mat-checkbox *ngFor='let key3 of Object.keys(permisos[key1][key2])'
+							[(ngModel)]="permisos[key1][key2][key3]" [disabled]="!user['permisos']?.terceros?.permisos?.editar">{{traducciones[key3]}}</mat-checkbox>
+					</mat-card-content>
+				</mat-card>
+
+			</mat-card-content>
+		</mat-card>
+	</div>
+
+	<div *ngIf="!haveUser" class="no-date-table">No se puedes asignar permisos al tercero porque no tiene un usuario asignado.</div>
+
+</div>

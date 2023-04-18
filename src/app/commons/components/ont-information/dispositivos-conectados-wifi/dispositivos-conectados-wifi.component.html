@@ -1,0 +1,82 @@
+<div class="d-flex justify-content-center align-items-center">
+    <app-loading *ngIf="!loadingConnectedWifi; else connectedDevices" class="text-center"></app-loading>
+</div>
+
+<ng-template #connectedDevices>
+    <table class="table table-striped align-middle" *ngIf="hasConnectedDevices && detectFail; else noConnectedDevices">
+        <thead>
+            <tr>
+                <th scope="col" class="text-center">Nombre dispositivo</th>
+                <th scope="col" class="text-center">MAC dispositivo</th>
+                <th scope="col" class="text-center">Nombre red</th>
+                <th scope="col" class="text-center">Tiempo conectado</th>
+                <th scope="col" class="text-center">Potencia señal (dBm)</th>
+                <th scope="col" class="text-center">Estado distancia</th>
+                <th scope="col" class="text-center">Velocidad de envío (Mbit/s)</th>
+                <th scope="col" class="text-center">Velocidad de recepción (Mbit/s)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let device of infoConected">
+                <td class="text-center">
+                    {{device[0]}}
+                </td>
+                <td class="text-center">
+                    {{device[1]}}
+                </td>
+                <td class="text-center">
+                    {{device[2]}}
+                </td>
+                <td class="text-center">
+                    {{device[3]}}
+                </td>
+                <td class="text-center">
+                    {{convertToFloat(device[6])}}
+                </td>
+
+                <!-- COLUMNA SEMAFORO DISTANCIA -->
+
+                <td class="text-center text-success" *ngIf="convertToFloat(device[6]) >= -65;" >
+                    <abbr title="Cercano">
+                        <fa-icon [icon]="wifiIcon" class="fs-6"></fa-icon>
+                    </abbr>
+                </td>
+                <td class="text-center text-warning" *ngIf="convertToFloat(device[6]) < -65 && convertToFloat(device[6]) >= -75;"> 
+                    <abbr title="Normal">
+                        <fa-icon [icon]="wifiIcon" class="fs-6"></fa-icon>
+                    </abbr>
+                </td>
+                <!-- <td class="text-center text-warning" *ngIf="convertToFloat(device[6]) < -75 && convertToFloat(device[6]) >= -85;" > 
+                    <abbr title="Lejano">
+                        <fa-icon [icon]="wifiIcon" class="fs-6"></fa-icon>
+                    </abbr>
+                </td> -->
+                <td class="text-center text-danger" *ngIf="convertToFloat(device[6]) < -75;" > 
+                    <abbr title="Lejano">
+                        <fa-icon [icon]="wifiIcon" class="fs-6"></fa-icon>
+                    </abbr>
+                </td>
+                <!-- FINAL COLUMNA SEMAFORO DISTANCIA  -->
+
+                <td class="text-center">
+                    {{convertToFloat(device[4])}}
+                </td>
+                <td class="text-center">
+                    {{convertToFloat(device[5])}}
+                </td>
+            </tr> 
+        </tbody>
+    </table>
+</ng-template>
+
+<ng-template #noConnectedDevices>
+    <div *ngIf="detectFail; else fail" class="d-flex flex-wrap justify-content-center">
+        <h2 class="text-secondary">Sin dispositivos conectados</h2>
+    </div>
+</ng-template>
+
+<ng-template #fail>
+    <div class="d-flex flex-wrap justify-content-center">
+        <h2 class="text-secondary">Error al consultar ONT</h2>
+    </div>
+</ng-template>

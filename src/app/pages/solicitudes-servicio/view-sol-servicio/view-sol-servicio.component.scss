@@ -1,0 +1,149 @@
+td.mat-cell, td.mat-footer-cell, th.mat-header-cell {
+    padding-right: 15px;
+}
+
+.vertical-table .title {
+    width: 160px;
+}
+
+.card-wrapper{
+    cursor: pointer;
+    text-align: center;
+    padding: 10px;   
+}
+
+
+.clase-op-card{
+    .icon {
+        margin-top: 10px;
+    }
+    
+    &:hover{
+        transition: color 0.2s ease-in-out;
+        color: var(--secondary);
+    }
+    
+    &.active{
+        color: var(--secondary);
+    }    
+}
+
+.tipo-op-card{
+    .icon {
+        margin-top: 10px;
+    }
+    
+    &:hover{
+        transition: color 0.2s ease-in-out;
+        color: var(--primary);
+    }
+    
+    &.active{
+        color: var(--primary);
+    }    
+}
+
+.red{
+    color: red;
+}
+
+.green{
+    color: green;
+}
+
+.stepper-wrapper{
+    width: 60%;
+    margin: 0 auto;
+    
+    
+}
+
+.btns-stepper{
+    text-align: center;
+    margin-top: 32px;
+}
+
+.title-form{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 24px;
+    font-size: 1.2em;
+    .icon{
+        color: var(--secondary);
+        margin-right: 10px;
+        font-size: larger;
+    }
+    .icon2{
+        color: var(--primary);
+        margin-right: 10px;
+        font-size: larger;
+    }
+}
+
+.tipo-icon{
+    color: var(--secondary);
+    margin-right: 8px;
+}
+
+.table-c{ 
+    border-collapse: collapse;
+    tr{
+        td { padding: 0px 10px; }
+        
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.075);
+        }
+        
+        &:nth-child(even) {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+    } 
+}
+
+.table-cuadrilla{
+    margin-top: 30px;
+    
+    .title{
+        font-weight: bold;
+        color: var(--primary);
+        margin-right: 10px;
+    }
+}
+
+.active-error {
+
+    display: block;
+    text-align: center;
+    margin-top: 32px;
+
+    &.true {
+        color: green;
+    }
+    
+    &.false {
+        color: red;
+    }
+}
+  
+
+
+.num-cuadrilla{
+    text-align: left;
+    
+    .names-cuadrilla{
+        display: block;
+        font-size: 12px;
+        line-height: 10px;
+    }
+}
+
+.banner-retiro {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    position: relative;
+    padding: 5px 16px;
+    border: 1px solid transparent;
+    /* border-radius: .25rem; */
+}

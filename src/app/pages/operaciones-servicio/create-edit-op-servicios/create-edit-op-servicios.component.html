@@ -1,0 +1,526 @@
+<mat-toolbar color="primary" class="header-pages" fxLayout="row" fxLayoutAlign="space-between center">
+	<div [@animate]="{value:'*',params:{x:'50px'}}">
+		<span class="title">Crear operación solicitud al servicio</span><br>
+		<span class="breadcrumb">Operación solicitud al servicio > Crear</span>
+	</div>
+
+	<div *ngIf="selectedCuadrilla" [@animate]="{value:'*',params:{y:'50px'}}" class="num-cuadrilla">
+		Cuadrilla: <strong>{{selectedCuadrilla.numeroservicio}}</strong>
+		<button mat-icon-button matTooltip="Cambiar Cuadrilla" (click)="deleteCuadrilla()" *ngIf="cuadrillas.length > 1">
+			<mat-icon>autorenew</mat-icon>
+		</button>
+		<span class="names-cuadrilla">{{selectedCuadrilla.nombres + " " + selectedCuadrilla.apellidos}}</span>
+	</div>
+</mat-toolbar>
+
+<mat-card class="page-content-card">
+
+	<app-entity-information *ngIf="!load && solicitud" [data]="solicitud" [view]="'createOperacion'">
+	</app-entity-information>
+	<div class="separator20"></div>
+
+
+	<div [@animate]="{value:'*',params:{y:'50px'}}" *ngIf="load">
+		<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+	</div>
+
+	<div *ngIf="!selectedCuadrilla && !load" [@animate]="{value:'*',params:{y:'50px'}}">
+
+		<div class="alert warning align-c">Por favor seleccione una cuadrilla para continuar con la creación de la
+			operación.</div>
+
+		<div fxLayoutAlign="center center">
+			<mat-form-field fxFlex="50">
+				<mat-label>Seleccione una cuadrilla</mat-label>
+				<mat-select [(ngModel)]="selectedCuadrilla" name="Cuadrilla"
+					(selectionChange)="changeCuadrilla($event.value)">
+					<mat-option *ngFor="let cuadrilla of cuadrillas" [value]="cuadrilla">
+						{{cuadrilla.numeroservicio + " - " + cuadrilla.nombres + " " + cuadrilla.apellidos}}
+					</mat-option>
+				</mat-select>
+			</mat-form-field>
+		</div>
+
+	</div>
+
+
+	<form [formGroup]="form" class="mat-card mat-elevation-z4 p-24" *ngIf="!load && selectedCuadrilla">
+
+		<mat-horizontal-stepper [linear]="true" #solServicioStepper fxFlex="100">
+			<!-- Tipo -->
+			<mat-step [stepControl]="form.controls['idtipooperacionservicio']">
+				<ng-template matStepLabel>Tipo Operación</ng-template>
+
+				<div xLayout="row" fxLayoutAlign="center center">
+					<mat-form-field fxFlex="40">
+						<mat-label>Tipo operación</mat-label>
+						<mat-select formControlName="idtipooperacionservicio" name="Tipo"
+							(selectionChange)="getLaboresByTipoOpServ($event)">
+							<mat-option *ngFor="let tipo of tipos" [value]="tipo" matTooltip="{{tipo.descripcion}}">
+								{{tipo.nombre}}
+							</mat-option>
+						</mat-select>
+						<mat-error>Tipo de operación requerido.</mat-error>
+					</mat-form-field>
+				</div>
+
+				<!-- Controls -->
+				<div class="separator30"></div>
+				<div class="align-c">
+					<button type="button" mat-button
+						[routerLink]="['/solicitud-servicio/ver/', idSolServicio]">Cancelar</button>
+					<button type="button" mat-raised-button color="primary"
+						[disabled]="!form.controls['idtipooperacionservicio'].valid" matStepperNext>Siguiente</button>
+				</div>
+			</mat-step>
+			<!-- idestadosservicio -->
+			<!-- Clase -->
+			<mat-step
+				[completed]="
+				form.controls['idclaseoperacionservicio'].valid && 
+				form.controls['idserviciocuadrillaagenda'].valid && 
+				form.controls['idnivelsolicitudservicio'].valid && 
+				form.controls['idestadoservicio'].valid || 
+				(form.controls['idclaseoperacionservicio'].value.idclaseoperacionservicio == 6 || form.controls['idclaseoperacionservicio'].value.idclaseoperacionservicio == 7 || form.controls['idclaseoperacionservicio'].value.idclaseoperacionservicio == 8 && activateForm.valid)">
+				<ng-template matStepLabel>Clase Operación</ng-template>
+
+				<div fxLayoutAlign="center center">
+					<mat-form-field fxFlex="40">
+						<mat-label>Clase Operación</mat-label>
+						<mat-select formControlName="idclaseoperacionservicio" name="Clase"
+							(selectionChange)="changeClase($event)">
+							<mat-option *ngFor="let clase of clases" [value]="clase" matTooltip="{{clase.descripcion}}">
+								{{clase.nombre}}
+							</mat-option>
+						</mat-select>
+						<mat-error>Clase requerido.</mat-error>
+					</mat-form-field>
+				</div>
+
+
+				<div style="margin-bottom: 20px; padding-bottom: 1.25em;" *ngIf="showDividers">
+					<mat-divider></mat-divider>
+				</div>
+
+				<!-- Agendar / Reagendar -->
+				<div fxLayout="row" fxLayoutAlign="space-around center"
+					*ngIf="form.controls['idclaseoperacionservicio'].value.idclaseoperacionservicio == 2 || form.controls['idclaseoperacionservicio'].value.idclaseoperacionservicio == 3">
+
+					<div fxLayout="column" fxFlex fxLayoutAlign="center center">
+
+						<div>
+							<button type="button" mat-raised-button color="accent" (click)="selectCuadrillaAgenda()">{{form.controls['idserviciocuadrillaagenda'].value ? "Cambiar Cuadrilla" : "Seleccionar Cuadrilla" }}</button>
+						</div>
+
+
+						<div class="table-cuadrilla" *ngIf="form.controls['idserviciocuadrillaagenda'].value">
+							<span class="title">Representante:</span>
+							<span
+								class="content">{{form.controls['idserviciocuadrillaagenda']?.value?.nombres + ' ' + form.controls['idserviciocuadrillaagenda']?.value?.apellidos}}</span>
+							<button type="button" mat-icon-button matTooltip="Ver agendas de cuadrilla"
+								(click)="showAgendaCuadrilla()">
+								<mat-icon>perm_contact_calendar</mat-icon>
+							</button>
+							<br />
+							<span class="title">Número cuadrilla 2222</span>
+							<span
+								class="content">{{form.controls['idserviciocuadrillaagenda']?.value?.numeroservicio}}</span>
+						</div>
+
+						{{form.controls['idclaseoperacionservicio'].value.idclaseoperacionservicio | json}}
+						
+
+					</div>
+				</div>
+
+				<!-- Escalar -->
+				<div *ngIf="form.controls['idclaseoperacionservicio'].value.idclaseoperacionservicio == 4"
+					fxLayoutAlign="center center">
+					<mat-form-field fxFlex="40">
+						<mat-label>Nuevo nivel de la solicitud</mat-label>
+						<mat-select formControlName="idnivelsolicitudservicio" name="Clase">
+							<mat-option *ngFor="let nivel of nivelesSolServicio" [value]="nivel"
+								matTooltip="{{nivel.descripcion}}">
+								{{nivel.nombre}}
+							</mat-option>
+						</mat-select>
+						<mat-error>Nivel solicitud requerido requerido.</mat-error>
+					</mat-form-field>
+				</div>
+
+				<!-- Reactivar -->
+				<div *ngIf="form.controls['idclaseoperacionservicio'].value.idclaseoperacionservicio == 6 || form.controls['idclaseoperacionservicio'].value.idclaseoperacionservicio == 7 || form.controls['idclaseoperacionservicio'].value.idclaseoperacionservicio == 8"
+					fxLayoutAlign="center center" fxLayout="column">
+
+					<form class="w100" name="activateForm" [formGroup]="activateForm" (ngSubmit)="onSubmit()">
+						<div fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto">
+							<div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+
+								<mat-form-field appearance="outline" class="pr20" fxFlex="15">
+									<mat-label>Octeto 1</mat-label>
+									<input matInput formControlName="octeto1" (input)="buildIp()" required>
+									<mat-hint>{{activateForm.controls['octeto1'].value?.length}} de 3</mat-hint>
+									<mat-error>
+										<span *ngIf="activateForm.controls['octeto1'].hasError('required')">Octeto 1 es
+											requerido.</span>
+										<!-- <span *ngIf="activateForm.controls['octeto1'].hasError('maxlength')"> Máximo 3
+											caracteres.</span> -->
+										<span *ngIf="activateForm.controls['octeto1'].hasError('max')">Números entre 0 y 255.</span>
+										<span *ngIf="activateForm.controls['octeto1'].hasError('pattern')">Número inválido.</span>
+									</mat-error>
+								</mat-form-field>
+
+								<mat-form-field appearance="outline" class="pr20" fxFlex="15">
+									<mat-label>Octeto 2</mat-label>
+									<input matInput formControlName="octeto2" (input)="buildIp()" required>
+									<mat-hint>{{activateForm.controls['octeto2'].value?.length}} de 3</mat-hint>
+									<mat-error>
+										<span *ngIf="activateForm.controls['octeto2'].hasError('required')">Octeto 2 es
+											requerido.</span>
+										<!-- <span *ngIf="activateForm.controls['octeto2'].hasError('maxlength')"> Máximo 3
+											caracteres.</span> -->
+										<span *ngIf="activateForm.controls['octeto2'].hasError('max')">Números entre 0 y 255.</span>
+										<span *ngIf="activateForm.controls['octeto2'].hasError('pattern')">Número inválido.</span>
+									</mat-error>
+								</mat-form-field>
+
+								<mat-form-field appearance="outline" class="pr20" fxFlex="15">
+									<mat-label>Octeto 3</mat-label>
+									<input matInput formControlName="octeto3" (input)="buildIp()" required>
+									<mat-hint>{{activateForm.controls['octeto3'].value?.length}} de 3</mat-hint>
+									<mat-error>
+										<span *ngIf="activateForm.controls['octeto3'].hasError('required')">Octeto 3 es
+											requerido</span>
+										<!-- <span *ngIf="activateForm.controls['octeto3'].hasError('maxlength')">Máximo 3
+											caracteres</span> -->
+											<span *ngIf="activateForm.controls['octeto3'].hasError('max')">Números entre 0 y 255.</span>
+											<span *ngIf="activateForm.controls['octeto3'].hasError('pattern')">Número inválido.</span>
+									</mat-error>
+								</mat-form-field>
+
+								<mat-form-field appearance="outline" class="pr20" fxFlex="15">
+									<mat-label>Octeto 4</mat-label>
+									<input matInput formControlName="octeto4" (input)="buildIp()" required>
+									<mat-hint>{{activateForm.controls['octeto4'].value?.length}} de 3</mat-hint>
+									<mat-error>
+										<span *ngIf="activateForm.controls['octeto4'].hasError('required')">Octeto 4 es
+											requerido</span>
+										<!-- <span *ngIf="activateForm.controls['octeto4'].hasError('maxlength')">Máximo 3
+											caracteres</span> -->
+											<span *ngIf="activateForm.controls['octeto4'].hasError('max')">Números entre 0 y 255.</span>
+											<span *ngIf="activateForm.controls['octeto4'].hasError('pattern')">Número inválido.</span>
+									</mat-error>
+								</mat-form-field>
+
+								<mat-form-field appearance="outline" fxFlex>
+									<mat-label>IP</mat-label>
+									<input matInput formControlName="ip" required>
+								</mat-form-field>
+
+							</div>
+
+							<div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+								<mat-form-field appearance="outline" fxFlex class="pr20">
+									<mat-label>Puerto Caja NAP</mat-label>
+									<input matInput formControlName="puertocaja" required>
+									<mat-hint>{{activateForm.controls['puertocaja'].value?.length}} de 3</mat-hint>
+									<mat-error>
+										<span *ngIf="activateForm.controls['puertocaja'].hasError('required')">Puerto
+											caja NAP requerido</span>
+										<span *ngIf="activateForm.controls['puertocaja'].hasError('maxlength')">Máximo 3
+											caracteres</span>
+									</mat-error>
+								</mat-form-field>
+
+								<mat-form-field appearance="outline" fxFlex class="pr20">
+									<mat-label>Número caja NAP</mat-label>
+									<input matInput formControlName="ncajanap" required>
+									<mat-hint>{{activateForm.controls['ncajanap'].value?.length}} de 8</mat-hint>
+									<mat-error>
+										<span *ngIf="activateForm.controls['ncajanap'].hasError('required')">Número caja
+											NAP requerido</span>
+										<span *ngIf="activateForm.controls['ncajanap'].hasError('maxlength')">Máximo 8
+											caracteres</span>
+									</mat-error>
+								</mat-form-field>
+
+								<mat-form-field appearance="outline" fxFlex>
+									<mat-label>Serial ONT</mat-label>
+									<input matInput formControlName="serialont" required>
+									<mat-hint>{{activateForm.controls['serialont'].value?.length}} de 16</mat-hint>
+									<mat-error>
+										<span *ngIf="activateForm.controls['serialont'].hasError('required')">Serial ONT
+											requerida</span>
+										<span *ngIf="activateForm.controls['serialont'].hasError('maxlength')">Máximo 16
+											caracteres</span>
+									</mat-error>
+								</mat-form-field>
+							</div>
+
+							<div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+								<mat-form-field appearance="outline" fxFlex class="pr20">
+									<mat-label>ONT ID</mat-label>
+									<input matInput formControlName="ontid" required>
+									<mat-hint>{{activateForm.controls['ontid'].value?.length}} de 3</mat-hint>
+									<mat-error>
+										<span *ngIf="activateForm.controls['ontid'].hasError('required')">ONT ID
+											requerido</span>
+										<span *ngIf="activateForm.controls['ontid'].hasError('maxlength')">Máximo 3
+											caracteres</span>
+									</mat-error>
+								</mat-form-field>
+
+								<mat-form-field appearance="outline" fxFlex class="pr20">
+									<mat-label>Potencia caja NAP (XX.XX)</mat-label>
+									<input matInput formControlName="potcajanap" required>
+									<mat-error>
+										<span *ngIf="activateForm.controls['potcajanap'].hasError('required')">Potencia
+											caja NAP requerida</span>
+										<span *ngIf="activateForm.controls['potcajanap'].hasError('pattern')">Formato
+											invalido (XX.XX)</span>
+									</mat-error>
+								</mat-form-field>
+
+								<mat-form-field appearance="outline" fxFlex>
+									<mat-label>Potencia ONT (XX.XX)</mat-label>
+									<input matInput formControlName="potont" required>
+									<mat-error>
+										<span *ngIf="activateForm.controls['potont'].hasError('required')">Potencia ONT
+											requerida</span>
+										<span *ngIf="activateForm.controls['potont'].hasError('pattern')">Formato
+											invalido (XX.XX)</span>
+									</mat-error>
+								</mat-form-field>
+
+							</div>
+						</div>
+					</form>
+
+					<div fxFlex *ngIf="activateError['msg']" class="active-error {{activateError['status']}}">{{activateError['msg']}}</div>
+				</div>
+
+				<!-- Cancelar y Finalizar -->
+				<div *ngIf="form.controls['idclaseoperacionservicio'].value.idclaseoperacionservicio == 9"
+					fxLayoutAlign="center center">
+					<mat-form-field fxFlex="40">
+						<mat-label>Motivo</mat-label>
+						<mat-select formControlName="idestadoservicio" name="Clase">
+							<mat-option *ngFor="let estado of estadosServicios" [value]="estado"
+								matTooltip="{{estado.descripcion}}">
+								{{estado.nombre}}
+							</mat-option>
+						</mat-select>
+						<mat-error>Motivo requerido requerido.</mat-error>
+					</mat-form-field>
+				</div>
+				
+				<div style="margin-top: 20px" *ngIf="showDividers">
+					<mat-divider></mat-divider>
+				</div>
+
+		
+				<!-- Controls -->
+				<div class="separator30"></div>
+				<div class="align-c">
+					<button type="button" mat-button matStepperPrevious>Atrás</button>
+					<button type="button" mat-raised-button color="primary" [disabled]="
+					form.controls['idclaseoperacionservicio'].invalid || 
+					form.controls['idserviciocuadrillaagenda'].invalid || 
+					form.controls['idnivelsolicitudservicio'].invalid || 
+					form.controls['idestadoservicio'].invalid || 
+					(
+						(form.controls['idclaseoperacionservicio'].value.idclaseoperacionservicio == 6 || 
+						form.controls['idclaseoperacionservicio'].value.idclaseoperacionservicio == 7 || 
+						form.controls['idclaseoperacionservicio'].value.idclaseoperacionservicio == 8)
+					 && (activateForm.invalid || !activateError['status'])
+					)
+					" matStepperNext>Siguiente</button>
+				</div>
+			</mat-step>
+
+			<!-- Labores -->
+			<mat-step [stepControl]="form.controls['labores']" optional
+				*ngIf="form.controls['idclaseoperacionservicio'].value.idclaseoperacionservicio == 1">
+				<ng-template matStepLabel>Labores</ng-template>
+
+				<div fxLayoutAlign="center center">
+					<ng-select fxFlex="40" [items]="labores" [virtualScroll]="true" appendTo="body"
+						dropdownPosition="bottom" bindLabel="nombre" bindValue="idlabor"
+						placeholder="Seleccione una labor" formControlName="tempLabor" (change)="addLabor($event)">
+					</ng-select>
+				</div>
+
+
+				<table>
+					<thead>
+						<tr>
+							<th>Labores realizadas</th>
+						</tr>
+					</thead>
+					<tbody class="tbody">
+						<tr *ngFor="let labor of form.controls['labores']?.value; let idx=index">
+							<td matTooltip="{{labor?.descripcion}}">{{labor.nombre}}</td>
+							<td>{{labor.cantidad}}</td>
+							<td>
+								<button mat-icon-button color="warn" matTooltip="Eliminar" (click)="deleteLabor(idx)">
+									<mat-icon>delete</mat-icon>
+								</button>
+							</td>
+						</tr>
+						<tr *ngIf="form.controls['labores']?.value.length == 0">
+							<td colspan="4">
+								<p class="no-date-table">Por favor ingrese una labor.</p>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<!-- Controls -->
+				<div class="separator30"></div>
+				<div class="align-c">
+					<button type="button" mat-button matStepperPrevious>Atrás</button>
+					<button type="button" mat-raised-button color="primary"
+						[disabled]="!form.controls['consumos'].valid" matStepperNext>Siguiente</button>
+				</div>
+			</mat-step>
+
+			<!-- Consumos -->
+			<mat-step [stepControl]="form.controls['consumos']" optional
+				*ngIf="form.controls['idclaseoperacionservicio'].value.idclaseoperacionservicio == 1 && form.controls['idtipooperacionservicio'].value.idtipooperacionservicio  != 2">
+				<ng-template matStepLabel>Consumos</ng-template>
+
+				<div fxLayoutAlign="center center">
+					<ng-select fxFlex="40" [items]="materiales" [virtualScroll]="true" appendTo="body"
+						dropdownPosition="bottom" bindLabel="nombre" bindValue="idmaterial"
+						placeholder="Seleccione un material" formControlName="tempMaterial"
+						(change)="addConsumo($event)">
+						<ng-template ng-option-tmp let-item="item">
+							<div matTooltip="{{item.descripcion}}">
+								{{item.nombre + ' (' + item.unidadmedida  + ')'}}
+							</div>
+						</ng-template>
+					</ng-select>
+				</div>
+
+				<table class="consumos">
+					<thead>
+						<tr>
+							<th>Material</th>
+							<th>Cantidad utilizada</th>
+							<th>Unidad de medida</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody class="tbody">
+						<tr *ngFor="let consumo of form.controls['consumos']?.value; let idx=index" class="tbody">
+							<td matTooltip="{{consumo?.descripcion}}">{{consumo.nombre}}</td>
+							<td>{{consumo.cantidad}}</td>
+							<td>{{consumo.unidadmedida}}</td>
+							<td>
+								<button mat-icon-button color="warn" matTooltip="Eliminar" (click)="deleteConsumo(idx)">
+									<mat-icon>delete</mat-icon>
+								</button>
+							</td>
+						</tr>
+						<tr *ngIf="form.controls['consumos']?.value.length == 0">
+							<td colspan="4">
+								<p class="no-date-table">Por favor ingrese un consumo de material.</p>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<!-- Controls -->
+				<div class="separator30"></div>
+				<div class="align-c">
+					<button type="button" mat-button matStepperPrevious>Atrás</button>
+					<button type="button" mat-raised-button color="primary"
+						[disabled]="!form.controls['consumos'].valid" matStepperNext>Siguiente</button>
+				</div>
+			</mat-step>
+
+			<!-- Observaciones -->
+			<mat-step [stepControl]="form.controls['observaciones']" optional>
+				<ng-template matStepLabel>Observaciones</ng-template>
+
+				<div class="align-c">
+
+					<div fxLayout="row" fxLayoutAlign="start center">
+						<mat-form-field appearance="outline" fxFlex="100" class="pr20">
+							<mat-label>Observaciones</mat-label>
+							<textarea matInput formControlName="observaciones"></textarea>
+							<mat-hint>{{form.controls['observaciones'].value?.length}} de 300</mat-hint>
+							<mat-error>Máximo 300 caracteres</mat-error>
+						</mat-form-field>
+					</div>
+
+					<!-- Controls -->
+					<div class="separator30"></div>
+					<button type="button" mat-button matStepperPrevious>Atrás</button>
+					<button type="button" mat-raised-button color="primary" matStepperNext>Siguiente</button>
+				</div>
+
+			</mat-step>
+
+			<!-- Finalizar -->
+			<mat-step>
+				<ng-template matStepLabel>Finalizar</ng-template>
+				<div class="align-c">
+					<h3>Crear operacion de solicitud al Servicio</h3>
+
+					<table class="resumen-table" [@animate]="{value:'*',params:{y:'50px'}}">
+						<tr>
+							<td class="title">Tipo operación: </td>
+							<td class="content">{{form.controls.idtipooperacionservicio.value.nombre}}</td>
+						</tr>
+						<tr>
+							<td class="title">Clase operación: </td>
+							<td class="content">{{form.controls.idclaseoperacionservicio.value.nombre}}</td>
+						</tr>
+						<tr
+							*ngIf="form.controls['idclaseoperacionservicio'].value.idclaseoperacionservicio == 2 || form.controls['idclaseoperacionservicio'].value.idclaseoperacionservicio == 3">
+							<td class="title">Cuadrilla asignada: </td>
+							<td class="content">
+								{{form.controls.idserviciocuadrillaagenda.value.nombres + ' ' + form.controls.idserviciocuadrillaagenda.value.apellidos + " (" + form.controls.idserviciocuadrillaagenda.value.numeroservicio  +")"}}
+							</td>
+						</tr>
+						<tr *ngIf="form.controls['idclaseoperacionservicio'].value.idclaseoperacionservicio == 4">
+							<td class="title">Escalar a: </td>
+							<td class="content">{{form.controls.idnivelsolicitudservicio.value.nombre}}</td>
+						</tr>
+						<tr *ngIf="form.controls['idclaseoperacionservicio'].value.idclaseoperacionservicio == 9">
+							<td class="title">Motivo: </td>
+							<td class="content">{{form.controls.idestadoservicio.value.nombre}}</td>
+						</tr>
+						<tr *ngIf="form.controls['idclaseoperacionservicio'].value.idclaseoperacionservicio == 1">
+							<td class="title">Materiales: </td>
+							<td class="content">{{form.controls.consumos.value.length}} material(es) consumido(s).</td>
+						</tr>
+						<tr *ngIf="form.controls['idclaseoperacionservicio'].value.idclaseoperacionservicio == 1">
+							<td class="title">Labores: </td>
+							<td class="content">{{form.controls.labores.value.length}} labor(es) realizada(s).</td>
+						</tr>
+						<tr *ngIf="form.controls['observaciones'].value">
+							<td class="title">Observaciones: </td>
+							<td class="content">{{form.controls.observaciones.value}}</td>
+						</tr>
+					</table>
+
+					<div class="separator30"></div>
+					<span class="error" *ngIf="error" [@animate]="{value:'*',params:{y:'50px'}}">{{error}}</span>
+					<div class="separator"></div>
+					<button type="button" mat-button matStepperPrevious [disabled]="loading">Atrás</button>
+					<button type="button" mat-raised-button color="primary" [disabled]="!form.valid || loading"
+						(click)="crateOperacion()">Crear Operación</button>
+					<div class="separator"></div>
+					<mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+
+				</div>
+			</mat-step>
+
+
+		</mat-horizontal-stepper>
+
+	</form>
+	<!-- </div> -->
+</mat-card>

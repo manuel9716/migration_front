@@ -1,0 +1,144 @@
+<mat-toolbar fxLayout="row" fxLayoutAlign="center center" color="primary">
+	<h4>{{data.entity ? 'EDITAR DIRECCIÓN' : 'CREAR DIRECCIÓN'}}</h4>
+	<span *ngIf="load">
+		<i class="fas fa-spinner fa-xs fa-spin" style="margin-left: 10px;"></i>
+	</span>
+</mat-toolbar>
+
+<div class="separator"></div>
+
+<form class="w100" name="form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+	<div fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto">
+
+		<div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+			<mat-form-field appearance="outline" fxFlex="100">
+				<mat-label>Descripción</mat-label>
+				<input matInput formControlName="descripcion" autofocus required>
+				<mat-icon matSuffix class="secondary-text">home</mat-icon>
+				<mat-hint>{{form.controls['descripcion'].value?.length}} de 120</mat-hint>
+				<mat-error>
+					<span *ngIf="form.controls['descripcion'].hasError('required')">Descripción es
+						requerida</span>
+					<span *ngIf="form.controls['descripcion'].hasError('maxlength')">Máximo 120
+						caracteres</span>
+				</mat-error>
+			</mat-form-field>
+		</div>
+
+		<div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+
+			<mat-form-field appearance="outline" fxFlex="25" class="pr20">
+				<mat-label>Whatsapp</mat-label>
+				<input matInput formControlName="whatsapp">
+				<!-- <mat-icon matSuffix class="secondary-text">sms</mat-icon> -->
+				<i matSuffix class="fab fa-whatsapp fa-2x secondary-text"></i>
+				<mat-hint>{{form.controls['whatsapp'].value?.length}} de 20</mat-hint>
+				<mat-error> Máximo 20 caracteres </mat-error>
+			</mat-form-field>
+
+			<mat-form-field appearance="outline" fxFlex="25" class="pr20">
+				<mat-label>Llamada</mat-label>
+				<input matInput formControlName="llamada">
+				<mat-icon matSuffix class="secondary-text">phone</mat-icon>
+				<mat-hint>{{form.controls['llamada'].value?.length}} de 10</mat-hint>
+				<mat-error> Máximo 10 caracteres </mat-error>
+			</mat-form-field>
+
+			<mat-form-field appearance="outline" fxFlex="25" class="pr20">
+				<mat-label>Celular</mat-label>
+				<input matInput formControlName="celular1" required>
+				<mat-icon matSuffix class="secondary-text">smartphone</mat-icon>
+				<mat-hint>{{form.controls['celular1'].value?.length}} de 10</mat-hint>
+				<mat-error>
+					<span *ngIf="form.controls['celular1'].hasError('required')">Celular requerido</span>
+					<span *ngIf="form.controls['celular1'].hasError('maxlength')">Máximo 10
+						caracteres</span>
+				</mat-error>
+			</mat-form-field>
+
+			<mat-form-field appearance="outline" fxFlex="25">
+				<mat-label>Celular 2</mat-label>
+				<input matInput formControlName="celular2">
+				<mat-icon matSuffix class="secondary-text">smartphone</mat-icon>
+				<mat-hint>{{form.controls['celular2'].value?.length}} de 10</mat-hint>
+				<mat-error> Máximo 10 caracteres </mat-error>
+			</mat-form-field>
+
+			
+
+		</div>
+
+		<div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+
+			<mat-form-field appearance="outline" fxFlex="33" class="pr20">
+				<mat-label>Email</mat-label>
+				<input matInput formControlName="email1" required>
+				<mat-icon matSuffix class="secondary-text">email</mat-icon>
+				<mat-hint>{{form.controls['email1'].value?.length}} de 50</mat-hint>
+				<mat-error>
+					<span *ngIf="form.controls['email1'].hasError('required')">Email requerido</span>
+					<span *ngIf="form.controls['email1'].hasError('email')">Email inválido</span>
+					<span *ngIf="form.controls['email1'].hasError('maxlength')">Máximo 50 caracteres</span>
+				</mat-error>
+			</mat-form-field>
+
+			<mat-form-field appearance="outline" fxFlex="34" class="pr20">
+				<mat-label>Email 2</mat-label>
+				<input matInput formControlName="email2">
+				<mat-icon matSuffix class="secondary-text">email</mat-icon>
+				<mat-hint>{{form.controls['email2'].value?.length}} de 50</mat-hint>
+				<mat-error> Máximo 50 caracteres </mat-error>
+			</mat-form-field>
+
+			<mat-form-field appearance="outline" fxFlex="33" >
+				<mat-label>Estrato</mat-label>
+				<mat-select formControlName="estrato" required>
+				 <mat-option *ngFor="let estrato of [1,2,3,4,5,6]" [value]="estrato">{{estrato}}</mat-option>
+				</mat-select>
+				<mat-error> Estrato es requerido </mat-error>
+			 </mat-form-field>
+		</div>
+
+		<div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+
+			<mat-form-field appearance="outline" fxFlex="33" class="pr20">
+				<mat-label>Departamento</mat-label>
+				<mat-select formControlName="departamento" required
+					(selectionChange)="changeControl('departamento', $event['value'])">
+					<mat-option *ngFor="let departamento of departamentos" [value]="departamento.iddepartamento">
+						{{departamento.nombre}}</mat-option>
+				</mat-select>
+				<mat-error>Departamento es requerido</mat-error>
+			</mat-form-field>
+
+			<mat-form-field appearance="outline" fxFlex="34" class="pr20">
+				<mat-label>Municipio</mat-label>
+				<mat-select formControlName="idmunicipio" required (selectionChange)="changeControl('municipio', $event['value'])">
+					<mat-option *ngFor="let municipio of municipiosSelect" [value]="municipio.idmunicipio">
+						{{municipio.nombre}}</mat-option>
+				</mat-select>
+				<mat-error>Municipio es requerido</mat-error>
+			</mat-form-field>
+
+			<mat-form-field appearance="outline" fxFlex="33">
+				<mat-label>Barrio</mat-label>
+				<mat-select formControlName="idbarrio" required>
+					<mat-option *ngFor="let barrio of barriosSelect" [value]="barrio.idbarrio">
+						{{barrio.nombre}}</mat-option>
+				</mat-select>
+			</mat-form-field>
+		</div>
+
+		<div class="content-form-submit">
+			<button mat-raised-button mat-dialog-close class="btn-form-submit" type="button" [disabled]="loading">Cancelar</button>
+
+			<button mat-raised-button class="btn-form-submit" type="submit" color="primary" [disabled]="form.invalid || loading">
+				<span *ngIf="!loading">{{data.entity ? 'Editar' : 'Crear'}}</span>
+				<span *ngIf="loading"><i class="fas fa-spinner fa-spin"></i></span>
+			</button>
+		</div>
+
+	</div>
+
+</form>

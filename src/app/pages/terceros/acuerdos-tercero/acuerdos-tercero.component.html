@@ -1,0 +1,76 @@
+<div class="header-pages-tools  m-10" fxLayout="row" fxLayoutAlign="start center">
+
+	<div class="top-filters" fxLayout="row" fxLayoutAlign="start center" fxFlex>
+		<mat-form-field appearance="outline" fxFlex="100" class="pr20">
+			<mat-label>Buscar Acuerdo</mat-label>
+			<input matInput (keyup)="applyFilter($event.target.value)" [(ngModel)]="acuerdosSearch">
+			<mat-icon matPrefix class="secondary-text">search</mat-icon>
+			<button mat-button *ngIf="acuerdosSearch" matSuffix mat-icon-button aria-label="Clear"
+				(click)="acuerdosSearch=''; applyFilter('')">
+				<mat-icon>close</mat-icon>
+			</button>
+		</mat-form-field>
+	</div>
+
+	<div class="top-buttons" fxFlex="5" *ngIf="user['permisos']?.terceros?.acuerdos?.crear || user['permisos']?.terceros?.acuerdos?.crear_hoy">
+		<button mat-mini-fab color="accent" matTooltip="Crear acuerdo" (click)="createEditAcuerdoDialog(null)"
+			[disabled]="disabledCreate">
+			<mat-icon>add</mat-icon>
+		</button>
+	</div>
+
+</div>
+
+
+<div class="mat-elevation-z5 m-10">
+
+	<mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+
+	<table mat-table [dataSource]="dataSource" matSort>
+
+		<ng-container matColumnDef="estado">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+			<td mat-cell *matCellDef="let row">
+				<span color="primary" class="box-status" matTooltip="{{row.estado ? 'Activo':'Inactivo'}}"
+					[ngClass]="row.estado ? 'bg-pri':'bg-sec'"></span>
+			</td>
+		</ng-container>
+
+		<ng-container matColumnDef="fechasolicitud">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header> F. Creación </th>
+			<td mat-cell *matCellDef="let row"> {{row.fechasolicitud.timestamp*1000 | date}} </td>
+		</ng-container>
+
+		<ng-container matColumnDef="fechapago">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header> F. Pago </th>
+			<td mat-cell *matCellDef="let row"> {{row.fechapago.timestamp*1000 | date}} </td>
+		</ng-container>
+
+		<ng-container matColumnDef="observaciones">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header> Observaciones </th>
+			<td mat-cell *matCellDef="let row">{{row.observaciones}} </td>
+		</ng-container>
+
+		<ng-container matColumnDef="actions">
+			<th mat-header-cell *matHeaderCellDef class="w-15p"> </th>
+			<td mat-cell *matCellDef="let row" class="w-15p align-r">
+				<button mat-icon-button color="primary" matTooltip="Editar" (click)="createEditAcuerdoDialog(row)" *ngIf="user['permisos']?.terceros?.acuerdos?.editar">
+					<mat-icon>edit</mat-icon>
+				</button>
+				<button mat-icon-button color="warn" matTooltip="Eliminar" (click)="delete(row)" *ngIf="user['permisos']?.terceros?.acuerdos?.eliminar">
+					<mat-icon>delete</mat-icon>
+				</button>
+			</td>
+		</ng-container>
+
+		<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+		<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+	</table>
+
+
+	<div *ngIf="dataSource?.data?.length === 0" class="no-date-table">
+		No hay acuerdos de pago del tercero.
+	</div>
+
+	<mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons="true"></mat-paginator>
+</div>

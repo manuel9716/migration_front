@@ -1,0 +1,130 @@
+/* table tr:hover {
+	background: rgba(29, 31, 34, 0.06);
+} */
+
+table tr,
+td {
+	height: 33px;
+	font-size: 14px;
+}
+
+tr:nth-child(odd) {
+	background-color: #f2f2f2;
+}
+
+table th {
+	font-size: 12px;
+	background-color: #ffffff;
+	border-bottom: 1px solid;
+}
+
+#barra_opciones {
+	width: 100%;
+}
+
+#containerTitulo {
+	flex-direction: column !important;
+	flex-wrap: nowrap;
+	margin-left: -40px;
+	margin-right: 40px;
+}
+
+.buttonSize {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.no-date-table {
+	padding-bottom: 20px;
+}
+
+@media screen and (min-width: 1300px) and (max-width: 1600px) {
+	.title {
+		font-size: 39px;
+	}
+	.breadcrumb {
+		font-size: medium;
+	}
+}
+
+@media screen and (min-width: 780px) and (max-width: 1299px) {
+	.title {
+		font-size: 24px;
+		margin-left: 40px;
+	}
+	.breadcrumb {
+		font-size: medium;
+		margin-left: 40px;
+	}
+	.scroll {
+		overflow: scroll;
+		width: auto;
+	}
+}
+
+@media screen and (max-width: 779px) {
+	.title {
+		font-size: 16px;
+		margin-left: 40px;
+	}
+	.breadcrumb {
+		font-size: 10px;
+		margin-left: 40px;
+	}
+
+	.scroll {
+		overflow: scroll;
+		width: auto;
+	}
+}
+
+@media screen and (max-width: 300px) {
+	.title {
+		font-size: 10px;
+		margin-left: 40px;
+	}
+	.breadcrumb {
+		font-size: 5px;
+		margin-left: 40px;
+	}
+
+	.scroll {
+		overflow: scroll;
+		width: auto;
+	}
+}
+
+.municipio {
+	width: 15%;
+	text-align: left;
+	color: #000000de;
+	font-weight: bold;
+}
+
+.fecha {
+	vertical-align: top;
+	width: 2.5%;
+	writing-mode: vertical-lr;
+	transform: rotate(0deg);
+	text-align: center;
+	height: 58px;
+}
+
+.total {
+	width: 3%;
+	font-weight: bold;
+	color: #000000de;
+}
+
+table tr:last-child td {
+	font-weight: bold;
+}
+
+.mat-column-Total {
+	font-weight: bold;
+}
+
+.mat-column-Municipio {
+	font-weight: bold;
+}

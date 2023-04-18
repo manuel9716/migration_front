@@ -1,0 +1,74 @@
+<div class="header-pages-tools  m-10" fxLayout="row" fxLayoutAlign="start center">
+
+	<div class="top-filters" fxLayout="row" fxLayoutAlign="start center" fxFlex>
+		<mat-form-field appearance="outline" fxFlex="100" class="pr20">
+			<mat-label>Buscar Solicitud</mat-label>
+			<input matInput (keyup)="applyFilter($event.target.value)" [(ngModel)]="solSearch">
+			<mat-icon matPrefix class="secondary-text">search</mat-icon>
+			<button mat-button *ngIf="solSearch" matSuffix mat-icon-button aria-label="Clear"
+				(click)="solSearch=''; applyFilter('')">
+				<mat-icon>close</mat-icon>
+			</button>
+		</mat-form-field>
+	</div>
+
+	<div class="top-buttons" fxFlex="5" *ngIf="user['permisos']?.terceros?.solicitudes?.crear">
+		<button mat-mini-fab color="accent" matTooltip="Crear solicitud" [routerLink]="['/solicitud-tercero', userData['identificacion']]">
+			<mat-icon>add</mat-icon>
+		</button>
+	</div>
+
+
+</div>
+
+
+<div class="mat-elevation-z5 m-10">
+
+	<mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+
+	<table mat-table class="table-striped table-hover" [dataSource]="dataSource" matSort>
+
+		<ng-container matColumnDef="idsolicitudtercero">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+			<td mat-cell *matCellDef="let row"> {{row.idsolicitudtercero}} </td>
+		</ng-container>
+
+		<ng-container matColumnDef="nombrecontacto">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header> Contacto </th>
+			<td mat-cell *matCellDef="let row"> {{row.nombrecontacto + ' (' + row.telefonocontacto + ')'}}
+			</td>
+		</ng-container>
+
+		<ng-container matColumnDef="nombretipo">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo </th>
+			<td mat-cell *matCellDef="let row" matTooltip="{{row.descripciontipo}}"> {{row.nombretipo}} </td>
+		</ng-container>
+
+		<ng-container matColumnDef="nombreestado">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+			<td mat-cell *matCellDef="let row" matTooltip="{{row.descripcionestado}}"> {{row.nombreestado}}
+			</td>
+		</ng-container>
+
+		<ng-container matColumnDef="actions">
+			<th mat-header-cell *matHeaderCellDef class=""> </th>
+			<td mat-cell *matCellDef="let row" class="align-r">
+				<button mat-icon-button color="primary" matTooltip="Seleccionar"
+					(click)="selectSolicitud(row.idsolicitudtercero)">
+					<i class="fas fa-mouse-pointer"></i>
+				</button>
+			</td>
+		</ng-container>
+
+		<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+		<tr mat-row *matRowDef="let row; columns: displayedColumns;" (dblclick)="selectSolicitud(row.idsolicitudtercero)">
+		</tr>
+	</table>
+
+	<div *ngIf="!dataSource?.data" class="no-date-table">
+		No hay servicios del tercero.
+	</div>
+
+	<mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons="true"></mat-paginator>
+
+</div>

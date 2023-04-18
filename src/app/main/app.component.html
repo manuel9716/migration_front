@@ -1,0 +1,33 @@
+<!-- <div fxLayout="row" fxLayoutAlign="center center" class="main-container-loader" *ngIf="!loaded">
+   <div class="main-loader" fxFlex="10" fxFlexAlign="center">
+      <img src="/assets/icono.ico" alt="logo"><br /><br />
+      <mat-progress-bar color="warn" mode="indeterminate"></mat-progress-bar>
+   </div>
+</div> -->
+
+<div *ngIf="loaded" style="height: 100%">
+	<app-login *ngIf="!user"></app-login>
+	<app-sidebar *ngIf="user"></app-sidebar>
+</div>
+
+
+<div id="fuse-splash-screen" *ngIf="!loaded">
+	<div class="center">
+		<div class="logo">
+			<img width="128" src="assets/full-logo-dark.png">
+		</div>
+		<div class="spinner-wrapper">
+			<div class="spinner">
+				<div class="inner">
+					<div class="gap"></div>
+					<div class="left">
+						<div class="half-circle"></div>
+					</div>
+					<div class="right">
+						<div class="half-circle"></div>
+					</div>
+				</div> 
+			</div>
+		</div>
+	</div>
+</div>

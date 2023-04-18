@@ -1,0 +1,57 @@
+<table class="table table-striped align-middle">
+    <thead>
+    <tr>
+      <th scope="col"></th>
+      <th scope="col" class="text-center">ONU</th>
+      <th scope="col" class="text-center">OLT</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row justify-content-center text-center">Potencia (dBm)</th>
+      <td class="text-center">{{ powerTx < 0 ? powerTx : "Sin potencia" }}</td>
+      <td class="text-center">{{ powerRx < 0 ? powerRx : "Sin potencia" }}</td>
+    </tr>
+    <tr>
+      <th scope="row justify-content-center">Estado</th>
+
+
+      
+      <td *ngIf="powerTx == 0" class="text-center">
+        <abbr title="ONT sin potencia">
+          <fa-icon [icon]="powerOff" class="text-danger"></fa-icon>
+        </abbr>
+      </td>
+      <td *ngIf="powerTx > -28 && powerTx < 0" class="text-center">
+        <abbr title="Potencia OK">
+          <fa-icon [icon]="powerOk" class="text-success"></fa-icon>
+        </abbr>
+      </td>
+      <td *ngIf="powerTx <= -28" class="text-center">
+        <abbr title="Potencia Alertada">
+          <fa-icon [icon]="powerAlert" class="text-danger"></fa-icon>
+        </abbr>
+      </td>
+
+
+      
+      <td *ngIf="powerRx == 0" class="text-center">
+        <abbr title="ONT sin potencia">
+          <fa-icon [icon]="powerOff" class="text-danger"></fa-icon>
+        </abbr>
+      </td>
+      <td *ngIf="powerRx > -30 && powerRx < 0" class="text-center">
+        <abbr title="Potencia OK">
+          <fa-icon [icon]="powerOk" class="text-success"></fa-icon>
+        </abbr>
+      </td>
+      <td *ngIf="powerRx <= -30" class="text-center">
+        <abbr title="Potencia Alertada">
+          <fa-icon [icon]="powerAlert" class="text-danger"></fa-icon>
+        </abbr>
+      </td>
+
+    </tr>
+  </tbody>
+</table>
+

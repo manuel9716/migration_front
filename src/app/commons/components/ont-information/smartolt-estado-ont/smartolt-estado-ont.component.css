@@ -1,0 +1,18 @@
+.button-reload{
+    color: white;
+    transition: all 1 ease-out;
+    transition: transform 0.5s ease 0s;
+    -webkit-transition: transform 0.5s ease 0s;
+    -moz-transition: transform 0.5s ease 0s;
+    -ms-transition: transform 0.5s ease 0s;
+    -o-transition: transform 0.5s ease 0s;
+}
+.button-reload:hover{
+    color: gray;
+    cursor: pointer;
+    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+}

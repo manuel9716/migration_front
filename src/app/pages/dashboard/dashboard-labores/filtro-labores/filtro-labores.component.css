@@ -1,0 +1,27 @@
+.paginatorDesabile{
+    display: none;
+}
+.paginatorDefaul{
+    display: block;
+}
+.lineas{
+    background-color: #dbf2ff;
+    border-radius: 10px;
+    padding-bottom: 15px;
+}
+.header-pages-tools{
+    margin-top: 3em;
+}
+
+.iconTabla{
+    width: 200px;
+}
+.letrasgrices{
+    color: #b6b4b4;
+}
+
+.tr-disabled{
+    color: gray;
+    background-color: #ececec;
+    transition: all 0.5 ease-in-out;
+}

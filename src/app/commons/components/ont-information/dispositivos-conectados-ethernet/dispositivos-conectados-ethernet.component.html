@@ -1,0 +1,64 @@
+<div class="d-flex justify-content-center align-items-center">
+    <app-loading *ngIf="!loadingSmartolt; else connectedDevices" class="text-center"></app-loading>
+</div>
+
+<ng-template #connectedDevices>
+    <table class="table table-striped align-middle">
+        <thead>
+            <tr>
+                <th scope="col" class="text-center">Puerto ONT</th>
+                <th scope="col" class="text-center">Tipo Puerto</th>
+                <th scope="col" class="text-center">Velocidad (Mbps)</th>
+                <th scope="col" class="text-center">Duplex</th>
+                <th scope="col" class="text-center">Estado</th>
+                <!-- <th scope="col" class="text-center">Estado del anillo</th> -->
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let port of connectedEthernetBody">
+                <td class="text-center">
+                    {{port.port}}
+                </td>
+                <td class="text-center">
+                    {{port.type}}
+                </td>
+                <td class="text-center">
+                    {{port.speed}}
+                </td>
+                <td class="text-center">
+                    {{port.duplex}}
+                </td>
+                <td class="text-center" *ngIf="port.status == 'up'; else portDisconnected">
+                    <abbr title="Conectado" *ngIf="convertToInt(port.speed) >= 100 && port.duplex == 'full', else alertPort;" >
+                        <fa-icon 
+                            [icon]="connectedIcon" 
+                            class="text-success" 
+                        ></fa-icon>
+                    </abbr>
+                </td>
+                <!-- <td class="text-center">
+                    {{port.statusRing}}
+                </td> -->
+            </tr> 
+        </tbody>
+    </table>
+</ng-template>
+
+<ng-template #portDisconnected>
+    <td class="text-center text-opacity-75">
+        <abbr title="Sin Conexion">
+            <fa-layers>
+                <fa-icon [icon]="connectedIcon" class="text-dark"></fa-icon>
+                <fa-icon [icon]="slashesIcon" class="text-dark"></fa-icon>
+            </fa-layers>
+        </abbr>
+    </td>
+</ng-template>
+<ng-template #alertPort>
+    <abbr title="Equipo podrá presentar lentitud de navegación">
+        <fa-icon 
+            [icon]="connectedIcon" 
+            class="text-warning" 
+        ></fa-icon>
+    </abbr>
+</ng-template>

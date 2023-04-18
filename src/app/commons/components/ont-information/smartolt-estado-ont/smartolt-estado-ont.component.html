@@ -1,0 +1,60 @@
+<div class="d-flex justify-content-center align-items-center">
+    <app-loading *ngIf="!loading; else smartReady" class="text-center"></app-loading>
+</div>
+  
+<ng-template #smartReady>
+
+    <div class="container">
+        <div class="card ">
+            <div class="card-header bg-secondary bg-opacity-75">
+                <div class="d-flex">
+                    <div class=""><b class="text-white">Estado ONT</b></div>
+                    <!-- <div class="ms-auto"><fa-icon [icon]="reloadIcon" class="fs-6 button-reload"></fa-icon></div> -->
+                </div>
+            </div>
+            <div class="row row-cols-2"  *ngIf="ontStatus; else ontOff">
+                <div class="col">
+                    <div class="row row-cols-2 d-flex align-items-center m-1">
+                        <div class="col text-start"><b>Estado:</b></div>
+                        <div *ngIf="ontStatus" class="col rounded-4 bg-secondary bg-opacity-25 text-dark text-start">EN LINEA</div>
+                        <div *ngIf="!ontStatus" class="col rounded-4 bg-danger bg-opacity-25 text-dark">FUERA DE LINEA</div>
+                    </div>
+            
+                    <div class="row row-cols-2  d-flex align-items-center m-1">
+                        <div class="col"><b>Duracion en linea:</b></div>
+                        <div *ngIf="ontStatus" class="col rounded-4 bg-secondary bg-opacity-25 text-dark">{{ontTimeOnline}}</div>
+                        <div *ngIf="!ontStatus" class="col rounded-4 bg-secondary bg-opacity-25 text-dark"></div>
+                    </div>
+            
+                    <div class="row row-cols-2  d-flex align-items-center m-1">
+                        <div class="col"><b>Configuracion Ip:</b></div>
+                        <div class="col rounded-4 bg-secondary bg-opacity-25 text-dark" *ngIf="ipStatus == ''">Correcta</div>
+                        <div class="col rounded-4 bg-danger bg-opacity-25 text-dark" *ngIf="ipStatus != ''">{{ipStatus}}</div>
+                    </div>
+    
+                </div>
+                <div class="col">
+                    <app-smartolt-potencia class=""></app-smartolt-potencia>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</ng-template>
+
+<ng-template #ontOff>
+    <div class="d-flex flex-column">
+
+        <div class="">
+            <div class="row row-cols-2 d-flex align-items-center m-1">
+                <div class="col text-primary text-start"><b>Estado ONT:</b></div>
+                <div *ngIf="ontStatus" class="col rounded-4 bg-success bg-opacity-25 text-dark text-start">EN LINEA</div>
+                <div *ngIf="!ontStatus" class="col rounded-4 bg-danger bg-opacity-25 text-dark">FUERA DE LINEA</div>
+            </div>
+        </div>
+        <div class="">
+            <app-smartolt-potencia class=""></app-smartolt-potencia>
+        </div>
+
+    </div>
+</ng-template>
